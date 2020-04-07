@@ -8,24 +8,18 @@ import Styles from "cuervo/src/styles/Styles";
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
+import * as HttpClient from "cuervo/src/utils/HttpClient";
 
 //Code
 export default () => {
-    const appContext = React.useContext(AppContext);
-    const { changeNavigator } = appContext;
+    const { changeNavigator } = React.useContext(AppContext);
 
-    fetch("http://" + Definitions.SERVER_IP + "/checkcon")
-    .then((response) => {
-        if(response.status == 200) {
-            response.json()
-            .then((json) => {
-                if(json == true) {
-                    changeNavigator(NAVIGATORS.AUTH);
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    HttpClient.get("http://" + Definitions.SERVER_IP + "/checkcon").then(([response, data, error]) => {
+        if(error == null && response.status == 200 && data == true) {
+            changeNavigator(NAVIGATORS.AUTH);
+        }
+        else {
+            console.log("ERROR!");
         }
     });
 
