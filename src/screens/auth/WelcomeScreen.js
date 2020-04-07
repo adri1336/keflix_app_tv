@@ -1,6 +1,7 @@
 //Imports
 import React from "react";
 import { View, Text } from "react-native";
+import i18n from "i18n-js";
 
 //Styles Imports
 import Styles from "cuervo/src/styles/Styles";
@@ -12,7 +13,7 @@ import Definitions from "cuervo/src/utils/Definitions";
 export default () => {
     return (
         <View style={[{ backgroundColor: Definitions.PRIMARY_COLOR }, Styles.centeredContainer]}>
-            <Text style={[{ color: Definitions.TEXT_COLOR }, Styles.titleText]}>¡Bienvenido!</Text>
+            <Text style={[{ color: Definitions.TEXT_COLOR }, Styles.titleText]}>{ i18n.t("connect.welcome") }</Text>
         </View>
     );
 }
