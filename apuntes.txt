@@ -1,0 +1,4 @@
+-- 7/4/2020 --
+Conectar si no se puede poner pantalla con boton reintentar
+Pasar textos a gettext: https://www.npmjs.com/package/i18n
+Estilos, dimensions wh, vh etc
