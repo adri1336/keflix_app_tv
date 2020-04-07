@@ -1,5 +1,7 @@
+//Imports
 import { StyleSheet } from "react-native";
 
+//Code
 const Styles = StyleSheet.create({
 	centeredContainer: {
 		flex: 1,
@@ -8,8 +10,10 @@ const Styles = StyleSheet.create({
 		alignItems: "center"
 	},
 	titleText: {
-		fontWeight: "bold",
-		fontSize: 32
+		fontSize: 24
+	},
+	normalText: {
+		fontSize: 12
 	}
 });
 

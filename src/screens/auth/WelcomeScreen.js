@@ -13,7 +13,7 @@ import Definitions from "cuervo/src/utils/Definitions";
 export default () => {
     return (
         <View style={[{ backgroundColor: Definitions.PRIMARY_COLOR }, Styles.centeredContainer]}>
-            <Text style={[{ color: Definitions.TEXT_COLOR }, Styles.titleText]}>{ i18n.t("connect.welcome") }</Text>
+            <Text style={[{ color: Definitions.TEXT_COLOR }, Styles.titleText]}>{ i18n.t("auth.welcome_text") }</Text>
         </View>
     );
 }

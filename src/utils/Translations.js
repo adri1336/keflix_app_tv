@@ -8,7 +8,11 @@ i18n.fallbacks = true;
 i18n.translations = {
     es: {
 		connect: {
-			welcome: "Bienvenido"
+			connect_error_text: "No se ha podido conectar",
+			retry_connect_button: "Reintentar"
+		},
+		auth: {
+			welcome_text: "Bienvenido"
 		}
 	}
 };
