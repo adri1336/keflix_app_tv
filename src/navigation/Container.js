@@ -8,21 +8,22 @@ import AuthNavigator from "./navigators/AuthNavigator";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
+import { NAVIGATORS } from "cuervo/src/utils/Definitions";
 
 //Code
 function getNavigator(navigator) {
 	switch(navigator) {
-		case "connect": {
+		case NAVIGATORS.CONNECT: {
 			return <ConnectNavigator/>;
 		}
-		case "auth": {
+		case NAVIGATORS.AUTH: {
 			return <AuthNavigator/>;
 		}
 	}
 }
 
 export default () => {
-	const [navigator, setNavigator] = React.useState("connect");
+	const [navigator, setNavigator] = React.useState(NAVIGATORS.CONNECT);
 	const appContext = React.useMemo(() => {
 		return {
 			changeNavigator: (navigator) => {

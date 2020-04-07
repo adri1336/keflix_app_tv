@@ -7,7 +7,7 @@ import Styles from "cuervo/src/styles/Styles";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 
 //Code
 export default () => {
@@ -20,7 +20,7 @@ export default () => {
             response.json()
             .then((json) => {
                 if(json == true) {
-                    changeNavigator("auth");
+                    changeNavigator(NAVIGATORS.AUTH);
                 }
             })
             .catch((error) => {

@@ -5,3 +5,8 @@ export default {
     TEXT_COLOR: 0xFFFFFFFF,
     SERVER_IP: "51.77.212.177"
 };
+
+export const NAVIGATORS = {
+	CONNECT: "connect",
+	AUTH: "auth"
+};
