@@ -1,9 +1,8 @@
 //Imports
 import React from "react";
-import { View, ActivityIndicator } from "react-native";
 
-//Styles Imports
-import Styles from "cuervo/src/styles/Styles";
+//Components Imports
+import LoadingView from "cuervo/src/components/LoadingView";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
@@ -23,9 +22,5 @@ export default () => {
         }
     });
 
-    return (
-        <View style={[{ backgroundColor: Definitions.PRIMARY_COLOR }, Styles.centeredContainer]}>
-            <ActivityIndicator size="large" color={Definitions.SECONDARY_COLOR}/>
-        </View>
-    );
+    return <LoadingView/>;
 }
