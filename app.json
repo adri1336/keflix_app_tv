@@ -9,7 +9,7 @@
       "web"
     ],
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -27,7 +27,16 @@
       "requireFullScreen": true
     },
     "android": {
-      "package": "com.example.cuervo"
+      "package": "com.example.cuervo",
+      "banner": "./assets/banner.png",
+      "intentFilters": [
+        {
+          "action": "MAIN",
+          "category": [
+            "LEANBACK_LAUNCHER"
+          ]
+        }
+      ]
     }
   }
 }
