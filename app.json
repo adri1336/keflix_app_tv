@@ -28,7 +28,6 @@
     },
     "android": {
       "package": "com.example.cuervo",
-      "banner": "./assets/banner.png",
       "intentFilters": [
         {
           "action": "MAIN",
