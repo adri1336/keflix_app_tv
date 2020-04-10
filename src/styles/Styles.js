@@ -1,5 +1,6 @@
 //Imports
 import { StyleSheet } from "react-native";
+import * as Dimensions from "cuervo/src/utils/Dimensions.js";
 
 //Code
 const Styles = StyleSheet.create({
@@ -10,11 +11,11 @@ const Styles = StyleSheet.create({
 		alignItems: "center"
 	},
 	titleText: {
-		fontSize: 24,
+		fontSize: Dimensions.vw(3.5),
 		fontFamily: "Roboto-Bold"
 	},
 	normalText: {
-		fontSize: 12,
+		fontSize: Dimensions.vw(1.3),
 		fontFamily: "Roboto-Regular"
 	}
 });
