@@ -10,10 +10,12 @@ const Styles = StyleSheet.create({
 		alignItems: "center"
 	},
 	titleText: {
-		fontSize: 24
+		fontSize: 24,
+		fontFamily: "Roboto-Bold"
 	},
 	normalText: {
-		fontSize: 12
+		fontSize: 12,
+		fontFamily: "Roboto-Regular"
 	}
 });
 

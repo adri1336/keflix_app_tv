@@ -12,6 +12,7 @@
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/native": "^5.1.4",
     "@react-navigation/stack": "^5.2.9",
+    "@use-expo/font": "^2.0.0",
     "expo": "~37.0.3",
     "expo-localization": "~8.1.0",
     "expo-screen-orientation": "~1.0.0",
