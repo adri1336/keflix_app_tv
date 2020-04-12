@@ -2,16 +2,19 @@
 import React from "react";
 import { View, ActivityIndicator } from "react-native";
 
-//Styles Imports
-import Styles from "cuervo/src/styles/Styles";
-
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 
 //Code
 export default () => {
     return (
-        <View style={[{ backgroundColor: Definitions.PRIMARY_COLOR }, Styles.centeredContainer]}>
+        <View style={{
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: Definitions.PRIMARY_COLOR
+        }}>
             <ActivityIndicator size="large" color={Definitions.SECONDARY_COLOR}/>
         </View>
     );

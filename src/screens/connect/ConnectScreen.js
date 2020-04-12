@@ -5,12 +5,10 @@ import i18n from "i18n-js";
 
 //Components Imports
 import LoadingView from "cuervo/src/components/LoadingView";
+import NormalButton from "cuervo/src/components/NormalButton";
 
 //Styles Imports
-import Styles from "cuervo/src/styles/Styles";
-
-//Components Imports
-import NormalButton from "cuervo/src/components/NormalButton";
+import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
@@ -37,9 +35,16 @@ export default () => {
         connecting ? (
             <LoadingView/>
         ) : (
-            <View style={[{ backgroundColor: Definitions.PRIMARY_COLOR }, Styles.centeredContainer]}>
-                <Text style={[{ color: Definitions.TEXT_COLOR }, Styles.titleText]}>{ i18n.t("connect.connect_error_text") }</Text>
+            <View style={{
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: Definitions.PRIMARY_COLOR
+            }}>
+                <Text style={Styles.titleText}>{ i18n.t("connect.connect_error_text") }</Text>
                 <NormalButton
+                    hasTVPreferredFocus={ true }
                     onPress={
                         () => {
                             setConnecting(true);

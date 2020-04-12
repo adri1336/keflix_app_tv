@@ -12,7 +12,9 @@ i18n.translations = {
 			retry_connect_button: "Reintentar"
 		},
 		auth: {
-			welcome_text: "Bienvenido"
+			slogan_text: "Películas para ver en tu televisión.",
+			register_button: "Registrarse ahora",
+			login_button: "Iniciar sesión"
 		}
 	}
 };
