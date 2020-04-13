@@ -28,7 +28,7 @@ export default ({ navigation }) => {
                     flexDirection: "column",
                     justifyContent: "center"
                 }}>
-                    <Text style={[Styles.bigTitleText, { color: Definitions.SECONDARY_COLOR }]}>{ name }</Text>
+                    <Text style={[Styles.bigTitleSlimText, { color: Definitions.SECONDARY_COLOR }]}>{ name }</Text>
                     <Text style={Styles.titleText}>{ i18n.t("auth.slogan_text") }</Text>
                 </View>
                 <View style={{
@@ -39,7 +39,7 @@ export default ({ navigation }) => {
                 }}>
                     <BoxButton
                         hasTVPreferredFocus={ true }
-                        onPress={ () => navigation.push("RegisterScreen") }
+                        onPress={ () => navigation.navigate("RegisterScreen") }
                     >{ i18n.t("auth.register_button") }</BoxButton>
                     <View style={{ height: Definitions.DEFAULT_MARGIN }}/>
                     <BoxButton>{ i18n.t("auth.login_button") }</BoxButton>

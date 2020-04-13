@@ -12,7 +12,10 @@ const AuthNavigator = createStackNavigator();
 //Code
 export default () => {
     return (
-        <AuthNavigator.Navigator headerMode="none">
+        <AuthNavigator.Navigator 
+            screenOptions={{ animationEnabled: false }}
+            headerMode="none"
+        >
             <AuthNavigator.Screen name="WelcomeScreen" component={WelcomeScreen}/>
             <AuthNavigator.Screen name="RegisterScreen" component={RegisterScreen}/>
         </AuthNavigator.Navigator>

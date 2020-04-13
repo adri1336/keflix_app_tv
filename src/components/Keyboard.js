@@ -102,29 +102,3 @@ export default class Keyboard extends React.Component {
         );
     }
 }
-
-/*
-        <View style={{
-                        flex: 1,
-                        flexDirection: "row"
-                    }}>
-        <BoxButton style={{ flex: 1, alignItems: "center" }} hasTVPreferredFocus={ true }>1</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>2</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>3</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>4</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>5</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>6</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>7</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>8</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>9</BoxButton>
-        <View style={{ width: Definitions.DEFAULT_MARGIN / 2 }}/>
-        <BoxButton style={{ flex: 1, alignItems: "center" }}>0</BoxButton>
-        */

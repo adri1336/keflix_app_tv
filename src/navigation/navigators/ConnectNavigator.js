@@ -11,7 +11,10 @@ const ConnectNavigator = createStackNavigator();
 //Code
 export default () => {
     return (
-        <ConnectNavigator.Navigator headerMode="none">
+        <ConnectNavigator.Navigator 
+            screenOptions={{ animationEnabled: false }}
+            headerMode="none"
+        >
             <ConnectNavigator.Screen name="ConnectScreen" component={ConnectScreen}/>
         </ConnectNavigator.Navigator>
     );
