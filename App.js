@@ -16,6 +16,9 @@ import Container from "./src/navigation/Container";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 
+//Disable Yellow Warnings Box In App
+console.disableYellowBox = true;
+
 //Code
 export default () => {
 	//TV Only
