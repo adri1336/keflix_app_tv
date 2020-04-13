@@ -1,6 +1,9 @@
 //Imports
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
+
+//Components Imports
+import TouchableOpacityFix from "./TouchableOpacityFix";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
@@ -8,6 +11,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 
+//Code
 export default class NormalButton extends React.Component {
     constructor(props) {
         super(props);
@@ -18,7 +22,7 @@ export default class NormalButton extends React.Component {
     
     render () {
         return (
-            <TouchableOpacity
+            <TouchableOpacityFix
                 hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
                 onPress={ this.props.onPress }
                 activeOpacity={ 1.0 }
@@ -39,7 +43,7 @@ export default class NormalButton extends React.Component {
                         this.state.focused ? ( { fontWeight: "bold" } ) : ( { fontWeight: "normal" } )
                     ]
                 }>{ this.props.children }</Text>
-            </TouchableOpacity>
-        )
+            </TouchableOpacityFix>
+        );
     }
 }

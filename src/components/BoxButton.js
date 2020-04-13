@@ -1,10 +1,17 @@
 //Imports
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
+
+//Components Imports
+import TouchableOpacityFix from "./TouchableOpacityFix";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
 
+//Other Imports
+import Definitions from "cuervo/src/utils/Definitions";
+
+//Code
 export default class BoxButton extends React.Component {
     constructor(props) {
         super(props);
@@ -15,8 +22,9 @@ export default class BoxButton extends React.Component {
     
     render () {
         return (
-            <TouchableOpacity
+            <TouchableOpacityFix
                 style={[
+                    this.props.style,
                     { borderRadius: 2 },
                     this.state.focused ? ( { backgroundColor: "rgba(70, 130, 180, 0.9);" } ) : ( { backgroundColor: "rgba(120, 120, 120, 0.4);" } )
                 ]}
@@ -36,10 +44,10 @@ export default class BoxButton extends React.Component {
                 <Text 
                     style={[
                         Styles.normalText,
-                        { padding: 10 },
+                        { padding: Definitions.DEFAULT_MARGIN },
                         this.state.focused ? ( { color: "white" } ) : ( { color: "rgba(255, 255, 255, 0.4);" } )
                     ]}>{ this.props.children }</Text>
-            </TouchableOpacity>
-        )
+            </TouchableOpacityFix>
+        );
     }
 }

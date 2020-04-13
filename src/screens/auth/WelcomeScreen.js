@@ -11,10 +11,10 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
-import { name, version } from 'cuervo/package.json';
+import { name, version } from "cuervo/package.json";
 
 //Code
-export default () => {
+export default ({ navigation }) => {
     return (
         <View style={{
             flex: 1,
@@ -28,8 +28,8 @@ export default () => {
                     flexDirection: "column",
                     justifyContent: "center"
                 }}>
-                    <Text style={[Styles.bigTitleSlimText, { color: Definitions.SECONDARY_COLOR }]}>{ name }</Text>
-                    <Text style={Styles.titleSlimText}>{ i18n.t("auth.slogan_text") }</Text>
+                    <Text style={[Styles.bigTitleText, { color: Definitions.SECONDARY_COLOR }]}>{ name }</Text>
+                    <Text style={Styles.titleText}>{ i18n.t("auth.slogan_text") }</Text>
                 </View>
                 <View style={{
                     flex: 40,
@@ -37,7 +37,10 @@ export default () => {
                     justifyContent: "flex-start",
                     alignItems: "flex-start"
                 }}>
-                    <BoxButton hasTVPreferredFocus={ true }>{ i18n.t("auth.register_button") }</BoxButton>
+                    <BoxButton
+                        hasTVPreferredFocus={ true }
+                        onPress={ () => navigation.push("RegisterScreen") }
+                    >{ i18n.t("auth.register_button") }</BoxButton>
                     <View style={{ height: Definitions.DEFAULT_MARGIN }}/>
                     <BoxButton>{ i18n.t("auth.login_button") }</BoxButton>
                 </View>
