@@ -23,7 +23,8 @@ i18n.translations = {
 				register_text: "Registrarse",
 				email_placeholder: "Escribe tu dirección de correo",
 				password_placeholder: "Escribe tu contraseña",
-				repeat_password_placeholder: "Repite tu contraseña"
+				repeat_password_placeholder: "Repite tu contraseña",
+				autoconnect_checkbox: "Ingresar automáticamente"
 			}
 		},
 		keyboard: {

@@ -6,12 +6,14 @@ import i18n from "i18n-js";
 //Components Imports
 import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
 import BoxTextInput from "cuervo/src/components/BoxTextInput";
+import Checkbox from "cuervo/src/components/Checkbox";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import * as Dimensions from "cuervo/src/utils/Dimensions.js";
 
 //Code
 export default class RegisterScreen extends React.Component {
@@ -109,22 +111,33 @@ export default class RegisterScreen extends React.Component {
                             <View style={{
                                 flex: 55,
                                 flexDirection: "column",
-                                marginLeft: Definitions.DEFAULT_MARGIN
+                                marginLeft: Definitions.DEFAULT_MARGIN,
                             }}>
-                                <BoxTextInput
-                                    ref={ component => this.textInputEmail = component }
-                                    placeholder={ i18n.t("auth.register.email_placeholder") }
-                                />
-                                <BoxTextInput
-                                    ref={ component => this.textInputPassword = component }
-                                    placeholder={ i18n.t("auth.register.password_placeholder") }
-                                    secureTextEntry={ true }
-                                />
-                                <BoxTextInput
-                                    ref={ component => this.textInputRepeatPassword = component }
-                                    placeholder={ i18n.t("auth.register.repeat_password_placeholder") }
-                                    secureTextEntry={ true }
-                                />
+                                <View style={{
+                                    flex: 1
+                                }}>
+                                    <BoxTextInput
+                                        ref={ component => this.textInputEmail = component }
+                                        placeholder={ i18n.t("auth.register.email_placeholder") }
+                                    />
+                                    <BoxTextInput
+                                        ref={ component => this.textInputPassword = component }
+                                        placeholder={ i18n.t("auth.register.password_placeholder") }
+                                        secureTextEntry={ true }
+                                    />
+                                    <BoxTextInput
+                                        ref={ component => this.textInputRepeatPassword = component }
+                                        placeholder={ i18n.t("auth.register.repeat_password_placeholder") }
+                                        secureTextEntry={ true }
+                                    />
+                                </View>
+                                <View style={{
+                                    flex: 1,
+                                    justifyContent: "flex-end",
+                                    marginBottom: Definitions.DEFAULT_MARGIN + (Definitions.DEFAULT_MARGIN / 2)
+                                }}>
+                                    <Checkbox checked={ true }>{ i18n.t("auth.register.autoconnect_checkbox") }</Checkbox>
+                                </View>
                             </View>
                         </View>
                         <View style={{ flex: 25 }}/>
