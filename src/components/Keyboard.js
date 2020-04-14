@@ -74,10 +74,14 @@ export default class Keyboard extends React.Component {
         super(props);
         this.state = {
             capitalLetters: false,
-            specialChars: false
+            specialChars: false,
+            title: null
         };
         this.keboardType = this.props.keboardType ? this.props.keboardType : KeyboardTypes.NORMAL;
         this.textInput = this.props.textInput;
+        if(this.textInput) {
+            this.state.title = this.textInput.props.placeholder;
+        }
     }
 
     componentDidMount() {
@@ -163,6 +167,7 @@ export default class Keyboard extends React.Component {
 
         this.textInput = textInput;
         this.textInput.setFocus(true);
+        this.setState({ title: this.textInput.props.placeholder });
     }
 
     onKeyPressed(letter) {
@@ -198,6 +203,21 @@ export default class Keyboard extends React.Component {
             }
         }
     }
+
+    renderTitle() {
+        if(this.state.title) {
+            return (
+                <View style={{
+                    flex: 10,
+                    flexDirection: "column"
+                }}>
+                    <Text style={ Styles.normalText }>
+                        { this.state.title }
+                    </Text>
+                </View>
+            );
+        }
+    }
     
     render () {
         return (
@@ -207,12 +227,9 @@ export default class Keyboard extends React.Component {
                 backgroundColor: "rgba(120, 120, 120, 0.2);",
                 padding: Definitions.DEFAULT_MARGIN
             }}>
-                <View style={{
-                    flex: 10,
-                    flexDirection: "column"
-                }}>
-                    <Text style={ Styles.normalText }>Escribe tu dirección de correo</Text>
-                </View>
+                {
+                    this.renderTitle()
+                }
                 <View style={{
                     flex: 70,
                     flexDirection: "column"
