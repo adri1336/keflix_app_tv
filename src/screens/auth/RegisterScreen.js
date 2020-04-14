@@ -7,13 +7,14 @@ import i18n from "i18n-js";
 import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
 import BoxTextInput from "cuervo/src/components/BoxTextInput";
 import Checkbox from "cuervo/src/components/Checkbox";
+import NormalAlert from "cuervo/src/components/NormalAlert";
+import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
-import * as Dimensions from "cuervo/src/utils/Dimensions.js";
 
 //Code
 export default class RegisterScreen extends React.Component {
@@ -60,7 +61,17 @@ export default class RegisterScreen extends React.Component {
                         break;
                     }
                     case KeyboardButtonsTypes.CONTINUE: {
-                        console.log("REGISTRARSE");
+                        if(this.textInputEmail.state.text == "" || this.textInputPassword.state.text == "" || this.textInputRepeatPassword.state.text == "") {
+                            this.alert.setAlertVisible(true, i18n.t("auth.register.error_alert_title"), i18n.t("auth.register.empty_fields_alert_message"));
+                        }
+                        else {
+                            if(this.textInputPassword.state.text != this.textInputRepeatPassword.state.text) {
+                                this.alert.setAlertVisible(true, i18n.t("auth.register.error_alert_title"), i18n.t("auth.register.passwords_no_match_alert_message"));
+                            }
+                            else {
+                                this.loadingViewModal.setVisible();
+                            }
+                        }
                         break;
                     }
                 }
@@ -76,6 +87,8 @@ export default class RegisterScreen extends React.Component {
                 flexDirection: "row",
                 backgroundColor: Definitions.PRIMARY_COLOR
             }}>
+                <NormalAlert ref={ component => this.alert = component }/>
+                <LoadingViewModal ref={ component => this.loadingViewModal = component }/>
                 <View style={{ flex: 10 }}/>
                 <View style={{ flex: 80 }}>
                     

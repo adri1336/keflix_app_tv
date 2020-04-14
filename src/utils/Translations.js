@@ -24,7 +24,10 @@ i18n.translations = {
 				email_placeholder: "Escribe tu dirección de correo",
 				password_placeholder: "Escribe tu contraseña",
 				repeat_password_placeholder: "Repite tu contraseña",
-				autoconnect_checkbox: "Ingresar automáticamente"
+				autoconnect_checkbox: "Ingresar automáticamente",
+				error_alert_title: "Error",
+				empty_fields_alert_message: "Rellena todos los campos",
+				passwords_no_match_alert_message: "Las contraseñas no coinciden"
 			}
 		},
 		keyboard: {
@@ -32,6 +35,9 @@ i18n.translations = {
 			next: "Siguiente",
 			continue: "Continuar",
 			finish: "Finalizar"
+		},
+		normalAlert: {
+			close_button: "Cerrar"
 		}
 	}
 };

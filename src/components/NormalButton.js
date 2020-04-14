@@ -16,7 +16,7 @@ export default class NormalButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            focused: false
+            focused: this.props.focused ? this.props.focused : false
         };
     }
     
