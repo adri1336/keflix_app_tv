@@ -12,7 +12,7 @@ import Styles from "cuervo/src/utils/Styles";
 import Definitions from "cuervo/src/utils/Definitions";
 
 //Vars
-const KeyboardTypes = {
+export const KeyboardTypes = {
     NORMAL: 1,
     EMAIL: 2
 };
@@ -74,9 +74,11 @@ export default class Keyboard extends React.Component {
         super(props);
         this.state = {
             capitalLetters: false,
-            specialChars: false
+            specialChars: false,
+            textInput: null
         };
         this.keboardType = this.props.keboardType ? this.props.keboardType : KeyboardTypes.NORMAL;
+        this.textInput = this.props.textInput;
     }
 
     renderKeyboard() {
@@ -149,6 +151,15 @@ export default class Keyboard extends React.Component {
         );
     }
 
+    setTextInput(textInput) {
+        if(this.textInput) {
+            this.textInput.setFocus(false);
+        }
+
+        this.textInput = textInput;
+        this.textInput.setFocus(true);
+    }
+
     onKeyPressed(letter) {
         switch(letter) {
             case "!#$": {
@@ -164,6 +175,21 @@ export default class Keyboard extends React.Component {
             case "SHIFT": {
                 this.setState({ capitalLetters: !this.state.capitalLetters });
                 break;
+            }
+            case "space":
+            case "SPACE": {
+                this.textInput.setText(this.textInput.state.text + " ");
+                break;
+            }
+            case "del":
+            case "DEL": {
+                this.textInput.setText(this.textInput.state.text.slice(0, -1));
+                break;
+            }
+            default: {
+                if(this.textInput) {
+                    this.textInput.setText(this.textInput.state.text + letter);
+                }
             }
         }
     }
