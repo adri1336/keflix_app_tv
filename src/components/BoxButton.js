@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { Text } from "react-native";
+import { Text, Image } from "react-native";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
@@ -10,6 +10,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import * as Dimensions from "cuervo/src/utils/Dimensions.js";
 
 //Code
 export default class BoxButton extends React.Component {
@@ -18,6 +19,20 @@ export default class BoxButton extends React.Component {
         this.state = {
             focused: false
         };
+    }
+
+    renderIcon() {
+        if(this.props.icon) {
+            return (
+                <Image
+                    style={{
+                        width: Dimensions.vw(1.3),
+                        height: Dimensions.vw(1.3)
+                    }}
+                    source={this.props.icon}
+                />
+            );
+        }
     }
     
     render () {
@@ -40,9 +55,12 @@ export default class BoxButton extends React.Component {
                     () => {
                         this.setState({ focused: false });
                     }
-                }>
+                }
+            >
+                { this.renderIcon() }
                 <Text 
                     style={[
+                        this.props.children ? { display: "flex" } : { display: "none" },
                         Styles.normalText,
                         { padding: Definitions.DEFAULT_MARGIN },
                         this.state.focused ? ( { color: "white" } ) : ( { color: "rgba(255, 255, 255, 0.4);" } )

@@ -12,7 +12,8 @@ const ConnectNavigator = createStackNavigator();
 export default () => {
     return (
         <ConnectNavigator.Navigator 
-            screenOptions={{ animationEnabled: false }}
+            /*por algun motivo da warning...: (Can't perform a React state update on an unmounted component.) 
+            screenOptions={{ animationEnabled: false }}*/
             headerMode="none"
         >
             <ConnectNavigator.Screen name="ConnectScreen" component={ConnectScreen}/>
