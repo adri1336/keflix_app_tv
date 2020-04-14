@@ -74,8 +74,7 @@ export default class Keyboard extends React.Component {
         super(props);
         this.state = {
             capitalLetters: false,
-            specialChars: false,
-            textInput: null
+            specialChars: false
         };
         this.keboardType = this.props.keboardType ? this.props.keboardType : KeyboardTypes.NORMAL;
         this.textInput = this.props.textInput;
