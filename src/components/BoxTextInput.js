@@ -43,6 +43,7 @@ export default class BoxButton extends React.Component {
                 ]}
                 placeholderTextColor={ "rgba(255, 255, 255, 0.4);" }
                 placeholder={ this.props.placeholder }
+                secureTextEntry={ this.props.secureTextEntry }
                 value= { this.state.text }
             />
         );

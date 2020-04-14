@@ -1,6 +1,7 @@
 //Imports
 import React from "react";
 import { View, Text } from "react-native";
+import i18n from "i18n-js";
 
 //Components Imports
 import BoxButton from "cuervo/src/components/BoxButton";
@@ -15,6 +16,13 @@ import Definitions from "cuervo/src/utils/Definitions";
 export const KeyboardTypes = {
     NORMAL: 1,
     EMAIL: 2
+};
+
+export const KeyboardButtonsTypes = {
+    BACK: 1,
+    NEXT: 2,
+    CONTINUE: 3,
+    FINISH: 4
 };
 
 const numericRow = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
@@ -69,15 +77,40 @@ function getKeyboard(type = KeyboardTypes.NORMAL, special = false) {
     return keyboard;
 }
 
+function getButtonText(buttonType) {
+    var buttonText;
+    switch(buttonType) {
+        case KeyboardButtonsTypes.BACK: {
+            buttonText = i18n.t("keyboard.back");
+            break;
+        }
+        case KeyboardButtonsTypes.NEXT: {
+            buttonText = i18n.t("keyboard.next");
+            break;
+        }
+        case KeyboardButtonsTypes.CONTINUE: {
+            buttonText = i18n.t("keyboard.continue");
+            break;
+        }
+        case KeyboardButtonsTypes.FINISH: {
+            buttonText = i18n.t("keyboard.finish");
+            break;
+        }
+    }
+    return buttonText;
+}
+
 export default class Keyboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             capitalLetters: false,
             specialChars: false,
-            title: null
+            title: null,
+            buttonsType: this.props.buttonsType,
+            keboardType: this.props.keboardType ? this.props.keboardType : KeyboardTypes.NORMAL
         };
-        this.keboardType = this.props.keboardType ? this.props.keboardType : KeyboardTypes.NORMAL;
+        this.onButtonPress = this.props.onButtonPress;
         this.textInput = this.props.textInput;
         if(this.textInput) {
             this.state.title = this.textInput.props.placeholder;
@@ -90,8 +123,12 @@ export default class Keyboard extends React.Component {
         }
     }
 
+    setKeyboardType(type) {
+        this.setState({ keboardType: type });
+    }
+    
     renderKeyboard() {
-        this.currentKeyboard = getKeyboard(this.keboardType, this.state.specialChars);
+        this.currentKeyboard = getKeyboard(this.state.keboardType, this.state.specialChars);
         return (
             this.currentKeyboard.map((row, i) => {
                 return (
@@ -218,6 +255,64 @@ export default class Keyboard extends React.Component {
             );
         }
     }
+
+    onButtonPressed(buttonType) {
+        if(this.onButtonPress) {
+            this.onButtonPress(this.textInput, buttonType);
+        }
+    }
+
+    setButtons(buttons) {
+        this.setState({ buttonsType: buttons });
+    }
+
+    renderButtons() {
+        const buttons = this.state.buttonsType;
+        if(buttons) {
+            return (
+                <View style={{
+                    flex: 20,
+                    flexDirection: "column"
+                }}>
+                    <View 
+                        style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            alignItems: "flex-end"
+                        }}
+                    >
+                        {
+                            buttons.map((button, i) => {
+                                var buttonType = button, buttonFlex = 1;
+                                if(Array.isArray(button)) {
+                                    buttonType = button[0];
+                                    buttonFlex = button[1];
+                                }
+                                
+                                return(
+                                    <BoxButton
+                                        key={ i }
+                                        style={[
+                                            {
+                                                flex: buttonFlex,
+                                                alignItems: "center"
+                                            },
+                                            i == 0 ? { marginLeft: 0 } : { marginLeft: Definitions.DEFAULT_MARGIN / 2 }
+                                        ]}
+                                        onPress={ () => this.onButtonPressed(buttonType) }
+                                    >
+                                        {
+                                            getButtonText(buttonType)
+                                        }
+                                    </BoxButton>
+                                );
+                            })
+                        }
+                    </View>
+                </View>
+            );
+        }
+    }
     
     render () {
         return (
@@ -236,20 +331,9 @@ export default class Keyboard extends React.Component {
                 }}>
                     { this.renderKeyboard() }
                 </View>
-                <View style={{
-                    flex: 20,
-                    flexDirection: "column"
-                }}>
-                    <View 
-                    style={{
-                        flex: 1,
-                        flexDirection: "row",
-                        alignItems: "flex-end"
-                    }}>
-                        <BoxButton style={{ flex: 1, alignItems: "center" }}>Atrás</BoxButton>
-                        <BoxButton style={{ flex: 2, alignItems: "center", marginLeft: Definitions.DEFAULT_MARGIN / 2 }}>Siguiente</BoxButton>
-                    </View>
-                </View>
+                {
+                    this.renderButtons()
+                }
             </View>
         );
     }

@@ -42,7 +42,7 @@ export default () => {
                 alignItems: "center",
                 backgroundColor: Definitions.PRIMARY_COLOR
             }}>
-                <Text style={Styles.titleText}>{ i18n.t("connect.connect_error_text") }</Text>
+                <Text style={Styles.titleText}>{ i18n.t("connect.connect.connect_error_text") }</Text>
                 <NormalButton
                     hasTVPreferredFocus={ true }
                     onPress={
@@ -50,7 +50,7 @@ export default () => {
                             setConnecting(true);
                         }
                     }
-                >{ (i18n.t("connect.retry_connect_button")).toUpperCase() }</NormalButton>
+                >{ (i18n.t("connect.connect.retry_connect_button")).toUpperCase() }</NormalButton>
             </View>
         )
     );

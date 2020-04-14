@@ -8,13 +8,29 @@ i18n.fallbacks = true;
 i18n.translations = {
     es: {
 		connect: {
-			connect_error_text: "No se ha podido conectar",
-			retry_connect_button: "Reintentar"
+			connect: {
+				connect_error_text: "No se ha podido conectar",
+				retry_connect_button: "Reintentar"
+			}
 		},
 		auth: {
-			slogan_text: "Películas para ver en tu televisión.",
-			register_button: "Registrarse ahora",
-			login_button: "Iniciar sesión"
+			welcome: {
+				slogan_text: "Películas para ver en tu televisión.",
+				register_button: "Registrarse ahora",
+				login_button: "Iniciar sesión"
+			},
+			register: {
+				register_text: "Registrarse",
+				email_placeholder: "Escribe tu dirección de correo",
+				password_placeholder: "Escribe tu contraseña",
+				repeat_password_placeholder: "Repite tu contraseña"
+			}
+		},
+		keyboard: {
+			back: "Atrás",
+			next: "Siguiente",
+			continue: "Continuar",
+			finish: "Finalizar"
 		}
 	}
 };
