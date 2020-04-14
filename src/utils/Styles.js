@@ -18,6 +18,11 @@ const Styles = StyleSheet.create({
 		fontSize: Dimensions.vw(3.5),
 		fontFamily: "Roboto-Light"
 	},
+	bigSlimText: {
+		color: Definitions.TEXT_COLOR,
+		fontSize: Dimensions.vw(1.6),
+		fontFamily: "Roboto-Light"
+	},
 	normalSlimText: {
 		color: Definitions.TEXT_COLOR,
 		fontSize: Dimensions.vw(1.3),
@@ -38,6 +43,11 @@ const Styles = StyleSheet.create({
 	titleText: {
 		color: Definitions.TEXT_COLOR,
 		fontSize: Dimensions.vw(3.5),
+		fontFamily: "Roboto-Regular"
+	},
+	bigText: {
+		color: Definitions.TEXT_COLOR,
+		fontSize: Dimensions.vw(1.6),
 		fontFamily: "Roboto-Regular"
 	},
 	normalText: {

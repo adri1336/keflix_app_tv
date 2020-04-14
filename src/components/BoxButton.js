@@ -61,8 +61,8 @@ export default class BoxButton extends React.Component {
                 <Text 
                     style={[
                         this.props.children ? { display: "flex" } : { display: "none" },
-                        Styles.normalText,
                         { padding: Definitions.DEFAULT_MARGIN },
+                        this.props.textStyle ? this.props.textStyle : Styles.normalText,
                         this.state.focused ? ( { color: "white" } ) : ( { color: "rgba(255, 255, 255, 0.4);" } )
                     ]}>{ this.props.children }</Text>
             </TouchableOpacityFix>

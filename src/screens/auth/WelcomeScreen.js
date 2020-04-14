@@ -38,11 +38,12 @@ export default ({ navigation }) => {
                     alignItems: "flex-start"
                 }}>
                     <BoxButton
+                        textStyle={[ Styles.bigText, { paddingLeft: Definitions.DEFAULT_MARGIN * 2, paddingRight: Definitions.DEFAULT_MARGIN * 2 } ]}
                         hasTVPreferredFocus={ true }
                         onPress={ () => navigation.navigate("RegisterScreen") }
                     >{ i18n.t("auth.register_button") }</BoxButton>
                     <View style={{ height: Definitions.DEFAULT_MARGIN }}/>
-                    <BoxButton>{ i18n.t("auth.login_button") }</BoxButton>
+                    <BoxButton textStyle={[ Styles.bigText, { paddingLeft: Definitions.DEFAULT_MARGIN * 2, paddingRight: Definitions.DEFAULT_MARGIN * 2 } ]}>{ i18n.t("auth.login_button") }</BoxButton>
                 </View>
             </View>
             <View style={{ flex: 10, padding: 2, alignItems: "flex-end" }}>
