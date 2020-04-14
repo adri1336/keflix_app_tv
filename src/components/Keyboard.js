@@ -80,6 +80,12 @@ export default class Keyboard extends React.Component {
         this.textInput = this.props.textInput;
     }
 
+    componentDidMount() {
+        if(this.textInput) {
+            this.textInput.setFocus(true);
+        }
+    }
+
     renderKeyboard() {
         this.currentKeyboard = getKeyboard(this.keboardType, this.state.specialChars);
         return (
