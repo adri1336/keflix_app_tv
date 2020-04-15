@@ -29,6 +29,15 @@ i18n.translations = {
 				empty_fields_alert_message: "Rellena todos los campos.",
 				passwords_no_match_alert_message: "Las contraseñas no coinciden.",
 				register_error_alert_message: "No se ha podido completar el registro, puede que el correo electrónico ya esté en uso."
+			},
+			login: {
+				login_text: "Iniciar sesión",
+				email_placeholder: "Escribe tu dirección de correo",
+				password_placeholder: "Escribe tu contraseña",
+				autoconnect_checkbox: "Ingresar automáticamente",
+				error_alert_title: "Error",
+				empty_fields_alert_message: "Rellena todos los campos.",
+				login_error_alert_message: "No se ha podido iniciar sesión, comprueba que el correo y la contraseña sean correctas."
 			}
 		},
 		keyboard: {
