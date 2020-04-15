@@ -17,8 +17,15 @@ export default class BoxButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            focused: this.props.focused ? this.props.focused : false
+            focused: false
         };
+        if(this.props.hasTVPreferredFocus) {
+            this.state.focused = true;
+        }
+    }
+
+    setFocused(toggle) {
+        this.setState({ focused: toggle });
     }
 
     renderIcon() {
