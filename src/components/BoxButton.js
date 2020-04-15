@@ -43,6 +43,7 @@ export default class BoxButton extends React.Component {
                     { borderRadius: 2 },
                     this.state.focused ? ( { backgroundColor: "rgba(70, 130, 180, 0.9);" } ) : ( { backgroundColor: "rgba(120, 120, 120, 0.4);" } )
                 ]}
+                accessibilityViewIsModal={ this.props.accessibilityViewIsModal }
                 hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
                 onPress={ this.props.onPress }
                 activeOpacity={ 1.0 }

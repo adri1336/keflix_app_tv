@@ -67,7 +67,12 @@ export default class NormalAlert extends React.Component {
                             justifyContent: "flex-end",
                             alignItems: "flex-end"
                         }}>
-                            <BoxButton>{ i18n.t("normalAlert.close_button").toUpperCase() }</BoxButton>
+                            <BoxButton
+                                accessibilityViewIsModal={ true }
+                                hasTVPreferredFocus={ true }
+                                focused={ true }
+                                onPress={ () => this.setAlertVisible(false) }
+                            >{ i18n.t("normalAlert.close_button").toUpperCase() }</BoxButton>
                         </View>
                     </View>
                 </View>
@@ -75,8 +80,3 @@ export default class NormalAlert extends React.Component {
         );
     }
 }
-
-/*
-El foco no se pone en el Modal en Android TV, bug de RN: https://stackoverflow.com/questions/44374345/textinput-doesnt-get-focus-inside-a-modal-react-native-android
-No funciona el boton de cerrar ya que no se pone el foco :(
-*/
