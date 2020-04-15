@@ -13,7 +13,8 @@ const AuthNavigator = createStackNavigator();
 export default () => {
     return (
         <AuthNavigator.Navigator 
-            screenOptions={{ animationEnabled: false }}
+            /*por algun motivo da warning...: (Can't perform a React state update on an unmounted component.) 
+            screenOptions={{ animationEnabled: false }}*/
             headerMode="none"
         >
             <AuthNavigator.Screen name="WelcomeScreen" component={WelcomeScreen}/>

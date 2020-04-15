@@ -13,6 +13,15 @@ export default class TouchableOpacityFix extends React.Component {
         this.state = {
             disabled: false
         };
+        this._isMounted = false;
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render () {
@@ -25,7 +34,11 @@ export default class TouchableOpacityFix extends React.Component {
                         if(!this.state.disabled && this.props.onPress != null) {
                             this.setState({ disabled: true });
                             this.props.onPress();
-                            setTimeout(() => this.setState({ disabled: false }), 200);
+                            setTimeout(() => {
+                                if(this._isMounted) {
+                                    this.setState({ disabled: false });
+                                }
+                            }, 200);
                         }
                     }
                 }
