@@ -2,6 +2,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import i18n from "i18n-js";
+import { AsyncStorage } from "react-native";
 
 //Components Imports
 import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
@@ -14,7 +15,7 @@ import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
+import Definitions, { NAVIGATORS, STORAGE_KEYS } from "cuervo/src/utils/Definitions";
 import * as HttpClient from "cuervo/src/utils/HttpClient";
 import { AppContext } from "cuervo/src/AppContext";
 
@@ -80,14 +81,20 @@ export default class RegisterScreen extends React.Component {
                                 };
                                 HttpClient.post("http://" + Definitions.SERVER_IP + "/account", account).then(([response, data, error]) => {
                                     if(error == null && response.status == 200) {
-                                        if(this.checkbox.state.checked) {
-                                            //GUARDAR LOGIN
-                                        }
-                                        else {
-                                            this.loadingViewModal.setVisible(false);
-                                            this.context[0].changeAccount(data);
-                                            this.context[0].changeNavigator(NAVIGATORS.PROFILE);
-                                        }
+                                        (
+                                            async () => {
+                                                if(this.checkbox.state.checked) {
+                                                    try {
+                                                        await AsyncStorage.setItem(STORAGE_KEYS.EMAIL, account.email);
+                                                        await AsyncStorage.setItem(STORAGE_KEYS.PASSWORD, account.password);
+                                                    } catch (error) {
+                                                    }
+                                                }
+                                                this.loadingViewModal.setVisible(false);
+                                                this.context[0].changeAccount(data);
+                                                this.context[0].changeNavigator(NAVIGATORS.PROFILE);
+                                            }
+                                        )();
                                     }
                                     else {
                                         this.loadingViewModal.setVisible(false);

@@ -12,3 +12,8 @@ export const NAVIGATORS = {
     AUTH: 1,
     PROFILE: 2
 };
+
+export const STORAGE_KEYS = {
+    EMAIL: "email",
+    PASSWORD: "password"
+}
