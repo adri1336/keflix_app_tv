@@ -26,8 +26,9 @@ i18n.translations = {
 				repeat_password_placeholder: "Repite tu contraseña",
 				autoconnect_checkbox: "Ingresar automáticamente",
 				error_alert_title: "Error",
-				empty_fields_alert_message: "Rellena todos los campos",
-				passwords_no_match_alert_message: "Las contraseñas no coinciden"
+				empty_fields_alert_message: "Rellena todos los campos.",
+				passwords_no_match_alert_message: "Las contraseñas no coinciden.",
+				register_error_alert_message: "No se ha podido completar el registro, puede que el correo electrónico ya esté en uso."
 			}
 		},
 		keyboard: {

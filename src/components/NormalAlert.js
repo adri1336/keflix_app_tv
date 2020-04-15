@@ -52,8 +52,10 @@ export default class NormalAlert extends React.Component {
                     backgroundColor: "rgba(0, 0, 0, 0.8);"
                 }}>
                     <View style={{
-                        width: 300,
-                        height: 100,
+                        minWidth: 300,
+                        maxWidth: 400,
+                        minHeight: 100,
+                        maxHeight: 200,
                         borderRadius: 1,
                         padding: Definitions.DEFAULT_MARGIN,
                         backgroundColor: "rgba(50, 50, 50, 1.0);"
@@ -63,11 +65,13 @@ export default class NormalAlert extends React.Component {
                         <Text style={ Styles.normalText }>{ this.state.message }</Text>
                         <View style={{ height: Definitions.DEFAULT_MARGIN / 2 }}/>
                         <View style={{
-                            flex: 1,
                             justifyContent: "flex-end",
                             alignItems: "flex-end"
                         }}>
                             <BoxButton
+                                style={{
+                                    marginTop: Definitions.DEFAULT_MARGIN
+                                }}
                                 accessibilityViewIsModal={ true }
                                 hasTVPreferredFocus={ true }
                                 onPress={ () => this.setAlertVisible(false) }

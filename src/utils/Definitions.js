@@ -8,6 +8,7 @@ export default {
 };
 
 export const NAVIGATORS = {
-	CONNECT: "connect",
-	AUTH: "auth"
+	CONNECT: 0,
+    AUTH: 1,
+    PROFILE: 2
 };

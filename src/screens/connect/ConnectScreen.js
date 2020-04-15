@@ -17,9 +17,9 @@ import * as HttpClient from "cuervo/src/utils/HttpClient";
 
 //Code
 export default () => {
-    const { changeNavigator } = React.useContext(AppContext);
+    const { changeNavigator } = React.useContext(AppContext)[0];
     const [connecting, setConnecting] = React.useState(true);
-
+    
     if(connecting) {
         HttpClient.get("http://" + Definitions.SERVER_IP + "/checkcon").then(([response, data, error]) => {
             if(error == null && response.status == 200 && data == true) {

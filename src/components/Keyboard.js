@@ -14,15 +14,15 @@ import Definitions from "cuervo/src/utils/Definitions";
 
 //Vars
 export const KeyboardTypes = {
-    NORMAL: 1,
-    EMAIL: 2
+    NORMAL: 0,
+    EMAIL: 1
 };
 
 export const KeyboardButtonsTypes = {
-    BACK: 1,
-    NEXT: 2,
-    CONTINUE: 3,
-    FINISH: 4
+    BACK: 0,
+    NEXT: 1,
+    CONTINUE: 2,
+    FINISH: 3
 };
 
 const numericRow = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];

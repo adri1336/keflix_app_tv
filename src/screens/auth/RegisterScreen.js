@@ -14,10 +14,14 @@ import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
+import * as HttpClient from "cuervo/src/utils/HttpClient";
+import { AppContext } from "cuervo/src/AppContext";
 
 //Code
 export default class RegisterScreen extends React.Component {
+    static contextType = AppContext;
+
     componentDidMount() {
         this.keyboard.setTextInput(this.textInputEmail);
     }
@@ -69,7 +73,27 @@ export default class RegisterScreen extends React.Component {
                                 this.alert.setAlertVisible(true, i18n.t("auth.register.error_alert_title"), i18n.t("auth.register.passwords_no_match_alert_message"));
                             }
                             else {
-                                this.loadingViewModal.setVisible();
+                                this.loadingViewModal.setVisible(true);
+                                const account = {
+                                    email: this.textInputEmail.state.text,
+                                    password: this.textInputPassword.state.text
+                                };
+                                HttpClient.post("http://" + Definitions.SERVER_IP + "/account", account).then(([response, data, error]) => {
+                                    if(error == null && response.status == 200) {
+                                        if(this.checkbox.state.checked) {
+                                            //GUARDAR LOGIN
+                                        }
+                                        else {
+                                            this.loadingViewModal.setVisible(false);
+                                            this.context[0].changeAccount(data);
+                                            this.context[0].changeNavigator(NAVIGATORS.PROFILE);
+                                        }
+                                    }
+                                    else {
+                                        this.loadingViewModal.setVisible(false);
+                                        this.alert.setAlertVisible(true, i18n.t("auth.register.error_alert_title"), i18n.t("auth.register.register_error_alert_message"));
+                                    }
+                                });
                             }
                         }
                         break;
@@ -149,7 +173,7 @@ export default class RegisterScreen extends React.Component {
                                     justifyContent: "flex-end",
                                     marginBottom: Definitions.DEFAULT_MARGIN + (Definitions.DEFAULT_MARGIN / 2)
                                 }}>
-                                    <Checkbox checked={ true }>{ i18n.t("auth.register.autoconnect_checkbox") }</Checkbox>
+                                    <Checkbox ref={ component => this.checkbox = component } checked={ true }>{ i18n.t("auth.register.autoconnect_checkbox") }</Checkbox>
                                 </View>
                             </View>
                         </View>
