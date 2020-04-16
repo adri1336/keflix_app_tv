@@ -28,7 +28,9 @@ i18n.translations = {
 				error_alert_title: "Error",
 				empty_fields_alert_message: "Rellena todos los campos.",
 				passwords_no_match_alert_message: "Las contraseñas no coinciden.",
-				register_error_alert_message: "No se ha podido completar el registro, puede que el correo electrónico ya esté en uso."
+				register_error_alert_message: "No se ha podido completar el registro, puede que el correo electrónico ya esté en uso.",
+				invalid_email_text_input_error: "Introduce un correo válido",
+				invalid_password_text_input_error: "Introduce una contraseña más segura"
 			},
 			login: {
 				login_text: "Iniciar sesión",
@@ -37,7 +39,9 @@ i18n.translations = {
 				autoconnect_checkbox: "Ingresar automáticamente",
 				error_alert_title: "Error",
 				empty_fields_alert_message: "Rellena todos los campos.",
-				login_error_alert_message: "No se ha podido iniciar sesión, comprueba que el correo y la contraseña sean correctas."
+				login_error_alert_message: "No se ha podido iniciar sesión, comprueba que el correo y la contraseña sean correctas.",
+				invalid_email_text_input_error: "Introduce un correo válido",
+				invalid_password_text_input_error: "Introduce una contraseña válida"
 			}
 		},
 		keyboard: {

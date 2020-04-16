@@ -20,11 +20,14 @@ export default class BoxButton extends React.Component {
     }
     
     setFocus(focus) {
-        this.setState({ focused: focus })
+        this.setState({ focused: focus });
     }
 
     setText(value) {
-        this.setState({ text: value })
+        this.setState({
+            text: value,
+            errorText: null
+        });
     }
 
     setError(value) {

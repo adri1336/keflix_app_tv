@@ -4,7 +4,8 @@ export default {
     SECONDARY_COLOR: 0xB8822FFF,
     TEXT_COLOR: 0xFFFFFFFF,
     DEFAULT_MARGIN: 8,
-    SERVER_IP: "51.77.212.177"
+    SERVER_IP: "51.77.212.177",
+    PASSWORD_MIN_LENGTH: 3
 };
 
 export const NAVIGATORS = {

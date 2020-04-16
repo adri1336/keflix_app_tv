@@ -73,34 +73,47 @@ export default class RegisterScreen extends React.Component {
                                 this.alert.setAlertVisible(true, i18n.t("auth.register.error_alert_title"), i18n.t("auth.register.passwords_no_match_alert_message"));
                             }
                             else {
-                                this.loadingViewModal.setVisible(true);
                                 const account = {
                                     email: this.textInputEmail.state.text,
                                     password: this.textInputPassword.state.text
                                 };
-                                HttpClient.post("http://" + Definitions.SERVER_IP + "/account", account).then(([response, data, error]) => {
-                                    if(error == null && response.status == 200) {
-                                        (
-                                            async () => {
-                                                if(this.checkbox.state.checked) {
-                                                    try {
-                                                        await AsyncStorage.multiSet([[STORAGE_KEYS.EMAIL, account.email], [STORAGE_KEYS.PASSWORD, account.password]]);
+
+                                var validated = true;
+                                if(!Functions.isValidEmail(account.email)) {
+                                    this.textInputEmail.setError(i18n.t("auth.register.invalid_email_text_input_error"));
+                                    validated = false;
+                                }
+                                if(account.password.length <= Definitions.PASSWORD_MIN_LENGTH) {
+                                    this.textInputPassword.setError(i18n.t("auth.register.invalid_password_text_input_error"));
+                                    validated = false;
+                                }
+
+                                if(validated) {
+                                    this.loadingViewModal.setVisible(true);
+                                    HttpClient.post("http://" + Definitions.SERVER_IP + "/account", account).then(([response, data, error]) => {
+                                        if(error == null && response.status == 200) {
+                                            (
+                                                async () => {
+                                                    if(this.checkbox.state.checked) {
+                                                        try {
+                                                            await AsyncStorage.multiSet([[STORAGE_KEYS.EMAIL, account.email], [STORAGE_KEYS.PASSWORD, account.password]]);
+                                                        }
+                                                        catch(error) {
+                                                            console.log(error);
+                                                        }
                                                     }
-                                                    catch(error) {
-                                                        console.log(error);
-                                                    }
+                                                    this.loadingViewModal.setVisible(false);
+                                                    this.context[0].changeAccount(data);
+                                                    this.context[0].changeNavigator(NAVIGATORS.PROFILE);
                                                 }
-                                                this.loadingViewModal.setVisible(false);
-                                                this.context[0].changeAccount(data);
-                                                this.context[0].changeNavigator(NAVIGATORS.PROFILE);
-                                            }
-                                        )();
-                                    }
-                                    else {
-                                        this.loadingViewModal.setVisible(false);
-                                        this.alert.setAlertVisible(true, i18n.t("auth.register.error_alert_title"), i18n.t("auth.register.register_error_alert_message"));
-                                    }
-                                });
+                                            )();
+                                        }
+                                        else {
+                                            this.loadingViewModal.setVisible(false);
+                                            this.alert.setAlertVisible(true, i18n.t("auth.register.error_alert_title"), i18n.t("auth.register.register_error_alert_message"));
+                                        }
+                                    });
+                                }
                             }
                         }
                         break;

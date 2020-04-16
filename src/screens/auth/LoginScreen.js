@@ -17,6 +17,7 @@ import Styles from "cuervo/src/utils/Styles";
 import Definitions, { NAVIGATORS, STORAGE_KEYS } from "cuervo/src/utils/Definitions";
 import * as HttpClient from "cuervo/src/utils/HttpClient";
 import { AppContext } from "cuervo/src/AppContext";
+import * as Functions from "cuervo/src/utils/Functions";
 
 //Code
 export default class LoginScreen extends React.Component {
@@ -52,37 +53,51 @@ export default class LoginScreen extends React.Component {
                         break;
                     }
                     case KeyboardButtonsTypes.CONTINUE: {
+                        
                         if(this.textInputEmail.state.text == "" || this.textInputPassword.state.text == "") {
                             this.alert.setAlertVisible(true, i18n.t("auth.login.error_alert_title"), i18n.t("auth.login.empty_fields_alert_message"));
                         }
                         else {
-                            this.loadingViewModal.setVisible(true);
                             const account = {
                                 email: this.textInputEmail.state.text,
                                 password: this.textInputPassword.state.text
                             };
-                            HttpClient.post("http://" + Definitions.SERVER_IP + "/account/check_account_password", account).then(([response, data, error]) => {
-                                if(error == null && response.status == 200 && data != false) {
-                                    (
-                                        async () => {
-                                            if(this.checkbox.state.checked) {
-                                                try {
-                                                    await AsyncStorage.multiSet([[STORAGE_KEYS.EMAIL, account.email], [STORAGE_KEYS.PASSWORD, account.password]]);
+
+                            var validated = true;
+                            if(!Functions.isValidEmail(account.email)) {
+                                this.textInputEmail.setError(i18n.t("auth.login.invalid_email_text_input_error"));
+                                validated = false;
+                            }
+                            if(account.password.length <= Definitions.PASSWORD_MIN_LENGTH) {
+                                this.textInputPassword.setError(i18n.t("auth.login.invalid_password_text_input_error"));
+                                validated = false;
+                            }
+ 
+                            if(validated) {
+                                this.loadingViewModal.setVisible(true);
+                                HttpClient.post("http://" + Definitions.SERVER_IP + "/account/check_account_password", account).then(([response, data, error]) => {
+                                    if(error == null && response.status == 200 && data != false) {
+                                        (
+                                            async () => {
+                                                if(this.checkbox.state.checked) {
+                                                    try {
+                                                        await AsyncStorage.multiSet([[STORAGE_KEYS.EMAIL, account.email], [STORAGE_KEYS.PASSWORD, account.password]]);
+                                                    }
+                                                    catch(error) {
+                                                        console.log(error);
+                                                    }
                                                 }
-                                                catch(error) {
-                                                    console.log(error);
-                                                }
+                                                this.context[0].changeAccount(data);
+                                                this.context[0].changeNavigator(NAVIGATORS.PROFILE);
                                             }
-                                            this.context[0].changeAccount(data);
-                                            this.context[0].changeNavigator(NAVIGATORS.PROFILE);
-                                        }
-                                    )();
-                                }
-                                else {
-                                    this.loadingViewModal.setVisible(false);
-                                    this.alert.setAlertVisible(true, i18n.t("auth.login.error_alert_title"), i18n.t("auth.login.login_error_alert_message"));
-                                }
-                            });
+                                        )();
+                                    }
+                                    else {
+                                        this.loadingViewModal.setVisible(false);
+                                        this.alert.setAlertVisible(true, i18n.t("auth.login.error_alert_title"), i18n.t("auth.login.login_error_alert_message"));
+                                    }
+                                });
+                            }
                         }
                         break;
                     }
@@ -144,11 +159,13 @@ export default class LoginScreen extends React.Component {
                                     <BoxTextInput
                                         ref={ component => this.textInputEmail = component }
                                         placeholder={ i18n.t("auth.login.email_placeholder") }
+                                        maxLength={ 64 }
                                     />
                                     <BoxTextInput
                                         ref={ component => this.textInputPassword = component }
                                         placeholder={ i18n.t("auth.login.password_placeholder") }
                                         secureTextEntry={ true }
+                                        maxLength={ 20 }
                                     />
                                 </View>
                                 <View style={{
