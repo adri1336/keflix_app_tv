@@ -1,10 +1,10 @@
 //Imports
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
 
 //Components Imports
-import BoxButton from "cuervo/src/components/BoxButton";
 import LoadingView from "cuervo/src/components/LoadingView";
+import ProfileButtonItem from "cuervo/src/components/ProfileButtonItem";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
@@ -22,11 +22,38 @@ export default class SelectProfileScreen extends React.Component {
         this.state = {
             loading: true
         };
+        this.profiles = [
+            {
+                id: 1,
+                name: "Adrián",
+                color: "steelblue"
+            },
+            {
+                id: 0,
+                name: "Crear perfil",
+                color: "gray"
+            }
+        ];
     }
 
     componentDidMount() {
         this.account = this.context[1];
         this.setState({ loading: false });
+    }
+
+    renderProfileItem(profileItem) {
+        var focus = false;
+        if(profileItem.index == 0) {
+            focus = true;
+        }
+
+        return (
+            <ProfileButtonItem
+                profile={ profileItem.item }
+                focused={ focus }
+                hasTVPreferredFocus={ focus }
+            />
+        );
     }
 
     render() {
@@ -36,21 +63,47 @@ export default class SelectProfileScreen extends React.Component {
             ) : (
                 <View style={{
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    flexDirection: "row",
                     backgroundColor: Definitions.PRIMARY_COLOR
                 }}>
-                    <Text style={ Styles.titleText }>Bienvenido, { this.account.email }</Text>
-                    <BoxButton
-                        textStyle={[ Styles.bigText, { paddingLeft: Definitions.DEFAULT_MARGIN * 2, paddingRight: Definitions.DEFAULT_MARGIN * 2 } ]}
-                        hasTVPreferredFocus={ true }
-                        onPress={
-                            () => {
-                                this.setState({ loading: true });
-                                this.context[0].logOut();
-                            }
-                        }
-                    >Cerrar sesión</BoxButton>
+                    <View style={{ flex: 10 }}/>
+                    <View style={{ flex: 80 }}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}>
+
+                            <View style={{
+                                flex: 30,
+                                justifyContent: "flex-end",
+                                alignItems: "center",
+                                marginBottom: Definitions.DEFAULT_MARGIN
+                            }}>
+                                <Text style={ Styles.titleText }>¿Quién eres? Elige tu perfil</Text>
+                            </View>
+
+                            <View style={{
+                                flex: 40,
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                                <FlatList
+                                    horizontal={ true }
+                                    data={ this.profiles }
+                                    renderItem={ (item) => this.renderProfileItem(item) }
+                                    keyExtractor={ item => item.id }
+                                />
+                            </View>
+
+                            <View style={{
+                                flex: 30
+                            }}/>
+
+                        </View>
+                    </View>
+                    <View style={{ flex: 10 }}/>
                 </View>
             )
         );
