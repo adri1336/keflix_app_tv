@@ -28,6 +28,11 @@ const Styles = StyleSheet.create({
 		fontSize: Dimensions.vw(1.3),
 		fontFamily: "Roboto-Light"
 	},
+	mediumSlimText: {
+		color: Definitions.TEXT_COLOR,
+		fontSize: Dimensions.vw(1.1),
+		fontFamily: "Roboto-Light"
+	},
 	smallSlimText: {
 		color: Definitions.TEXT_COLOR,
 		fontSize: Dimensions.vw(0.9),
@@ -53,6 +58,11 @@ const Styles = StyleSheet.create({
 	normalText: {
 		color: Definitions.TEXT_COLOR,
 		fontSize: Dimensions.vw(1.3),
+		fontFamily: "Roboto-Regular"
+	},
+	mediumText: {
+		color: Definitions.TEXT_COLOR,
+		fontSize: Dimensions.vw(1.1),
 		fontFamily: "Roboto-Regular"
 	},
 	smallText: {

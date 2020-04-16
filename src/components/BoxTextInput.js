@@ -24,8 +24,14 @@ export default class BoxButton extends React.Component {
     }
 
     setText(value) {
+        var finalText = value;
+        if(this.props.maxLength) {
+            if(value.length > this.props.maxLength) {
+                finalText = value.substring(0, this.props.maxLength);
+            }
+        }
         this.setState({
-            text: value,
+            text: finalText,
             errorText: null
         });
     }
@@ -38,7 +44,7 @@ export default class BoxButton extends React.Component {
         if(this.state.errorText != null) {
             return (
                 <Text style={[
-                    Styles.smallText,
+                    Styles.mediumText,
                     { color: "red" }
                 ]}>{ this.state.errorText }</Text>
             );
