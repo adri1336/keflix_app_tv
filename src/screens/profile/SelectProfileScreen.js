@@ -94,7 +94,7 @@ export default class SelectProfileScreen extends React.Component {
                                     horizontal={ true }
                                     data={ this.profiles }
                                     renderItem={ (item) => this.renderProfileItem(item) }
-                                    keyExtractor={ item => item.id }
+                                    keyExtractor={ item => item.id.toString() }
                                 />
                             </View>
 
