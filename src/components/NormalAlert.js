@@ -74,6 +74,7 @@ export default class NormalAlert extends React.Component {
                                 }}
                                 accessibilityViewIsModal={ true }
                                 hasTVPreferredFocus={ true }
+                                nativeOnPress={ true }
                                 onPress={ () => this.setAlertVisible(false) }
                             >{ i18n.t("normalAlert.close_button").toUpperCase() }</BoxButton>
                         </View>

@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, AsyncStorage } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
@@ -17,6 +17,7 @@ import Styles from "cuervo/src/utils/Styles";
 import Definitions, { NAVIGATORS, STORAGE_KEYS } from "cuervo/src/utils/Definitions";
 import * as HttpClient from "cuervo/src/utils/HttpClient";
 import { AppContext } from "cuervo/src/AppContext";
+import * as Functions from "cuervo/src/utils/Functions";
 
 //Code
 export default class RegisterScreen extends React.Component {

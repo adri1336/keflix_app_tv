@@ -18,7 +18,7 @@ export default class TouchableOpacityFix extends React.Component {
     }
 
     enableTVEventHandler() {
-        if(this.tvEventHandler == null && this.props.onPress != null) {
+        if(this.tvEventHandler == null && this.props.onPress != null && (this.props.nativeOnPress == null || this.props.nativeOnPress == false)) {
             this.tvEventHandler = new TVEventHandler();
             this.tvEventHandler.enable(this, (cmp, evt) => {
                 if(this.focused) {
@@ -62,6 +62,7 @@ export default class TouchableOpacityFix extends React.Component {
                 style={ this.props.style }
                 hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
                 activeOpacity={ this.props.activeOpacity }
+                onPress={ this.props.nativeOnPress ? this.props.onPress : undefined }
                 onFocus={
                     () => {
                         if(this.props.onFocus != null) {
