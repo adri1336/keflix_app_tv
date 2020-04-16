@@ -5,6 +5,7 @@ import { View, Text, FlatList } from "react-native";
 //Components Imports
 import LoadingView from "cuervo/src/components/LoadingView";
 import ProfileButtonItem from "cuervo/src/components/ProfileButtonItem";
+import NormalButton from "cuervo/src/components/NormalButton";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
@@ -98,8 +99,20 @@ export default class SelectProfileScreen extends React.Component {
                             </View>
 
                             <View style={{
-                                flex: 30
-                            }}/>
+                                flex: 30,
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                                <NormalButton
+                                    style={{ flex: 1 }}
+                                    onPress={
+                                        () => {
+                                            this.setState({ loading: true });
+                                            this.context[0].logOut();
+                                        }
+                                    }
+                                >CERRAR SESIÓN</NormalButton>
+                            </View>
 
                         </View>
                     </View>
