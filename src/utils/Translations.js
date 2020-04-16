@@ -44,6 +44,28 @@ i18n.translations = {
 				invalid_password_text_input_error: "Introduce una contraseña válida"
 			}
 		},
+		profile: {
+			select_profile: {
+				profile_text: "¿Quién eres? Elige tu perfil",
+				logout_button: "Cerrar sesión",
+				create_profile_text: "Crear perfil"
+			},
+			create_profile: {
+				error_alert_title: "Error",
+				empty_fields_alert_message: "Rellena todos los campos.",
+				passwords_no_match_alert_message: "Los pines no coinciden.",
+				invalid_password_text_input_error: "El PIN debe contener {{password_length}} dígitos",
+				empty_name_alert_message: "Introduce un nombre para tu perfil.",
+				repeat_password_placeholder: "Repite tu PIN de acceso",
+				create_profile_text: "Crear perfil",
+				name_placeholder: "Escribe tu nombre",
+				password_placeholder: "Establece tu PIN de acceso (opcional)",
+				adult_content_checkbox: "Permitir mostrar contenido solo para adultos (pornografía)"
+			},
+			select_profile_color: {
+				profile_color_text: "Selecciona tu color preferido, {{name}}"
+			}
+		},
 		keyboard: {
 			back: "Atrás",
 			next: "Siguiente",

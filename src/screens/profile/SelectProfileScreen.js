@@ -1,6 +1,7 @@
 //Imports
 import React from "react";
 import { View, Text, FlatList } from "react-native";
+import i18n from "i18n-js";
 
 //Components Imports
 import LoadingView from "cuervo/src/components/LoadingView";
@@ -13,6 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
+import * as HttpClient from "cuervo/src/utils/HttpClient";
 
 //Code
 export default class SelectProfileScreen extends React.Component {
@@ -23,23 +25,30 @@ export default class SelectProfileScreen extends React.Component {
         this.state = {
             loading: true
         };
-        this.profiles = [
-            {
-                id: 1,
-                name: "Adrián",
-                color: "steelblue"
-            },
-            {
-                id: 0,
-                name: "Crear perfil",
-                color: "gray"
-            }
-        ];
     }
 
     componentDidMount() {
         this.account = this.context[1];
-        this.setState({ loading: false });
+        HttpClient.get("http://" + Definitions.SERVER_IP + "/account/" + this.account.id + "/profiles").then(([response, data, error]) => {
+            if(error == null && response.status == 200) {
+                this.profiles = data;
+            }
+            this.profiles.push({
+                id: 0,
+                name: i18n.t("profile.select_profile.create_profile_text"),
+                color: "gray"
+            });
+            this.setState({ loading: false });
+        });
+    }
+
+    onProfilePressed(profile) {
+        if(profile.id == 0) {
+            this.props.navigation.navigate("CreateProfileScreen");
+        }
+        else {
+
+        }
     }
 
     renderProfileItem(profileItem) {
@@ -53,6 +62,7 @@ export default class SelectProfileScreen extends React.Component {
                 profile={ profileItem.item }
                 focused={ focus }
                 hasTVPreferredFocus={ focus }
+                onPress={ (profile) => this.onProfilePressed(profile) }
             />
         );
     }
@@ -82,7 +92,7 @@ export default class SelectProfileScreen extends React.Component {
                                 alignItems: "center",
                                 marginBottom: Definitions.DEFAULT_MARGIN
                             }}>
-                                <Text style={ Styles.titleText }>¿Quién eres? Elige tu perfil</Text>
+                                <Text style={ Styles.titleText }>{ i18n.t("profile.select_profile.profile_text") }</Text>
                             </View>
 
                             <View style={{
@@ -111,7 +121,7 @@ export default class SelectProfileScreen extends React.Component {
                                             this.context[0].logOut();
                                         }
                                     }
-                                >CERRAR SESIÓN</NormalButton>
+                                >{ i18n.t("profile.select_profile.logout_button").toUpperCase() }</NormalButton>
                             </View>
 
                         </View>

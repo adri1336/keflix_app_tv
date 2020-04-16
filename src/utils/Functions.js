@@ -5,3 +5,7 @@ export function isValidEmail(email) {
     }
     return false;
 }
+
+export function capitalizeFirstLetter(text) {
+    return (text[0].toUpperCase() + text.slice(1));
+}

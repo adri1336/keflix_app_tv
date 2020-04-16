@@ -15,7 +15,8 @@ import Definitions from "cuervo/src/utils/Definitions";
 //Vars
 export const KeyboardTypes = {
     NORMAL: 0,
-    EMAIL: 1
+    EMAIL: 1,
+    NUMERIC: 2
 };
 
 export const KeyboardButtonsTypes = {
@@ -38,6 +39,12 @@ const specialRows = [
     [["abc", 1.56], ["shift", 1.56], "á", "é", "í", "ó", "ú", "ñ", "ç"]
 ];
 
+const numericKeyboard = [
+    ["1", "2", "3"],
+    ["4", "5", "6"],
+    ["7", "8", "9"],
+    ["empty", "0", "del"]
+];
 const normalKeyboard = ["!#$", ["space", 2.06], ",", ".", "del"];
 const emailKeyboard = [
     ["@hotmail.com", "@gmail.com", "@hotmail.es"],
@@ -70,6 +77,10 @@ function getKeyboard(type = KeyboardTypes.NORMAL, special = false) {
                 emailKeyboard.map((row) => {
                     keyboard.push(row);
                 });
+                break;
+            }
+            case KeyboardTypes.NUMERIC: {
+                keyboard = numericKeyboard;
                 break;
             }
         }
@@ -150,7 +161,7 @@ export default class Keyboard extends React.Component {
                                     stringLetter = stringLetterUpper;
                                 }
                                 
-                                var iconObject, isDel = false;
+                                var iconObject, isDel = false, isEmpty = false;
                                 switch(stringLetterUpper) {
                                     case "SHIFT": {
                                         if(this.state.capitalLetters) {
@@ -170,35 +181,49 @@ export default class Keyboard extends React.Component {
                                         iconObject = require("cuervo/assets/images/keyboard/backspace.png");
                                         break;
                                     }
+                                    case "EMPTY": {
+                                        isEmpty = true;
+                                        break;
+                                    }
                                 }
 
-                                return (
-                                    <BoxButton
-                                        key={ j }
-                                        icon={ iconObject }
-                                        onPress={ () => this.onKeyPressed(stringLetter) }
-                                        onLongPress={
-                                            isDel ? (
-                                                () => {
-                                                    if(this.textInput) {
-                                                        this.textInput.setText("");
+                                if(isEmpty) {
+                                    return (
+                                        <View
+                                            key={ j }
+                                            style={{ flex: 1 }}
+                                        />
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <BoxButton
+                                            key={ j }
+                                            icon={ iconObject }
+                                            onPress={ () => this.onKeyPressed(stringLetter) }
+                                            onLongPress={
+                                                isDel ? (
+                                                    () => {
+                                                        if(this.textInput) {
+                                                            this.textInput.setText("");
+                                                        }
                                                     }
-                                                }
-                                            ) : ( null )
-                                        }
-                                        hasTVPreferredFocus={ (i == 0 && j == 0) ? ( true ) : ( false ) }
-                                        style={[
-                                            {
-                                                justifyContent: "center",
-                                                alignItems: "center"
-                                            },
-                                            Array.isArray(letter) ? { flex: letter[1] } : { flex: 1 },
-                                            j == 0 ? ( { marginLeft: 0 } ) : ( { marginLeft: Definitions.DEFAULT_MARGIN / 2 } )
-                                        ]}
-                                    >{ 
-                                        iconObject ? "" : stringLetter
-                                    }</BoxButton>
-                                )
+                                                ) : ( null )
+                                            }
+                                            hasTVPreferredFocus={ (i == 0 && j == 0) ? ( true ) : ( false ) }
+                                            style={[
+                                                {
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                },
+                                                Array.isArray(letter) ? { flex: letter[1] } : { flex: 1 },
+                                                j == 0 ? ( { marginLeft: 0 } ) : ( { marginLeft: Definitions.DEFAULT_MARGIN / 2 } )
+                                            ]}
+                                        >{ 
+                                            iconObject ? "" : stringLetter
+                                        }</BoxButton>
+                                    )
+                                }
                             })
                         }
                     </View>

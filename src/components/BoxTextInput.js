@@ -34,6 +34,9 @@ export default class BoxButton extends React.Component {
             text: finalText,
             errorText: null
         });
+        if(this.props.onTextSet) {
+            this.props.onTextSet(finalText);
+        }
     }
 
     setError(value) {

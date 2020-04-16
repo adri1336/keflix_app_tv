@@ -47,6 +47,13 @@ export default class ProfileButtonItem extends React.Component {
                         this.state.focused ? { borderColor: "white" } : { borderColor: "rgba(255, 255, 255, 0.1);" }
                     ]}
                     activeOpacity={ 1.0 }
+                    onPress={
+                        () => {
+                            if(this.props.onPress && this.props.profile) {
+                                this.props.onPress(this.props.profile);
+                            }
+                        }
+                    }
                     onFocus={
                         () => {
                             this.setState({ focused: true });
