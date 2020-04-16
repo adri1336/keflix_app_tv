@@ -13,6 +13,8 @@ export default class TouchableOpacityFix extends React.Component {
         this.state = {
             disabled: false
         };
+        this.lastPressedTime = 0;
+        this.consecutiveTvLongPress = 0;
         this._isMounted = false;
     }
 
@@ -33,6 +35,20 @@ export default class TouchableOpacityFix extends React.Component {
                     () => {
                         if(!this.state.disabled && this.props.onPress != null) {
                             this.setState({ disabled: true });
+                            if(this.props.onTvLongPress != null) {
+                                const diff = Date.now() - this.lastPressedTime;
+                                if(diff <= 350) {
+                                    this.consecutiveTvLongPress ++;
+                                    if(this.consecutiveTvLongPress >= 3) {
+                                        this.consecutiveTvLongPress = 0;
+                                        this.props.onTvLongPress();
+                                    }
+                                }
+                                else {
+                                    this.consecutiveTvLongPress = 0;
+                                }
+                                this.lastPressedTime = Date.now();
+                            }
                             this.props.onPress();
                             setTimeout(() => {
                                 if(this._isMounted) {

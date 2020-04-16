@@ -150,7 +150,7 @@ export default class Keyboard extends React.Component {
                                     stringLetter = stringLetterUpper;
                                 }
                                 
-                                var iconObject;
+                                var iconObject, isDel = false;
                                 switch(stringLetterUpper) {
                                     case "SHIFT": {
                                         if(this.state.capitalLetters) {
@@ -166,6 +166,7 @@ export default class Keyboard extends React.Component {
                                         break;
                                     }
                                     case "DEL": {
+                                        isDel = true;
                                         iconObject = require("cuervo/assets/images/keyboard/backspace.png");
                                         break;
                                     }
@@ -176,6 +177,15 @@ export default class Keyboard extends React.Component {
                                         key={ j }
                                         icon={ iconObject }
                                         onPress={ () => this.onKeyPressed(stringLetter) }
+                                        onTvLongPress={
+                                            isDel ? (
+                                                () => {
+                                                    if(this.textInput) {
+                                                        this.textInput.setText("");
+                                                    }
+                                                }
+                                            ) : ( null )
+                                        }
                                         hasTVPreferredFocus={ (i == 0 && j == 0) ? ( true ) : ( false ) }
                                         style={[
                                             {

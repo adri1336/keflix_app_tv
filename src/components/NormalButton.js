@@ -28,6 +28,7 @@ export default class NormalButton extends React.Component {
             <TouchableOpacityFix
                 hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
                 onPress={ this.props.onPress }
+                onTvLongPress={ this.props.onTvLongPress }
                 activeOpacity={ 1.0 }
                 onFocus={
                     () => {

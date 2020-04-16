@@ -53,6 +53,7 @@ export default class BoxButton extends React.Component {
                 accessibilityViewIsModal={ this.props.accessibilityViewIsModal }
                 hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
                 onPress={ this.props.onPress }
+                onTvLongPress={ this.props.onTvLongPress }
                 activeOpacity={ 1.0 }
                 onFocus={
                     () => {
