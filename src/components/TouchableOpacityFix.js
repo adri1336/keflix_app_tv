@@ -4,7 +4,7 @@
 */
 //Imports
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TVEventHandler } from "react-native";
 
 //Code
 export default class TouchableOpacityFix extends React.Component {
@@ -13,17 +13,47 @@ export default class TouchableOpacityFix extends React.Component {
         this.state = {
             disabled: false
         };
-        this.lastPressedTime = 0;
-        this.consecutiveTvLongPress = 0;
-        this._isMounted = false;
+        this.focused = this.props.focused ? this.props.focused : false;
+        this.onLongPressCalled = false;
+    }
+
+    enableTVEventHandler() {
+        if(this.tvEventHandler == null && this.props.onPress != null) {
+            this.tvEventHandler = new TVEventHandler();
+            this.tvEventHandler.enable(this, (cmp, evt) => {
+                if(this.focused) {
+                    if(evt && evt.eventType == "select" && evt.eventKeyAction >= 0) {
+                        if(evt.eventKeyAction == 0) {
+                            this.props.onPress();
+                            if(!this.onLongPressCalled && this.lastEventKeyAction == evt.eventKeyAction && this.props.onLongPress != null) {
+                                this.onLongPressCalled = true;
+                                this.props.onLongPress();
+                            }
+                        }
+                        else {
+                            this.onLongPressCalled = false;
+                        }
+                        this.lastEventKeyAction = evt.eventKeyAction;
+                    }
+                }
+            });
+        }
+    }
+
+    disableTVEventHandler() {
+        if(this.tvEventHandler) {
+            this.tvEventHandler.disable();
+        }
     }
 
     componentDidMount() {
         this._isMounted = true;
+        this.enableTVEventHandler();
     }
 
     componentWillUnmount() {
         this._isMounted = false;
+        this.disableTVEventHandler();
     }
 
     render () {
@@ -31,36 +61,23 @@ export default class TouchableOpacityFix extends React.Component {
             <TouchableOpacity
                 style={ this.props.style }
                 hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
-                onPress={
+                activeOpacity={ this.props.activeOpacity }
+                onFocus={
                     () => {
-                        if(!this.state.disabled && this.props.onPress != null) {
-                            this.setState({ disabled: true });
-                            if(this.props.onTvLongPress != null) {
-                                const diff = Date.now() - this.lastPressedTime;
-                                if(diff <= 350) {
-                                    this.consecutiveTvLongPress ++;
-                                    if(this.consecutiveTvLongPress >= 3) {
-                                        this.consecutiveTvLongPress = 0;
-                                        this.props.onTvLongPress();
-                                    }
-                                }
-                                else {
-                                    this.consecutiveTvLongPress = 0;
-                                }
-                                this.lastPressedTime = Date.now();
-                            }
-                            this.props.onPress();
-                            setTimeout(() => {
-                                if(this._isMounted) {
-                                    this.setState({ disabled: false });
-                                }
-                            }, 200);
+                        if(this.props.onFocus != null) {
+                            this.props.onFocus();
                         }
+                        this.focused = true
                     }
                 }
-                activeOpacity={ this.props.activeOpacity }
-                onFocus={ this.props.onFocus }
-                onBlur={ this.props.onBlur }
+                onBlur={
+                    () => {
+                        if(this.props.onBlur != null) {
+                            this.props.onBlur();
+                        }
+                        this.focused = false;
+                    }
+                }
             >{ this.props.children }</TouchableOpacity>
         );
     }

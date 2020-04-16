@@ -177,7 +177,7 @@ export default class Keyboard extends React.Component {
                                         key={ j }
                                         icon={ iconObject }
                                         onPress={ () => this.onKeyPressed(stringLetter) }
-                                        onTvLongPress={
+                                        onLongPress={
                                             isDel ? (
                                                 () => {
                                                     if(this.textInput) {

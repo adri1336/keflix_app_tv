@@ -21,24 +21,25 @@ console.disableYellowBox = true;
 
 //Code
 export default () => {
-	//TV Only
-	if(!Platform.isTV) {
-		return BackHandler.exitApp();
-	}
+	React.useEffect(() => {
+		//TV Only
+		if(!Platform.isTV) {
+			return BackHandler.exitApp();
+		}
 
-	//Enable screens (necesario para Expo, sin esto van mal los focos y demás)
-	enableScreens();
-
-	//Lock screen orientation to Landscape
-	ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-
+		//Enable screens (necesario para Expo, sin esto van mal los focos y demás)
+		enableScreens();
+		
+		//Lock screen orientation to Landscape
+		ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+	}, []);
+	
 	//Fonts
 	let [fontsLoaded] = useFonts({
         "Roboto-Bold": require("cuervo/assets/fonts/Roboto-Bold.ttf"),
 		"Roboto-Light": require("cuervo/assets/fonts/Roboto-Light.ttf"),
 		"Roboto-Regular": require("cuervo/assets/fonts/Roboto-Regular.ttf")
 	});
-	
 	if(fontsLoaded) {
 		return (
 			<View style={{
