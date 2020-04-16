@@ -5,7 +5,7 @@ export async function get(url) {
         let data = await response.json();
         return [response, data, null];
     }
-    catch (error) {
+    catch(error) {
         return [null, null, error];
     }
 }
@@ -23,7 +23,7 @@ export async function post(url, bodyData) {
         let data = await response.json();
         return [response, data, null];
     }
-    catch (error) {
+    catch(error) {
         return [null, null, error];
     }
 }

@@ -53,7 +53,8 @@ export default class WelcomeScreen extends React.Component {
                             this.finishLoading();
                         }
                     }
-                    catch (error) {
+                    catch(error) {
+                        console.log(error);
                         this.finishLoading();
                     }
 
@@ -62,10 +63,16 @@ export default class WelcomeScreen extends React.Component {
         }
     }
 
-    finishLoading() {
-        AsyncStorage.removeItem(STORAGE_KEYS.EMAIL);
-        AsyncStorage.removeItem(STORAGE_KEYS.PASSWORD);
-        this.setState({ loading: false });
+    async finishLoading() {
+        try {
+            await AsyncStorage.clear();
+        }
+        catch(error){
+            console.log(error);
+        }
+        finally {
+            this.setState({ loading: false });
+        }
     }
 
     render() {

@@ -2,7 +2,6 @@
 import React from "react";
 import { View, Text } from "react-native";
 import i18n from "i18n-js";
-import { AsyncStorage } from "react-native";
 
 //Components Imports
 import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
@@ -85,9 +84,10 @@ export default class RegisterScreen extends React.Component {
                                             async () => {
                                                 if(this.checkbox.state.checked) {
                                                     try {
-                                                        await AsyncStorage.setItem(STORAGE_KEYS.EMAIL, account.email);
-                                                        await AsyncStorage.setItem(STORAGE_KEYS.PASSWORD, account.password);
-                                                    } catch (error) {
+                                                        await AsyncStorage.multiSet([[STORAGE_KEYS.EMAIL, account.email], [STORAGE_KEYS.PASSWORD, account.password]]);
+                                                    }
+                                                    catch(error) {
+                                                        console.log(error);
                                                     }
                                                 }
                                                 this.loadingViewModal.setVisible(false);

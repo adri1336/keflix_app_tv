@@ -1,5 +1,6 @@
 //Imports
 import React from "react";
+import { AsyncStorage } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
 //Navigator Imports
@@ -36,6 +37,22 @@ export default () => {
 			},
 			changeAccount: (account) => {
 				setAccount(account);
+			},
+			logOut: () => {
+				(
+					async () => {
+						try {
+							await AsyncStorage.clear();
+						}
+						catch(error) {
+							console.log(error);
+						}
+						finally {
+							setAccount(null);
+							setNavigator(NAVIGATORS.AUTH);
+						}
+					}
+				)();
 			}
 		}
 	}, []);
