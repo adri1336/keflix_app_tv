@@ -66,6 +66,12 @@ i18n.translations = {
 				profile_color_text: "Selecciona tu color preferido, {{name}}",
 				error_alert_title: "Error",
 				create_profile_error_alert_message: "No se ha podido crear tu perfil, comprueba tu conexión a internet.",
+			},
+			enter_profile_password: {
+				profile_password_text: "Introduce tu PIN de acceso",
+				error_alert_title: "Error",
+				invalid_password_length_alert_message: "Introduce un PIN válido.",
+				invalid_password_alert_message: "El PIN no es correcto."
 			}
 		},
 		keyboard: {

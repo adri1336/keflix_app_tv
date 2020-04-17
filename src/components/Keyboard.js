@@ -239,7 +239,9 @@ export default class Keyboard extends React.Component {
 
         this.textInput = textInput;
         this.textInput.setFocus(true);
-        this.setState({ title: this.textInput.props.placeholder });
+        if(this.textInput.props?.placeholder && this.textInput.props.placeholder != "") {
+            this.setState({ title: this.textInput.props.placeholder });
+        }
     }
 
     onKeyPressed(letter) {

@@ -9,7 +9,7 @@ import Styles from "cuervo/src/utils/Styles";
 import Definitions from "cuervo/src/utils/Definitions";
 
 //Code
-export default class BoxButton extends React.Component {
+export default class BoxTextInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

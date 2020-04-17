@@ -60,7 +60,15 @@ export default class SelectProfileScreen extends React.Component {
             });
         }
         else {
-
+            if(profile.password) {
+                this.props.navigation.navigate("EnterProfilePasswordScreen", {
+                    account: this.account,
+                    profile: profile
+                });
+            }
+            else {
+                //GO
+            }
         }
     }
 
