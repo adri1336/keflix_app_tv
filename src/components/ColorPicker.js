@@ -58,24 +58,34 @@ export default class ColorPicker extends React.Component {
                     numColumns={ this.numColumns }
                     renderItem={ ({ item, index }) => {
                         return (
-                            <ColorPickerButton
-                                hasTVPreferredFocus={ index == 0 ? true : false }
-                                style={[
-                                    {
+                            item == "#00000000" ? (
+                                <View
+                                    style={{
                                         flex: 1,
                                         margin: 2,
                                         height: (Dimensions.get("window").width * (this.flexWidthPercentage / 100.0)) / this.numColumns,
-                                        backgroundColor: item
-                                    }
-                                ]}
-                                onPress={
-                                    () => {
-                                        if(this.props.onPress) {
-                                            this.props.onPress(item);
+                                    }}
+                                />
+                            ) : (
+                                <ColorPickerButton
+                                    hasTVPreferredFocus={ index == 0 ? true : false }
+                                    style={[
+                                        {
+                                            flex: 1,
+                                            margin: 2,
+                                            height: (Dimensions.get("window").width * (this.flexWidthPercentage / 100.0)) / this.numColumns,
+                                            backgroundColor: item
+                                        }
+                                    ]}
+                                    onPress={
+                                        () => {
+                                            if(this.props.onPress) {
+                                                this.props.onPress(item);
+                                            }
                                         }
                                     }
-                                }
-                            />
+                                />
+                            )
                         );
                     }}
                     keyExtractor={ item => item }
