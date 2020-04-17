@@ -10,28 +10,29 @@ import { TouchableOpacity, TVEventHandler } from "react-native";
 export default class TouchableOpacityFix extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            disabled: false
-        };
-        this.focused = this.props.focused ? this.props.focused : false;
-        this.onLongPressCalled = false;
+        this.focused = this.props?.focused ? this.props.focused : false;
+        this.onLongPressed = false;
     }
 
     enableTVEventHandler() {
-        if(this.tvEventHandler == null && this.props.onPress != null && (this.props.nativeOnPress == null || this.props.nativeOnPress == false)) {
+        if(!this.tvEventHandler && !this.props?.nativeOnPress) {
             this.tvEventHandler = new TVEventHandler();
             this.tvEventHandler.enable(this, (cmp, evt) => {
-                if(this.focused) {
-                    if(evt && evt.eventType == "select" && evt.eventKeyAction >= 0) {
+                if(this.focused && evt && evt.eventType == "select") {
+                    if(evt.eventKeyAction >= 0) {
                         if(evt.eventKeyAction == 0) {
-                            this.props.onPress();
-                            if(!this.onLongPressCalled && this.lastEventKeyAction == evt.eventKeyAction && this.props.onLongPress != null) {
-                                this.onLongPressCalled = true;
-                                this.props.onLongPress();
+                            if(this.lastEventKeyAction == evt.eventKeyAction) {
+                                if(this.props?.onLongPress && !this.onLongPressed) {
+                                    this.onLongPressed = true;
+                                    this.props.onLongPress();
+                                }
                             }
                         }
-                        else {
-                            this.onLongPressCalled = false;
+                        else if(evt.eventKeyAction == 1) {
+                            this.onLongPressed = false;
+                            if(this.props?.onPress) {
+                                this.props.onPress();
+                            }
                         }
                         this.lastEventKeyAction = evt.eventKeyAction;
                     }
@@ -47,12 +48,10 @@ export default class TouchableOpacityFix extends React.Component {
     }
 
     componentDidMount() {
-        this._isMounted = true;
         this.enableTVEventHandler();
     }
 
     componentWillUnmount() {
-        this._isMounted = false;
         this.disableTVEventHandler();
     }
 
@@ -65,7 +64,7 @@ export default class TouchableOpacityFix extends React.Component {
                 onPress={ this.props.nativeOnPress ? this.props.onPress : undefined }
                 onFocus={
                     () => {
-                        if(this.props.onFocus != null) {
+                        if(this.props?.onFocus) {
                             this.props.onFocus();
                         }
                         this.focused = true
@@ -73,13 +72,15 @@ export default class TouchableOpacityFix extends React.Component {
                 }
                 onBlur={
                     () => {
-                        if(this.props.onBlur != null) {
+                        if(this.props?.onBlur) {
                             this.props.onBlur();
                         }
                         this.focused = false;
                     }
                 }
-            >{ this.props.children }</TouchableOpacity>
+            >
+                { this.props.children }
+            </TouchableOpacity>
         );
     }
 }
