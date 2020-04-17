@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import ConnectNavigator from "./navigators/ConnectNavigator";
 import AuthNavigator from "./navigators/AuthNavigator";
 import ProfileNavigator from "./navigators/ProfileNavigator";
+import MainNavigator from "./navigators/MainNavigator";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
@@ -24,12 +25,16 @@ function getNavigator(navigator) {
 		case NAVIGATORS.PROFILE: {
 			return <ProfileNavigator/>;
 		}
+		case NAVIGATORS.MAIN: {
+			return <MainNavigator/>;
+		}
 	}
 }
 
 export default () => {
 	const [navigator, setNavigator] = React.useState(NAVIGATORS.CONNECT);
 	const [account, setAccount] = React.useState(null);
+	const [profile, setProfile] = React.useState(null);
 	const appContext = React.useMemo(() => {
 		return {
 			changeNavigator: (navigator) => {
@@ -37,6 +42,9 @@ export default () => {
 			},
 			changeAccount: (account) => {
 				setAccount(account);
+			},
+			changeProfile: (profile) => {
+				setProfile(profile);
 			},
 			logOut: () => {
 				(
@@ -53,12 +61,16 @@ export default () => {
 						}
 					}
 				)();
+			},
+			profileLogOut: () => {
+				setProfile(null);
+				setNavigator(NAVIGATORS.PROFILE);
 			}
 		}
 	}, []);
 
 	return (
-		<AppContext.Provider value={[appContext, account]}>
+		<AppContext.Provider value={[appContext, account, profile]}>
 			<NavigationContainer>{ getNavigator(navigator) }</NavigationContainer>
 		</AppContext.Provider>
 	);

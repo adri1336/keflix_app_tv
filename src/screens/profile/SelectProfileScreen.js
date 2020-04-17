@@ -12,7 +12,7 @@ import NormalButton from "cuervo/src/components/NormalButton";
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
 import * as HttpClient from "cuervo/src/utils/HttpClient";
 
@@ -67,7 +67,8 @@ export default class SelectProfileScreen extends React.Component {
                 });
             }
             else {
-                //GO
+                this.context[0].changeProfile(profile);
+                this.context[0].changeNavigator(NAVIGATORS.MAIN);
             }
         }
     }

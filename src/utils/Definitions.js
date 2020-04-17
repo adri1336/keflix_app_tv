@@ -12,7 +12,8 @@ export default {
 export const NAVIGATORS = {
 	CONNECT: 0,
     AUTH: 1,
-    PROFILE: 2
+    PROFILE: 2,
+    MAIN: 3
 };
 
 export const STORAGE_KEYS = {

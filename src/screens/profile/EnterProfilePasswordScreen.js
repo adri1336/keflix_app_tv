@@ -12,10 +12,13 @@ import NormalAlert from "cuervo/src/components/NormalAlert";
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
+import { AppContext } from "cuervo/src/AppContext";
 
 //Code
 export default class EnterProfilePasswordScreen extends React.Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props);
         this.account = this.props.route.params.account;
@@ -43,7 +46,8 @@ export default class EnterProfilePasswordScreen extends React.Component {
                             this.alert.setAlertVisible(true, i18n.t("profile.enter_profile_password.error_alert_title"), i18n.t("profile.enter_profile_password.invalid_password_alert_message"));
                         }
                         else {
-                            //GO
+                            this.context[0].changeProfile(this.profile);
+                            this.context[0].changeNavigator(NAVIGATORS.MAIN);
                         }
                     }
                     break;
