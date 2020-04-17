@@ -66,7 +66,7 @@ export default class ProfileButtonItem extends React.Component {
                     }
                 >
                     <Image
-                        style={{ flex: 1, margin: 25, resizeMode: "center" }}
+                        style={{ flex: 1, margin: 35, resizeMode: "center" }}
                         source={ this.profileImage }
                     />
                 </TouchableOpacityFix>

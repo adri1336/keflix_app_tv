@@ -19,6 +19,7 @@ import Definitions from "cuervo/src/utils/Definitions";
 export default class CreateProfileScreen extends React.Component {
     constructor(props) {
         super(props);
+        this.account = this.props.route.params.account;
         this.state = {
             repeatPasswordEnabled: false
         }
@@ -117,10 +118,13 @@ export default class CreateProfileScreen extends React.Component {
         if(goToColorPicker) {
             const profile = {
                 name: this.textInputName.state.text,
-                password: this.textInputPassword.state.text,
-                adult_content: this.adult_content_checkbox.state.checked
+                password: this.textInputPassword.state.text == "" ? null : this.textInputPassword.state.text,
+                adult_content: this.adult_content_checkbox.state.checked ? 1 : 0
             };
-            this.props.navigation.navigate("SelectProfileColorScreen", profile);
+            this.props.navigation.navigate("SelectProfileColorScreen", {
+                account: this.account,
+                profile: profile
+            });
         }
     }
 

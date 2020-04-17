@@ -42,9 +42,22 @@ export default class SelectProfileScreen extends React.Component {
         });
     }
 
+    componentDidUpdate() {
+        if(this.props.route.params?.profile) {
+            this.addProfile(this.props.route.params.profile);
+            this.props.route.params.profile = undefined;
+        }
+    }
+
+    addProfile(profile) {
+        this.profiles.unshift(profile);
+    }
+
     onProfilePressed(profile) {
         if(profile.id == 0) {
-            this.props.navigation.navigate("CreateProfileScreen");
+            this.props.navigation.navigate("CreateProfileScreen", {
+                account: this.account
+            });
         }
         else {
 

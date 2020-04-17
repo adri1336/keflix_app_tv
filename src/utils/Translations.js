@@ -63,7 +63,9 @@ i18n.translations = {
 				adult_content_checkbox: "Permitir mostrar contenido solo para adultos (pornografía)"
 			},
 			select_profile_color: {
-				profile_color_text: "Selecciona tu color preferido, {{name}}"
+				profile_color_text: "Selecciona tu color preferido, {{name}}",
+				error_alert_title: "Error",
+				create_profile_error_alert_message: "No se ha podido crear tu perfil, comprueba tu conexión a internet.",
 			}
 		},
 		keyboard: {
