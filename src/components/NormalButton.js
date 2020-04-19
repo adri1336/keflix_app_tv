@@ -18,19 +18,17 @@ export default class NormalButton extends React.Component {
         this.state = {
             focused: false
         };
-        if(this.props.hasTVPreferredFocus) {
+        if(this.props?.hasTVPreferredFocus) {
             this.state.focused = true;
         }
     }
     
     render () {
+        const { children, ...rest } = this.props;
         return (
             <TouchableOpacityFix
-                hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
+                { ...rest }
                 focused={ this.state.focused }
-                nativeOnPress={ this.props.nativeOnPress }
-                onPress={ this.props.onPress }
-                onLongPress={ this.props.onLongPress }
                 activeOpacity={ 1.0 }
                 onFocus={
                     () => {
@@ -48,7 +46,7 @@ export default class NormalButton extends React.Component {
                         Styles.normalText,
                         this.state.focused ? ( { fontWeight: "bold" } ) : ( { fontWeight: "normal" } )
                     ]
-                }>{ this.props.children }</Text>
+                }>{ children }</Text>
             </TouchableOpacityFix>
         );
     }

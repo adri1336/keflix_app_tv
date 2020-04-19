@@ -55,11 +55,13 @@ export default class BoxTextInput extends React.Component {
     }
 
     render () {
+        const { ...rest } = this.props;
         return (
             <View style={{
                 marginBottom: Definitions.DEFAULT_MARGIN
             }}>
                 <TextInput
+                    { ...rest }
                     style={[
                         {
                             borderRadius: 1,
@@ -72,10 +74,7 @@ export default class BoxTextInput extends React.Component {
                         this.state.focused ? { borderColor: "rgba(255, 255, 255, 1.0);" } : { borderColor: "rgba(120, 120, 120, 0.2);" }
                     ]}
                     placeholderTextColor={ "rgba(255, 255, 255, 0.4);" }
-                    placeholder={ this.props.placeholder }
-                    secureTextEntry={ this.props.secureTextEntry }
                     value={ this.state.text }
-                    maxLength={ this.props.maxLength }
                 />
                 {
                     this.renderErrorMessage()

@@ -79,7 +79,7 @@ export default class ColorPicker extends React.Component {
                                     ]}
                                     onPress={
                                         () => {
-                                            if(this.props.onPress) {
+                                            if(this.props?.onPress) {
                                                 this.props.onPress(item);
                                             }
                                         }
@@ -107,13 +107,14 @@ class ColorPickerButton extends React.Component {
     }
 
     render() {
+        const { style, ...rest } = this.props;
         return (
             <TouchableOpacityFix
+                { ...rest }
                 activeOpacity={ 1.0 }
-                hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
                 focused={ this.state.focused }
                 style={[
-                    this.props.style,
+                    style,
                     { borderWidth: 2 },
                     this.state.focused ? { borderColor: "white" } : { borderColor: "#00000000" }
                 ]}
@@ -127,7 +128,6 @@ class ColorPickerButton extends React.Component {
                         this.setState({ focused: false });
                     }
                 }
-                onPress={ this.props.onPress }
             />
         );
     }

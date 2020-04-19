@@ -56,11 +56,10 @@ export default class TouchableOpacityFix extends React.Component {
     }
 
     render () {
+        const { children, ...rest } = this.props;
         return (
             <TouchableOpacity
-                style={ this.props.style }
-                hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
-                activeOpacity={ this.props.activeOpacity }
+                { ...rest }
                 onPress={ this.props.nativeOnPress ? this.props.onPress : undefined }
                 onFocus={
                     () => {
@@ -78,8 +77,9 @@ export default class TouchableOpacityFix extends React.Component {
                         this.focused = false;
                     }
                 }
+                
             >
-                { this.props.children }
+                { children }
             </TouchableOpacity>
         );
     }

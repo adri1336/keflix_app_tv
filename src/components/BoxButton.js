@@ -43,27 +43,29 @@ export default class BoxButton extends React.Component {
     }
     
     render () {
+        const { children, style, ...rest } = this.props;
         return (
             <TouchableOpacityFix
+                { ...rest }
                 style={[
-                    this.props.style,
+                    style,
                     { borderRadius: 2 },
                     this.state.focused ? ( { backgroundColor: "rgba(70, 130, 180, 0.9);" } ) : ( { backgroundColor: "rgba(120, 120, 120, 0.4);" } )
                 ]}
-                accessibilityViewIsModal={ this.props.accessibilityViewIsModal }
-                hasTVPreferredFocus={ this.props.hasTVPreferredFocus }
-                focused={ this.state.focused }
-                nativeOnPress={ this.props.nativeOnPress }
-                onPress={ this.props.onPress }
-                onLongPress={ this.props.onLongPress }
                 activeOpacity={ 1.0 }
                 onFocus={
                     () => {
+                        if(this.props?.onFocus) {
+                            this.props.onFocus();
+                        }
                         this.setState({ focused: true });
                     }
                 }
                 onBlur={
                     () => {
+                        if(this.props?.onBlur) {
+                            this.props.onBlur();
+                        }
                         this.setState({ focused: false });
                     }
                 }
@@ -75,7 +77,7 @@ export default class BoxButton extends React.Component {
                         { padding: Definitions.DEFAULT_MARGIN },
                         this.props.textStyle ? this.props.textStyle : Styles.normalText,
                         this.state.focused ? ( { color: "white" } ) : ( { color: "rgba(255, 255, 255, 0.4);" } )
-                    ]}>{ this.props.children }</Text>
+                    ]}>{ children }</Text>
             </TouchableOpacityFix>
         );
     }
