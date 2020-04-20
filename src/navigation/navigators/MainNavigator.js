@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 
 //Components Imports
 import { createTVDrawerNavigator } from "cuervo/src/components/TVDrawerNavigator";
@@ -24,8 +24,16 @@ export default () => {
             headerMode="none"
             appContext={ appContext }
         >
-            <MainNavigator.Screen name="MainScreen" component={MainScreen}/>
-            <MainNavigator.Screen name="Screen2" component={Screen2}/>
+            <MainNavigator.Screen name="MainScreen" component={MainScreen} options={{
+                title: "MainScreen",
+                iconLibrary: MaterialCommunityIcons,
+                iconName: "movie"
+            }}/>
+            <MainNavigator.Screen name="Screen2" component={Screen2} options={{
+                title: "Screen2",
+                iconLibrary: FontAwesome,
+                iconName: "file-movie-o"
+            }}/>
         </MainNavigator.Navigator>
     );
 }

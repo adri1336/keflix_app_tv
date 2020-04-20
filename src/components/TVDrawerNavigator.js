@@ -1,7 +1,8 @@
 //Imports
 import React from "react";
-import { SafeAreaView, View, Text, Dimensions, Animated, Easing } from "react-native";
+import { SafeAreaView, View, Text, Animated, Easing } from "react-native";
 import { TabRouter, useNavigationBuilder, createNavigatorFactory } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 
 //Code
 function isDrawerOpen(state) {
@@ -76,7 +77,7 @@ function TVDrawerNavigatorRouter(options) {
                 return { type: "CLOSE_DRAWER" };
             },
             toggleDrawer() {
-                return { type: "TOGGLE_DRAWER" }
+                return { type: "TOGGLE_DRAWER" };
             }
         }
     };
@@ -88,8 +89,10 @@ function TVDrawerNavigator({ initialRouteName, children, appContext }) {
         children
     });
 
-    const { routes, navigation, index } = state;
-    const descriptor = descriptors[routes[index].key];
+    const
+        { routes, index } = state,
+        descriptorKey = routes[index].key,
+        descriptor = descriptors[descriptorKey];
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -99,6 +102,8 @@ function TVDrawerNavigator({ initialRouteName, children, appContext }) {
             <TVDrawer
                 appContext={ appContext }
                 drawer={ isDrawerOpen(state) }
+                descriptorKey={ descriptorKey }
+                descriptors={ descriptors }
             />
         </SafeAreaView>
     );
@@ -118,7 +123,8 @@ class TVDrawer extends React.Component {
         super(props);
         this.profile = this.props.appContext[2];
         this.state = {
-            drawerPosX: new Animated.Value(-drawerValues.DRAWER_OPENED_WIDTH + drawerValues.DRAWER_CLOSED_WIDTH)
+            drawerOpacity: new Animated.Value(0),
+            drawerPosX: new Animated.Value((-drawerValues.DRAWER_OPENED_WIDTH + drawerValues.DRAWER_CLOSED_WIDTH))
         };
     }
 
@@ -132,35 +138,107 @@ class TVDrawer extends React.Component {
     }
 
     animateDrawer() {
+        Animated.timing(this.state.drawerOpacity, {
+            toValue: this.props.drawer ? 1.0 : 0.0,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+
         Animated.timing(this.state.drawerPosX, {
-            toValue: this.props.drawer ? 0 : -drawerValues.DRAWER_OPENED_WIDTH + drawerValues.DRAWER_CLOSED_WIDTH,
-            duration: 150,
+            toValue: this.props.drawer ? 0 : (-drawerValues.DRAWER_OPENED_WIDTH + drawerValues.DRAWER_CLOSED_WIDTH),
+            duration: 200,
             useNativeDriver: true,
             easing: Easing.linear
         }).start();
     }
 
+    renderDescriptors() {
+        //console.log(this.props.descriptors);
+        const descriptorsArray = Object.entries(this.props.descriptors);
+
+        return (
+            descriptorsArray.map((descriptorEntry, index) => {
+                const descriptor = descriptorEntry[1];
+                return (
+                    <View
+                        key={ index }
+                        style={{
+                            flexDirection: "row",
+                            margin: 8
+                        }}
+                    >
+                        <descriptor.options.iconLibrary name={ descriptor.options.iconName } size={ 16 } color="white"/>
+                        <Text style={{ color: "white" }}>{ descriptor.options.title }</Text>
+                    </View>
+                );
+            })
+        );
+    }
+
     render() {
         return (
-            <Animated.View
-                style={[
-                    {
+            <View
+                style={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0
+                }}
+            >
+                <Animated.View 
+                    style={{ flex: 1 }}
+                    opacity={ this.state.drawerOpacity }
+                >
+                    <LinearGradient
+                        style={{ flex: 1 }}
+                        colors={["rgba(0, 0, 0, 0.8)", "rgba(0, 0, 0, 0.4)"]}
+                        start={[0.25, 0]}
+                        end={[0.3, 0]}
+                    />
+                </Animated.View>
+
+                <Animated.View
+                    style={{
                         position: "absolute",
                         top: 0,
                         right: 0,
                         bottom: 0,
                         left: 0,
                         width: drawerValues.DRAWER_OPENED_WIDTH,
-                        height: Dimensions.get("window").height,
                         transform: [{
                             translateX: this.state.drawerPosX
-                        }],
-                        backgroundColor: "rgba(0, 0, 0, 0.2);"
-                    }
-                ]}
-            >
-                <Text style={{ color: "white" }}>TVDrawerNavigator</Text>
-            </Animated.View>
+                        }]
+                    }}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "flex-start"
+                        }}
+                    >
+                        <Text style={{ color: "white" }}>EDITAR PERFIL, CAMBIAR DE PERFIL</Text>
+                    </View>
+
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center"
+                        }}
+                    >
+                        { this.renderDescriptors() }
+                    </View>
+                    
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "flex-end"
+                        }}
+                    >
+                        <Text style={{ color: "white" }}>CERRAR SESIÓN, SALIR</Text>
+                    </View>
+                </Animated.View>
+            </View>
         );
     }
 }
