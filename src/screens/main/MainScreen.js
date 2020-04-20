@@ -51,6 +51,28 @@ export default class MainScreen extends React.Component {
                         hasTVPreferredFocus={ true }
                         onPress={
                             () => {
+                                this.props.navigation.navigate("Screen2", {
+                                    account: this.account,
+                                    profile: this.profile
+                                });
+                            }
+                        }
+                    >
+                        GO TO SCREEN2
+                    </NormalButton>
+                    <NormalButton
+                        onPress={
+                            () => {
+                                this.props.navigation.toggleDrawer();
+                            }
+                        }
+                    >
+                        TOGGLE DRAWER
+                    </NormalButton>
+                    <View style={{ height: 20 }}/>
+                    <NormalButton
+                        onPress={
+                            () => {
                                 this.setState({ loading: true });
                                 this.context[0].profileLogOut();
                             }
