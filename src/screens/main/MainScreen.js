@@ -25,8 +25,8 @@ export default class MainScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.account = this.context[1];
-        this.profile = this.context[2];
+        this.account = this.context.account;
+        this.profile = this.context.profile;
         this.setState({ loading: false });
     }
 
@@ -74,7 +74,7 @@ export default class MainScreen extends React.Component {
                         onPress={
                             () => {
                                 this.setState({ loading: true });
-                                this.context[0].profileLogOut();
+                                this.context.appContext.profileLogOut();
                             }
                         }
                     >
@@ -84,7 +84,7 @@ export default class MainScreen extends React.Component {
                         onPress={
                             () => {
                                 this.setState({ loading: true });
-                                this.context[0].logOut();
+                                this.context.appContext.logOut();
                             }
                         }
                     >

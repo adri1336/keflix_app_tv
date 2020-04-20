@@ -28,7 +28,7 @@ export default class SelectProfileScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.account = this.context[1];
+        this.account = this.context.account;
         HttpClient.get("http://" + Definitions.SERVER_IP + "/account/" + this.account.id + "/profiles").then(([response, data, error]) => {
             if(error == null && response.status == 200) {
                 this.profiles = data;
@@ -67,8 +67,8 @@ export default class SelectProfileScreen extends React.Component {
                 });
             }
             else {
-                this.context[0].changeProfile(profile);
-                this.context[0].changeNavigator(NAVIGATORS.MAIN);
+                this.context.appContext.changeProfile(profile);
+                this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
             }
         }
     }
@@ -140,7 +140,7 @@ export default class SelectProfileScreen extends React.Component {
                                     onPress={
                                         () => {
                                             this.setState({ loading: true });
-                                            this.context[0].logOut();
+                                            this.context.appContext.logOut();
                                         }
                                     }
                                 >{ i18n.t("profile.select_profile.logout_button").toUpperCase() }</NormalButton>

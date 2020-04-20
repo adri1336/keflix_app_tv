@@ -70,7 +70,13 @@ export default () => {
 	}, []);
 
 	return (
-		<AppContext.Provider value={[appContext, account, profile]}>
+		<AppContext.Provider 
+			value={{
+				appContext: appContext,
+				account: account,
+				profile: profile
+			}}
+		>
 			<NavigationContainer>{ getNavigator(navigator) }</NavigationContainer>
 		</AppContext.Provider>
 	);

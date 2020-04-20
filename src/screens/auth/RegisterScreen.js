@@ -104,8 +104,8 @@ export default class RegisterScreen extends React.Component {
                                                         }
                                                     }
                                                     this.loadingViewModal.setVisible(false);
-                                                    this.context[0].changeAccount(data);
-                                                    this.context[0].changeNavigator(NAVIGATORS.PROFILE);
+                                                    this.context.appContext.changeAccount(data);
+                                                    this.context.appContext.changeNavigator(NAVIGATORS.PROFILE);
                                                 }
                                             )();
                                         }

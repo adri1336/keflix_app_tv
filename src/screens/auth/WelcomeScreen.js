@@ -41,8 +41,8 @@ export default class WelcomeScreen extends React.Component {
                             };
                             HttpClient.post("http://" + Definitions.SERVER_IP + "/account/check_account_password", account).then(([response, data, error]) => {
                                 if(error == null && response.status == 200 && data != false) {
-                                    this.context[0].changeAccount(data);
-                                    this.context[0].changeNavigator(NAVIGATORS.PROFILE);
+                                    this.context.appContext.changeAccount(data);
+                                    this.context.appContext.changeNavigator(NAVIGATORS.PROFILE);
                                 }
                                 else {
                                     this.finishLoading();

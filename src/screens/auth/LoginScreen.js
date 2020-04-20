@@ -87,8 +87,8 @@ export default class LoginScreen extends React.Component {
                                                         console.log(error);
                                                     }
                                                 }
-                                                this.context[0].changeAccount(data);
-                                                this.context[0].changeNavigator(NAVIGATORS.PROFILE);
+                                                this.context.appContext.changeAccount(data);
+                                                this.context.appContext.changeNavigator(NAVIGATORS.PROFILE);
                                             }
                                         )();
                                     }

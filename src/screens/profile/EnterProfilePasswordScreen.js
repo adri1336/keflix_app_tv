@@ -46,8 +46,8 @@ export default class EnterProfilePasswordScreen extends React.Component {
                             this.alert.setAlertVisible(true, i18n.t("profile.enter_profile_password.error_alert_title"), i18n.t("profile.enter_profile_password.invalid_password_alert_message"));
                         }
                         else {
-                            this.context[0].changeProfile(this.profile);
-                            this.context[0].changeNavigator(NAVIGATORS.MAIN);
+                            this.context.appContext.changeProfile(this.profile);
+                            this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
                         }
                     }
                     break;

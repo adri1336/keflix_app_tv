@@ -121,7 +121,7 @@ const drawerValues = {
 class TVDrawer extends React.Component {
     constructor(props) {
         super(props);
-        this.profile = this.props.appContext[2];
+        this.profile = this.props.appContext.profile;
         this.state = {
             drawerOpacity: new Animated.Value(0),
             drawerPosX: new Animated.Value((-drawerValues.DRAWER_OPENED_WIDTH + drawerValues.DRAWER_CLOSED_WIDTH))
