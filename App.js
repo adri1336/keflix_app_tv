@@ -36,8 +36,6 @@ export default () => {
 	
 	//Fonts
 	let [fontsLoaded] = useFonts({
-        "Roboto-Bold": require("cuervo/assets/fonts/Roboto-Bold.ttf"),
-		"Roboto-Light": require("cuervo/assets/fonts/Roboto-Light.ttf"),
 		"Roboto-Regular": require("cuervo/assets/fonts/Roboto-Regular.ttf")
 	});
 	if(fontsLoaded) {

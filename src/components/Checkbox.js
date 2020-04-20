@@ -1,6 +1,7 @@
 //Imports
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
@@ -25,13 +26,7 @@ export default class Checkbox extends React.Component {
     renderChecked() {
         if(this.state.checked) {
             return (
-                <Image
-                    style={{
-                        width: Dimensions.vw(1.8),
-                        height: Dimensions.vw(1.8)
-                    }}
-                    source={ require("cuervo/assets/images/checkbox/checked.png") }
-                />
+                <Feather name="check" size={ Dimensions.vw(1.8) } color="white" />
             );
         }
     }

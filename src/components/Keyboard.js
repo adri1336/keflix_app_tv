@@ -2,6 +2,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import i18n from "i18n-js";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 //Components Imports
 import BoxButton from "cuervo/src/components/BoxButton";
@@ -165,20 +166,32 @@ export default class Keyboard extends React.Component {
                                 switch(stringLetterUpper) {
                                     case "SHIFT": {
                                         if(this.state.capitalLetters) {
-                                            iconObject = require("cuervo/assets/images/keyboard/caps_off.png");
+                                            iconObject = {
+                                                iconLibrary: MaterialIcons,
+                                                iconName: "arrow-downward"
+                                            };
                                         }
                                         else {
-                                            iconObject = require("cuervo/assets/images/keyboard/caps_on.png");
+                                            iconObject = {
+                                                iconLibrary: MaterialIcons,
+                                                iconName: "arrow-upward"
+                                            };
                                         }
                                         break;
                                     }
                                     case "SPACE": {
-                                        iconObject = require("cuervo/assets/images/keyboard/spacebar.png");
+                                        iconObject = {
+                                            iconLibrary: MaterialIcons,
+                                            iconName: "space-bar"
+                                        };
                                         break;
                                     }
                                     case "DEL": {
                                         isDel = true;
-                                        iconObject = require("cuervo/assets/images/keyboard/backspace.png");
+                                        iconObject = {
+                                            iconLibrary: MaterialCommunityIcons,
+                                            iconName: "backspace"
+                                        };
                                         break;
                                     }
                                     case "EMPTY": {

@@ -1,6 +1,7 @@
 //Imports
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
@@ -18,13 +19,6 @@ export default class ProfileButtonItem extends React.Component {
         this.state = {
             focused: this.props.focused ? this.props.focused : false
         };
-
-        if(this.props.profile.id == 0) {
-            this.profileImage = require("cuervo/assets/images/profile/add_profile.png");
-        }
-        else {
-            this.profileImage = require("cuervo/assets/images/profile/profile.png");
-        }
     }
 
     render() {
@@ -65,10 +59,7 @@ export default class ProfileButtonItem extends React.Component {
                         }
                     }
                 >
-                    <Image
-                        style={{ flex: 1, margin: 35, resizeMode: "center" }}
-                        source={ this.profileImage }
-                    />
+                    <Feather name={ this.props.profile.id == 0 ? "user-plus" : "user" } size={ 70 } color="white"/>
                 </TouchableOpacityFix>
                 <Text
                     style={[

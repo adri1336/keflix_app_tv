@@ -28,15 +28,24 @@ export default class BoxButton extends React.Component {
         this.setState({ focused: toggle });
     }
 
-    renderIcon() {
-        if(this.props.icon) {
+    renderImageOrIcon() {
+        if(this.props.image) {
             return (
                 <Image
                     style={{
                         width: Dimensions.vw(1.3),
                         height: Dimensions.vw(1.3)
                     }}
-                    source={this.props.icon}
+                    source={ this.props.image }
+                />
+            );
+        }
+        if(this.props.icon) {
+            return (
+                <this.props.icon.iconLibrary
+                    name={ this.props.icon.iconName }
+                    size={ Dimensions.vw(1.3) }
+                    color={ this.state.focused ? "white" : "rgba(255, 255, 255, 0.4);" }
                 />
             );
         }
@@ -70,7 +79,7 @@ export default class BoxButton extends React.Component {
                     }
                 }
             >
-                { this.renderIcon() }
+                { this.renderImageOrIcon() }
                 <Text 
                     style={[
                         this.props.children ? { display: "flex" } : { display: "none" },
