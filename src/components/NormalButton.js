@@ -43,7 +43,7 @@ export default class NormalButton extends React.Component {
                 <Text style={
                     [
                         { color: Definitions.TEXT_COLOR },
-                        Styles.normalText,
+                        this.props.textStyle ? this.props.textStyle : Styles.normalText,
                         this.state.focused ? ( { fontWeight: "bold" } ) : ( { fontWeight: "normal" } )
                     ]
                 }>{ children }</Text>

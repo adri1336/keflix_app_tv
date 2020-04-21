@@ -303,6 +303,7 @@ class TVDrawer extends React.Component {
                                     <NormalButton
                                         alwaysAccessible={ true }
                                         hasTVPreferredFocus={ this.props.drawer && descriptorEntry[0] == this.props.descriptorKey ? true : false }
+                                        textStyle={ Styles.bigText }
                                     >
                                         { descriptor.options.title }
                                     </NormalButton>
@@ -347,16 +348,13 @@ class TVDrawer extends React.Component {
                 >
                     <Svg height="100%" width="100%">
                         <Defs>
-                            <LinearGradient 
-                                gradientUnits="userSpaceOnUse"
+                            <LinearGradient
                                 id="grad"
-                                x1="0" y1="0"
+                                x1="0.2" y1="0"
                                 x2="0.3" y2="0"
-                                x3="1" y3="0"
                             >
-                                <Stop offset="0" stopColor="black" stopOpacity="1"/>
-                                <Stop offset="1" stopColor="black" stopOpacity="1"/>
-                                <Stop offset="1" stopColor="black" stopOpacity="0.4"/>
+                                <Stop offset="0" stopColor="black" stopOpacity="0.8"/>
+                                <Stop offset="1" stopColor="black" stopOpacity="0.6"/>
                             </LinearGradient>
                         </Defs>
                         <Rect x="0" y="0" width="100%" height="100%" fill="url(#grad)"/>
