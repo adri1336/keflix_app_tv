@@ -1,11 +1,12 @@
 //Imports
 import React from "react";
-import { SafeAreaView, View, Text, Animated, Easing, Modal, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { SafeAreaView, View, Text, Animated, Easing, TVEventHandler } from "react-native";
 import { TabRouter, useNavigationBuilder, createNavigatorFactory } from "@react-navigation/native";
 import Svg, { Defs, LinearGradient, Stop, Rect } from "react-native-svg";
 
 //Components Imports
 import NormalButton from "cuervo/src/components/NormalButton";
+import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
@@ -107,6 +108,10 @@ function TVDrawerNavigator({ initialRouteName, children, appContext }) {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View 
+                accessible={false}
+                pointerEvents="box-none"
+                focusable={false}
+                disabled
                 style={{ flex: 1 }}>
                 { descriptor.render() }
             </View>
@@ -148,6 +153,12 @@ class TVDrawer extends React.Component {
     componentDidUpdate(prevProps) {
         if(this.props.drawer != prevProps.drawer) {
             console.log("TVDrawer componentDidUpdate: ", this.props.drawer);
+            if(this.props.drawer) {
+                disableAllButtons();
+            }
+            else {
+                enableAllButtons();
+            }
             this.animateDrawer();
         }
     }
@@ -279,6 +290,8 @@ class TVDrawer extends React.Component {
                             const descriptor = descriptorEntry[1];
                             return (
                                 <View
+                                        
+                                accessible={false} pointerEvents='none'
                                     key={ index }
                                     style={{
                                         height: 20,
@@ -288,7 +301,8 @@ class TVDrawer extends React.Component {
                                     }}
                                 >
                                     <NormalButton
-                                       hasTVPreferredFocus={ this.props.drawer && descriptorEntry[0] == this.props.descriptorKey ? true : false }
+                                        alwaysAccessible={ true }
+                                        hasTVPreferredFocus={ this.props.drawer && descriptorEntry[0] == this.props.descriptorKey ? true : false }
                                     >
                                         { descriptor.options.title }
                                     </NormalButton>

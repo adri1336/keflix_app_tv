@@ -6,11 +6,27 @@
 import React from "react";
 import { TouchableOpacity, TVEventHandler } from "react-native";
 
+var buttons = [];
+export function enableAllButtons() {
+    buttons.map((button) => {
+        button.enableButton();       
+    });
+}
+
+export function disableAllButtons() {
+    buttons.map((button) => {
+        button.disableButton();       
+    });
+}
+
 //Code
 export default class TouchableOpacityFix extends React.Component {
     constructor(props) {
         super(props);
         this.focused = this.props?.focused ? this.props.focused : false;
+        this.state = {
+            enabled: true
+        };
         this.onLongPressed = false;
     }
 
@@ -48,11 +64,24 @@ export default class TouchableOpacityFix extends React.Component {
     }
 
     componentDidMount() {
+        buttons.push(this);
         this.enableTVEventHandler();
     }
 
     componentWillUnmount() {
+        const index = buttons.indexOf(this);
+        if(index !== -1) {
+            buttons.splice(index, 1);
+        }
         this.disableTVEventHandler();
+    }
+
+    enableButton() {
+        this.setState({ enabled: true });
+    }
+
+    disableButton() {
+        this.setState({ enabled: false });
     }
 
     render () {
@@ -60,6 +89,7 @@ export default class TouchableOpacityFix extends React.Component {
         return (
             <TouchableOpacity
                 { ...rest }
+                accessible={ this.props?.alwaysAccessible ? true : this.state.enabled }
                 onPress={ this.props.nativeOnPress ? this.props.onPress : undefined }
                 onFocus={
                     () => {
