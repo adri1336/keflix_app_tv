@@ -22,17 +22,18 @@ export default () => {
     return (
         <MainNavigator.Navigator 
             headerMode="none"
+            initialRouteName="MainScreen"
             appContext={ appContext }
         >
+            <MainNavigator.Screen name="Screen2" component={Screen2} options={{
+                title: "Búsqueda",
+                iconLibrary: FontAwesome,
+                iconName: "search"
+            }}/>
             <MainNavigator.Screen name="MainScreen" component={MainScreen} options={{
-                title: "MainScreen",
+                title: "Películas",
                 iconLibrary: MaterialCommunityIcons,
                 iconName: "movie"
-            }}/>
-            <MainNavigator.Screen name="Screen2" component={Screen2} options={{
-                title: "Screen2",
-                iconLibrary: FontAwesome,
-                iconName: "file-movie-o"
             }}/>
         </MainNavigator.Navigator>
     );

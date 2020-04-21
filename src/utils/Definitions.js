@@ -9,6 +9,15 @@ export default {
     PIN_PASSWORD_LEGTH: 4
 };
 
+export const DEFAULT_SIZES = {
+    BIG_TITLE_SIZE: 5.0,
+    TITLE_SIZE: 3.5,
+    BIG_SIZE: 1.6,
+    NORMAL_SIZE: 1.3,
+    MEDIUM_SIZE: 1.1,
+    SMALL_SIZE: 0.9
+};
+
 export const NAVIGATORS = {
 	CONNECT: 0,
     AUTH: 1,

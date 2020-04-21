@@ -9,7 +9,7 @@ import TouchableOpacityFix from "./TouchableOpacityFix";
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions, { DEFAULT_SIZES } from "cuervo/src/utils/Definitions";
 import * as Dimensions from "cuervo/src/utils/Dimensions.js";
 
 //Code
@@ -33,8 +33,8 @@ export default class BoxButton extends React.Component {
             return (
                 <Image
                     style={{
-                        width: Dimensions.vw(1.3),
-                        height: Dimensions.vw(1.3)
+                        width: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
+                        height: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE)
                     }}
                     source={ this.props.image }
                 />
@@ -44,7 +44,7 @@ export default class BoxButton extends React.Component {
             return (
                 <this.props.icon.iconLibrary
                     name={ this.props.icon.iconName }
-                    size={ Dimensions.vw(1.3) }
+                    size={ Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE) }
                     color={ this.state.focused ? "white" : "rgba(255, 255, 255, 0.4);" }
                 />
             );
