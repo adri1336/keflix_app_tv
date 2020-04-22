@@ -69,6 +69,17 @@ export default class MainScreen extends React.Component {
                     >
                         TOGGLE DRAWER
                     </NormalButton>
+                    <NormalButton
+                        onPress={
+                            () => {
+                                this.props.navigation.setOptions({
+                                    title: "asdasd"
+                                });
+                            }
+                        }
+                    >
+                        SET OPTIONS
+                    </NormalButton>
                     <View style={{ height: 20 }}/>
                     <NormalButton
                         onPress={

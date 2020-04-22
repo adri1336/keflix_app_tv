@@ -42,9 +42,8 @@ export default class NormalButton extends React.Component {
                 }>
                 <Text style={
                     [
-                        { color: Definitions.TEXT_COLOR },
                         this.props.textStyle ? this.props.textStyle : Styles.normalText,
-                        this.state.focused ? ( { fontWeight: "bold" } ) : ( { fontWeight: "normal" } )
+                        this.state.focused ? ( { color: Definitions.TEXT_COLOR, fontWeight: "bold" } ) : ( { color: "rgba(255, 255, 255, 0.4);", fontWeight: "normal" } ),
                     ]
                 }>{ children }</Text>
             </TouchableOpacityFix>

@@ -77,11 +77,25 @@ export default class TouchableOpacityFix extends React.Component {
     }
 
     enableButton() {
+        if(this.props?.hasTVPreferredFocus) {
+            if(this.props?.onFocus) {
+                this.props.onFocus();
+            }
+            this.focused = true;
+        }
         this.setState({ enabled: true });
     }
 
     disableButton() {
-        this.setState({ enabled: false });
+        if(!this.props?.alwaysAccessible) {
+            if(this.focused) {
+                if(this.props?.onBlur) {
+                    this.props.onBlur();
+                }
+                this.focused = false;
+            }
+            this.setState({ enabled: false });
+        }
     }
 
     render () {
@@ -90,24 +104,33 @@ export default class TouchableOpacityFix extends React.Component {
             <TouchableOpacity
                 { ...rest }
                 accessible={ this.props?.alwaysAccessible ? true : this.state.enabled }
-                onPress={ this.props.nativeOnPress ? this.props.onPress : undefined }
+                onPress={
+                    () => {
+                        if(this.state.enabled && this.props.nativeOnPress && this.props.onPress) {
+                            this.props.onPress();
+                        }
+                    }
+                }
                 onFocus={
                     () => {
-                        if(this.props?.onFocus) {
-                            this.props.onFocus();
+                        if(this.state.enabled) {
+                            if(this.props?.onFocus) {
+                                this.props.onFocus();
+                            }
+                            this.focused = true;
                         }
-                        this.focused = true
                     }
                 }
                 onBlur={
                     () => {
-                        if(this.props?.onBlur) {
-                            this.props.onBlur();
+                        if(this.state.enabled) {
+                            if(this.props?.onBlur) {
+                                this.props.onBlur();
+                            }
+                            this.focused = false;
                         }
-                        this.focused = false;
                     }
                 }
-                
             >
                 { children }
             </TouchableOpacity>

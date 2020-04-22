@@ -38,18 +38,8 @@ export default class MainScreen extends React.Component {
                     backgroundColor: Definitions.PRIMARY_COLOR
                 }}
             >
-                <Text style={ Styles.titleText }>Screen2</Text>
-                <View style={{ height: 20 }}/>
-                <NormalButton
-                    hasTVPreferredFocus={ true }
-                    onPress={
-                        () => {
-                            this.props.navigation.navigate("MainScreen");
-                        }
-                    }
-                >
-                    GO TO MAINSCREEN
-                </NormalButton>
+                <Text style={ Styles.titleText }>Screen3</Text>
+                <NormalButton>Button</NormalButton>
             </View>
         );
     }
