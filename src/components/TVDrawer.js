@@ -1,9 +1,12 @@
 //Imports
 import React from "react";
-import { View, Text, Animated, Easing, TVEventHandler } from "react-native";
+import { View, Text, Animated, Easing, TVEventHandler, BackHandler } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import i18n from "i18n-js";
 
 //Components Imports
 import NormalButton from "cuervo/src/components/NormalButton";
+import LoadingView from "cuervo/src/components/LoadingView";
 import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
 
 //Styles Imports
@@ -17,7 +20,10 @@ import * as Dimensions from "cuervo/src/utils/Dimensions.js";
 const DRAWER_VALUES = {
     DRAWER_OPENED_WIDTH: Dimensions.vw(30.0),
     DRAWER_CLOSED_WIDTH: 50,
-    DRAWER_ANIMATION_TIME: 200
+    DRAWER_ANIMATION_TIME: 100,
+    DRAWER_ITEMS_MARGIN: 40,
+    DRAWER_ICON_SIZE: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
+    DRAWER_PROFILE_ICON_SIZE: 30
 };
 
 //Code
@@ -26,8 +32,9 @@ export default class TVDrawer extends React.Component {
         super(props);
         const activeDescriptor = this.props.descriptors[this.props.currentDescriptorKey];
         this.state = {
+            loading: false,
             drawerOpacity: new Animated.Value(0),
-            drawerIconsPosX: new Animated.Value(0),
+            drawerIconsPosX: new Animated.Value(15),
             drawerPosX: new Animated.Value((-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH)),
             drawerEnabled: activeDescriptor.options.drawerEnabled
         };
@@ -94,7 +101,7 @@ export default class TVDrawer extends React.Component {
         }).start();
 
         Animated.timing(this.state.drawerIconsPosX, {
-            toValue: this.props.isDrawerOpen ? 10 : 0,
+            toValue: this.props.isDrawerOpen ? DRAWER_VALUES.DRAWER_ITEMS_MARGIN : 15,
             duration: DRAWER_VALUES.DRAWER_ANIMATION_TIME,
             useNativeDriver: true,
             easing: Easing.linear
@@ -125,7 +132,7 @@ export default class TVDrawer extends React.Component {
                     style={{
                         position: "absolute",
                         bottom: -1,
-                        width: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
+                        width: DRAWER_VALUES.DRAWER_ICON_SIZE,
                         height: 2,
                         backgroundColor: Definitions.SECONDARY_COLOR,
                     }}
@@ -144,17 +151,17 @@ export default class TVDrawer extends React.Component {
                 <View
                     key={ descriptorKey }
                     style={{
-                        width: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
+                        width: DRAWER_VALUES.DRAWER_ICON_SIZE,
                         height: 20,
-                        margin: Definitions.DEFAULT_MARGIN,
-                        marginLeft: 20,
+                        marginTop: Definitions.DEFAULT_MARGIN,
+                        marginBottom: Definitions.DEFAULT_MARGIN,
                         justifyContent: "center",
                         alignItems: "center"
                     }}
                 >
                     <descriptor.options.icon.library
                         name={ descriptor.options.icon.name }
-                        size={ Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE) }
+                        size={ DRAWER_VALUES.DRAWER_ICON_SIZE }
                         color={ this.state.drawerEnabled ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);" }
                     />
                     { this.printBottomBarIfIsActiveDescriptor(descriptorKey) }
@@ -219,7 +226,7 @@ export default class TVDrawer extends React.Component {
                 style={{
                     height: 20,
                     margin: Definitions.DEFAULT_MARGIN,
-                    marginLeft: 55,
+                    marginLeft: DRAWER_VALUES.DRAWER_ITEMS_MARGIN + DRAWER_VALUES.DRAWER_ICON_SIZE + (Definitions.DEFAULT_MARGIN * 2),
                     justifyContent: "center"
                 }}
             >
@@ -257,15 +264,59 @@ export default class TVDrawer extends React.Component {
                 <View
                     style={{
                         flex: 1,
-                        justifyContent: "flex-start"
+                        justifyContent: "flex-start",
+                        margin: Definitions.DEFAULT_MARGIN,
+                        marginLeft: DRAWER_VALUES.DRAWER_ITEMS_MARGIN,
+                        marginTop: 30
                     }}
                 >
-                    <Text style={{ color: "white" }}>EDITAR PERFIL, CAMBIAR DE PERFIL</Text>
+                    <View
+                        style={{
+                            height: DRAWER_VALUES.DRAWER_PROFILE_ICON_SIZE,
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}
+                    >
+                        <View
+                            style={{
+                                borderRadius: 1,
+                                borderWidth: 1,
+                                width: DRAWER_VALUES.DRAWER_PROFILE_ICON_SIZE,
+                                height: DRAWER_VALUES.DRAWER_PROFILE_ICON_SIZE,
+                                borderColor: "white",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                backgroundColor: this.props.appContext.profile.color
+                            }}
+                        >
+                            <Feather name="user" size={ 20 } color="white"/>
+                        </View>
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: "column",
+                                marginLeft: Definitions.DEFAULT_MARGIN
+                            }}
+                        >
+                            <Text style={[ Styles.normalText, { fontWeight: "bold" } ]}>
+                                { this.props.appContext.profile.name.toUpperCase() }
+                            </Text>
+                            <NormalButton
+                                alwaysAccessible={ true }
+                                onPress={
+                                    () => {
+                                        this.setState({ loading: true });
+                                        this.props.appContext.appContext.profileLogOut();
+                                    }
+                                }
+                            >
+                                { i18n.t("mainTvNavigator.change_profile_button") }
+                            </NormalButton>
+                        </View>
+                    </View>
                 </View>
 
                 <View
-                    pointerEvents="none"
-                    removeClippedSubviews={true}
                     style={{
                         flex: 1,
                         justifyContent: "center"
@@ -281,16 +332,37 @@ export default class TVDrawer extends React.Component {
                 <View
                     style={{
                         flex: 1,
-                        justifyContent: "flex-end"
+                        justifyContent: "flex-end",
+                        margin: Definitions.DEFAULT_MARGIN,
+                        marginLeft: DRAWER_VALUES.DRAWER_ITEMS_MARGIN,
+                        marginBottom: 30
                     }}
                 >
-                    <Text style={{ color: "white" }}>CERRAR SESIÓN, SALIR</Text>
+                    <NormalButton
+                        alwaysAccessible={ true }
+                    >
+                        { i18n.t("mainTvNavigator.options_button") }
+                    </NormalButton>
+                    <NormalButton
+                        alwaysAccessible={ true }
+                        onPress={
+                            () => {
+                                BackHandler.exitApp();
+                            }
+                        }
+                    >
+                        { i18n.t("mainTvNavigator.exit_app_button") }
+                    </NormalButton>
                 </View>
             </Animated.View>
         );
     }
 
     render() {
+        if(this.state.loading) {
+            return <LoadingView/>;
+        }
+        
         const drawer = this.props.descriptors[this.props.currentDescriptorKey].options.drawer;
         if(drawer) {
             return (

@@ -82,6 +82,11 @@ i18n.translations = {
 		},
 		normalAlert: {
 			close_button: "Cerrar"
+		},
+		mainTvNavigator: {
+			change_profile_button: "Cambiar de perfil",
+			options_button: "Opciones",
+			exit_app_button: "Salir de la aplicación"
 		}
 	}
 };
