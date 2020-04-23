@@ -7,6 +7,7 @@ import SelectProfileScreen from "cuervo/src/screens/profile/SelectProfileScreen"
 import CreateProfileScreen from "cuervo/src/screens/profile/CreateProfileScreen";
 import SelectProfileColorScreen from "cuervo/src/screens/profile/SelectProfileColorScreen";
 import EnterProfilePasswordScreen from "cuervo/src/screens/profile/EnterProfilePasswordScreen";
+import EnterAccountPasswordScreen from "cuervo/src/screens/profile/EnterAccountPasswordScreen";
 
 //Vars
 const ProfileNavigator = createStackNavigator();
@@ -21,6 +22,7 @@ export default () => {
             <ProfileNavigator.Screen name="CreateProfileScreen" component={CreateProfileScreen}/>
             <ProfileNavigator.Screen name="SelectProfileColorScreen" component={SelectProfileColorScreen}/>
             <ProfileNavigator.Screen name="EnterProfilePasswordScreen" component={EnterProfilePasswordScreen}/>
+            <ProfileNavigator.Screen name="EnterAccountPasswordScreen" component={EnterAccountPasswordScreen}/>
         </ProfileNavigator.Navigator>
     );
 }

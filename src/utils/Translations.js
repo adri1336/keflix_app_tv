@@ -69,13 +69,18 @@ i18n.translations = {
 			},
 			enter_profile_password: {
 				profile_password_text: "Introduce tu PIN de acceso",
-				account_password_text: "Introduce la contraseña para acceder",
 				error_alert_title: "Error",
 				invalid_password_length_alert_message: "Introduce un PIN válido.",
 				invalid_password_alert_message: "El PIN no es correcto.",
-				use_account_password_button: "Acceder con la contraseña de la cuenta",
+				use_account_password_button: "Acceder con la contraseña de la cuenta"
+			},
+			enter_account_password: {
+				account_password_text: "Introduce la contraseña para acceder",
+				error_alert_title: "Error",
+				invalid_password_length_alert_message: "Introduce una contraseña válida.",
+				invalid_password_alert_message: "La contraseña no es correcta.",
 				use_profile_password_button: "Acceder con el PIN del perfil",
-				account_password_placeholder: "Introduce la contraseña de la cuenta"
+				password_placeholder: "Escribe la contraseña de la cuenta"
 			}
 		},
 		settings: {
