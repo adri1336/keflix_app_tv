@@ -9,6 +9,7 @@ import { createTVDrawerNavigator } from "cuervo/src/components/navigators/TVDraw
 import MainScreen from "cuervo/src/screens/main/MainScreen";
 import Screen2 from "cuervo/src/screens/main/Screen2";
 import Screen3 from "cuervo/src/screens/main/Screen3";
+import SettingsNavigator from "./SettingsNavigator";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
@@ -28,7 +29,8 @@ export default () => {
         >
             <MainNavigator.Screen name="Screen2" component={Screen2} options={{
                 drawer: true, //activa el drawer en esta pantalla
-                drawerEnabled: true, //permite o no abrir el drawer en la pantalla (mediante el mando)
+                drawerCanOpen: true, //permite o no abrir el drawer en la pantalla (mediante el mando)
+                showScreenInDrawer: true,
                 title: "Búsqueda",
                 icon: {
                     library: FontAwesome,
@@ -37,8 +39,9 @@ export default () => {
             }}/>
             <MainNavigator.Screen name="MainScreen" component={MainScreen} options={{
                 drawer: true,
-                drawerEnabled: true,
+                drawerCanOpen: true,
                 title: "Películas",
+                showScreenInDrawer: true,
                 icon: {
                     library: MaterialCommunityIcons,
                     name: "movie"
@@ -46,12 +49,19 @@ export default () => {
             }}/>
             <MainNavigator.Screen name="Screen3" component={Screen3} options={{
                 drawer: true,
-                drawerEnabled: true,
+                drawerCanOpen: true,
+                showScreenInDrawer: true,
                 title: "Mi lista",
                 icon: {
                     library: FontAwesome,
                     name: "plus"
                 }
+            }}/>
+            <MainNavigator.Screen name="SettingsNavigator" component={SettingsNavigator} options={{
+                drawer: false,
+                drawerCanOpen: false,
+                showScreenInDrawer: false,
+                title: "Settings"
             }}/>
         </MainNavigator.Navigator>
     );

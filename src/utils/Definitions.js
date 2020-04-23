@@ -6,7 +6,8 @@ export default {
     DEFAULT_MARGIN: 8,
     SERVER_IP: "51.77.212.177",
     PASSWORD_MIN_LENGTH: 3,
-    PIN_PASSWORD_LEGTH: 4
+    PIN_PASSWORD_LEGTH: 4,
+    APPLICATION_WEBPAGE: "https://github.com/adri1samp/"
 };
 
 export const DEFAULT_SIZES = {

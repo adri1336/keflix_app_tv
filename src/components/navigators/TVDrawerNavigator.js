@@ -105,6 +105,7 @@ function TVDrawerNavigator({ initialRouteName, children, appContext }) {
                 appContext={ appContext }
                 isDrawerOpen={ isDrawerOpen(state) }
                 currentDescriptorKey={ currentDescriptorKey }
+                currentIndex={ index }
                 descriptors={ descriptors }
                 routes={ routes }
                 navigation={ navigation }

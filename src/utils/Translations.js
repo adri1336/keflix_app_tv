@@ -69,9 +69,37 @@ i18n.translations = {
 			},
 			enter_profile_password: {
 				profile_password_text: "Introduce tu PIN de acceso",
+				account_password_text: "Introduce la contraseña para acceder",
 				error_alert_title: "Error",
 				invalid_password_length_alert_message: "Introduce un PIN válido.",
-				invalid_password_alert_message: "El PIN no es correcto."
+				invalid_password_alert_message: "El PIN no es correcto.",
+				use_account_password_button: "Acceder con la contraseña de la cuenta",
+				use_profile_password_button: "Acceder con el PIN del perfil",
+				account_password_placeholder: "Introduce la contraseña de la cuenta"
+			}
+		},
+		settings: {
+			general: {
+				back_button: "Volver",
+				edit_profile_button: "Editar perfil",
+				delete_profile_button: "Eliminar perfil",
+				change_profile_button: "Cambiar de perfil",
+				logout_button: "Cerrar sesión",
+				exit_app_button: "Salir de la aplicación",
+				account_text: "Cuenta",
+				profile_text: "Perfil",
+				app_text: "Aplicación",
+				id_text: "ID: {{id}}",
+				email_text: "Correo: {{email}}",
+				registration_date_text: "Fecha de registro: {{registration_date}}",
+				name_text: "Nombre: {{name}}",
+				profile_has_password_yes: "PIN: sí",
+				profile_has_password_no: "PIN: no",
+				color_text: "Color:",
+				profile_adult_content_yes: "Contenido para adultos: sí",
+				profile_adult_content_no: "Contenido para adultos: no",
+				version_text: "Versión: {{version}}",
+				web_text: "Contacto: {{web}}"
 			}
 		},
 		keyboard: {
@@ -85,7 +113,7 @@ i18n.translations = {
 		},
 		mainTvNavigator: {
 			change_profile_button: "Cambiar de perfil",
-			options_button: "Opciones",
+			settings_button: "Opciones",
 			exit_app_button: "Salir de la aplicación"
 		}
 	}

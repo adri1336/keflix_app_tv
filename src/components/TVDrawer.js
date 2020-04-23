@@ -36,7 +36,7 @@ export default class TVDrawer extends React.Component {
             drawerOpacity: new Animated.Value(0),
             drawerIconsPosX: new Animated.Value(15),
             drawerPosX: new Animated.Value((-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH)),
-            drawerEnabled: activeDescriptor.options.drawerEnabled
+            drawerCanOpen: activeDescriptor.options.drawerCanOpen
         };
     }
 
@@ -45,7 +45,7 @@ export default class TVDrawer extends React.Component {
             this.tvEventHandler = new TVEventHandler();
             this.tvEventHandler.enable(this, (cmp, evt) => {
                 if(evt && evt.eventKeyAction > 0) {
-                    if(evt.eventType == "left" && this.state.drawerEnabled && !this.props.isDrawerOpen) {
+                    if(evt.eventType == "left" && this.state.drawerCanOpen && !this.props.isDrawerOpen) {
                         this.props.navigation.openDrawer();
                     }
                     else if(evt.eventType == "right" && this.props.isDrawerOpen) {
@@ -82,7 +82,7 @@ export default class TVDrawer extends React.Component {
         }
         if(this.props.currentDescriptorKey != prevProps.currentDescriptorKey) {
             const activeDescriptor = this.props.descriptors[this.props.currentDescriptorKey];
-            this.setState({ drawerEnabled: activeDescriptor.options.drawerEnabled });
+            this.setState({ drawerCanOpen: activeDescriptor.options.drawerCanOpen });
         }
     }
 
@@ -146,40 +146,42 @@ export default class TVDrawer extends React.Component {
             descriptorKey = route.key,
             descriptor = this.props.descriptors[descriptorKey];
 
-        if(descriptor.options.icon) {
-            return (
-                <View
-                    key={ descriptorKey }
-                    style={{
-                        width: DRAWER_VALUES.DRAWER_ICON_SIZE,
-                        height: 20,
-                        marginTop: Definitions.DEFAULT_MARGIN,
-                        marginBottom: Definitions.DEFAULT_MARGIN,
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}
-                >
-                    <descriptor.options.icon.library
-                        name={ descriptor.options.icon.name }
-                        size={ DRAWER_VALUES.DRAWER_ICON_SIZE }
-                        color={ this.state.drawerEnabled ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);" }
+        if(descriptor.options.showScreenInDrawer) {
+            if(descriptor.options.icon) {
+                return (
+                    <View
+                        key={ descriptorKey }
+                        style={{
+                            width: DRAWER_VALUES.DRAWER_ICON_SIZE,
+                            height: 20,
+                            marginTop: Definitions.DEFAULT_MARGIN,
+                            marginBottom: Definitions.DEFAULT_MARGIN,
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <descriptor.options.icon.library
+                            name={ descriptor.options.icon.name }
+                            size={ DRAWER_VALUES.DRAWER_ICON_SIZE }
+                            color={ this.state.drawerCanOpen ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);" }
+                        />
+                        { this.printBottomBarIfIsActiveDescriptor(descriptorKey) }
+                    </View>
+                );
+            }
+            else {
+                return (
+                    <View
+                        key={ descriptorKey }
+                        style={{
+                            height: 20,
+                            margin: Definitions.DEFAULT_MARGIN,
+                            marginLeft: 20,
+                            justifyContent: "center"
+                        }}
                     />
-                    { this.printBottomBarIfIsActiveDescriptor(descriptorKey) }
-                </View>
-            );
-        }
-        else {
-            return (
-                <View
-                    key={ descriptorKey }
-                    style={{
-                        height: 20,
-                        margin: Definitions.DEFAULT_MARGIN,
-                        marginLeft: 20,
-                        justifyContent: "center"
-                    }}
-                />
-            );
+                );
+            }
         }
     }
 
@@ -219,31 +221,34 @@ export default class TVDrawer extends React.Component {
         const
             descriptorKey = route.key,
             descriptor = this.props.descriptors[descriptorKey];
-
-        return (
-            <View
-                key={ descriptorKey }
-                style={{
-                    height: 20,
-                    margin: Definitions.DEFAULT_MARGIN,
-                    marginLeft: DRAWER_VALUES.DRAWER_ITEMS_MARGIN + DRAWER_VALUES.DRAWER_ICON_SIZE + (Definitions.DEFAULT_MARGIN * 2),
-                    justifyContent: "center"
-                }}
-            >
-                <NormalButton
-                    alwaysAccessible={ true }
-                    hasTVPreferredFocus={ this.props.isDrawerOpen && descriptorKey == this.props.currentDescriptorKey ? true : false }
-                    textStyle={ Styles.bigText }
-                    onPress={
-                        () => {
-                            this.props.navigation.navigate(route.name);
-                        }
-                    }
+        
+        if(descriptor.options.showScreenInDrawer) {
+            return (
+                
+                <View
+                    key={ descriptorKey }
+                    style={{
+                        height: 20,
+                        margin: Definitions.DEFAULT_MARGIN,
+                        marginLeft: DRAWER_VALUES.DRAWER_ITEMS_MARGIN + DRAWER_VALUES.DRAWER_ICON_SIZE + (Definitions.DEFAULT_MARGIN * 2),
+                        justifyContent: "center"
+                    }}
                 >
-                    { descriptor.options.title }
-                </NormalButton>
-            </View>
-        );
+                    <NormalButton
+                        alwaysAccessible={ true }
+                        hasTVPreferredFocus={ this.props.isDrawerOpen && descriptorKey == this.props.currentDescriptorKey ? true : false }
+                        textStyle={ Styles.bigText }
+                        onPress={
+                            () => {
+                                this.props.navigation.navigate(route.name);
+                            }
+                        }
+                    >
+                        { descriptor.options.title }
+                    </NormalButton>
+                </View>
+            );
+        }
     }
 
     renderDrawer() {
@@ -340,8 +345,20 @@ export default class TVDrawer extends React.Component {
                 >
                     <NormalButton
                         alwaysAccessible={ true }
+                        onPress={
+                            () => {
+                                this.props.navigation.navigate("SettingsNavigator", {
+                                    screen: "GeneralScreen",
+                                    params: {
+                                        backRouteName: this.props.routes[this.props.currentIndex].name,
+                                        account: this.props.appContext.account,
+                                        profile: this.props.appContext.profile
+                                    }
+                                });
+                            }
+                        }
                     >
-                        { i18n.t("mainTvNavigator.options_button") }
+                        { i18n.t("mainTvNavigator.settings_button") }
                     </NormalButton>
                     <NormalButton
                         alwaysAccessible={ true }
