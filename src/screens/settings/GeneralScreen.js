@@ -86,7 +86,17 @@ export default class GeneralScreen extends React.Component {
                                     { i18n.t("settings.general.back_button") }
                                 </NormalButton>
 
-                                <NormalButton>
+                                <NormalButton
+                                    onPress={
+                                        () => {
+                                            this.props.navigation.navigate("EnterAccountPasswordScreen", {
+                                                update_profile: true,
+                                                account: this.account,
+                                                profile: this.profile
+                                            });
+                                        }
+                                    }
+                                >
                                     { i18n.t("settings.general.edit_profile_button") }
                                 </NormalButton>
                                 <NormalButton

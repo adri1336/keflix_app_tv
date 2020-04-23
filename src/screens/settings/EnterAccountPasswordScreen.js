@@ -65,15 +65,20 @@ export default class EnterAccountPasswordScreen extends React.Component {
                             onPasswordCheckStart={ () => this.loadingViewModal.setVisible(true) }
                             onPasswordChecked={
                                 (successful) => {
-                                    if(successful)  {
-                                        HttpClient.http_delete("http://" + Definitions.SERVER_IP + "/profile/" + this.profile.id).then(([response, data, error]) => {
-                                            if(error == null && response.status == 200) {
-                                                this.context.appContext.profileLogOut();
-                                            }
-                                            else {
-                                                this.props.navigation.navigate("GeneralScreen");
-                                            }
-                                        });
+                                    if(successful) {
+                                        if(this.props.route.params.delete_profile) {
+                                            HttpClient.http_delete("http://" + Definitions.SERVER_IP + "/profile/" + this.profile.id).then(([response, data, error]) => {
+                                                if(error == null && response.status == 200) {
+                                                    this.context.appContext.profileLogOut();
+                                                }
+                                                else {
+                                                    this.props.navigation.navigate("GeneralScreen");
+                                                }
+                                            });
+                                        }
+                                        else if(this.props.route.params.update_profile) {
+                                            //TODO
+                                        }
                                     }
                                     else {
                                         this.loadingViewModal.setVisible(false);
