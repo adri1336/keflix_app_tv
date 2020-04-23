@@ -132,6 +132,11 @@ i18n.translations = {
 		},
 		account_password_checker: {
 			password_placeholder: "Escribe la contraseña de la cuenta"
+		},
+		main_navigator: {
+			search_screen_title: "Búsqueda",
+			movies_screen_title: "Películas",
+			my_list_screen_title: "Mi lista"
 		}
 	}
 };

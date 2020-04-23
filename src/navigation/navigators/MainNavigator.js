@@ -1,14 +1,15 @@
 //Imports
 import React from "react";
+import i18n from "i18n-js";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 
 //Components Imports
 import { createTVDrawerNavigator } from "cuervo/src/components/navigators/TVDrawerNavigator";
 
 //Screen Imports
-import MainScreen from "cuervo/src/screens/main/MainScreen";
-import Screen2 from "cuervo/src/screens/main/Screen2";
-import Screen3 from "cuervo/src/screens/main/Screen3";
+import SearchScreen from "cuervo/src/screens/main/SearchScreen";
+import MoviesScreen from "cuervo/src/screens/main/MoviesScreen";
+import MyListScreen from "cuervo/src/screens/main/MyListScreen";
 import SettingsNavigator from "./SettingsNavigator";
 
 //Other Imports
@@ -24,34 +25,34 @@ export default () => {
     return (
         <MainNavigator.Navigator 
             headerMode="none"
-            initialRouteName="MainScreen"
+            initialRouteName="MoviesScreen"
             appContext={ appContext }
         >
-            <MainNavigator.Screen name="Screen2" component={Screen2} options={{
+            <MainNavigator.Screen name="SearchScreen" component={SearchScreen} options={{
                 drawer: true, //activa el drawer en esta pantalla
                 drawerCanOpen: true, //permite o no abrir el drawer en la pantalla (mediante el mando)
                 showScreenInDrawer: true,
-                title: "Búsqueda",
+                title: i18n.t("main_navigator.search_screen_title"),
                 icon: {
                     library: FontAwesome,
                     name: "search"
                 }
             }}/>
-            <MainNavigator.Screen name="MainScreen" component={MainScreen} options={{
+            <MainNavigator.Screen name="MoviesScreen" component={MoviesScreen} options={{
                 drawer: true,
                 drawerCanOpen: true,
-                title: "Películas",
+                title: i18n.t("main_navigator.movies_screen_title"),
                 showScreenInDrawer: true,
                 icon: {
                     library: MaterialCommunityIcons,
                     name: "movie"
                 }
             }}/>
-            <MainNavigator.Screen name="Screen3" component={Screen3} options={{
+            <MainNavigator.Screen name="MyListScreen" component={MyListScreen} options={{
                 drawer: true,
                 drawerCanOpen: true,
                 showScreenInDrawer: true,
-                title: "Mi lista",
+                title: i18n.t("main_navigator.my_list_screen_title"),
                 icon: {
                     library: FontAwesome,
                     name: "plus"
@@ -60,8 +61,7 @@ export default () => {
             <MainNavigator.Screen name="SettingsNavigator" component={SettingsNavigator} options={{
                 drawer: false,
                 drawerCanOpen: false,
-                showScreenInDrawer: false,
-                title: "Settings"
+                showScreenInDrawer: false
             }}/>
         </MainNavigator.Navigator>
     );

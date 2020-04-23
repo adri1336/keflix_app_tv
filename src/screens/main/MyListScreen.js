@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View, Text, BackHandler } from "react-native";
+import { View, Text } from "react-native";
 
 //Components Imports
 import NormalButton from "cuervo/src/components/NormalButton";
@@ -10,22 +10,14 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { AppContext } from "cuervo/src/AppContext";
 
 //Code
-export default class MainScreen extends React.Component {
+export default class MyListScreen extends React.Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount() {
-        /*this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
-            this.props.navigation.navigate("MainScreen");
-            return true;
-        });*/
-    }
-
-    componentWillUnmount() {
-        //this.backHandler.remove();
     }
 
     render() {
@@ -38,8 +30,8 @@ export default class MainScreen extends React.Component {
                     backgroundColor: Definitions.PRIMARY_COLOR
                 }}
             >
-                <Text style={ Styles.titleText }>Screen3</Text>
-                <NormalButton>Button</NormalButton>
+                <Text style={ Styles.titleText }>My List Screen</Text>
+                <NormalButton hasTVPreferredFocus={ true }>Button</NormalButton>
             </View>
         );
     }
