@@ -315,7 +315,7 @@ export default class TVDrawer extends React.Component {
                                     }
                                 }
                             >
-                                { i18n.t("mainTvNavigator.change_profile_button") }
+                                { i18n.t("main_tv_navigator.change_profile_button") }
                             </NormalButton>
                         </View>
                     </View>
@@ -358,7 +358,7 @@ export default class TVDrawer extends React.Component {
                             }
                         }
                     >
-                        { i18n.t("mainTvNavigator.settings_button") }
+                        { i18n.t("main_tv_navigator.settings_button") }
                     </NormalButton>
                     <NormalButton
                         alwaysAccessible={ true }
@@ -368,7 +368,7 @@ export default class TVDrawer extends React.Component {
                             }
                         }
                     >
-                        { i18n.t("mainTvNavigator.exit_app_button") }
+                        { i18n.t("main_tv_navigator.exit_app_button") }
                     </NormalButton>
                 </View>
             </Animated.View>

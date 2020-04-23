@@ -4,11 +4,10 @@ import { View, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
-import BoxTextInput from "cuervo/src/components/BoxTextInput";
 import NormalAlert from "cuervo/src/components/NormalAlert";
 import NormalButton from "cuervo/src/components/NormalButton";
 import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
+import AccountPasswordChecker from "cuervo/src/components/AccountPasswordChecker";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
@@ -16,7 +15,6 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
-import * as HttpClient from "cuervo/src/utils/HttpClient";
 
 //Code
 export default class EnterAccountPasswordScreen extends React.Component {
@@ -26,46 +24,6 @@ export default class EnterAccountPasswordScreen extends React.Component {
         super(props);
         this.account = this.props.route.params.account;
         this.profile = this.props.route.params.profile;
-    }
-
-    componentDidMount() {
-        this.keyboard.setTextInput(this.textInputPassword);
-    }
-
-    onKeyboardButtonPressed(textInput, buttonType) {
-        if(textInput == this.textInputPassword) {
-            switch(buttonType) {
-                case KeyboardButtonsTypes.BACK: {
-                    this.props.navigation.goBack();
-                    break;
-                }
-                case KeyboardButtonsTypes.CONTINUE: {
-                    const password = this.textInputPassword.state.text;
-                    if(password.length < Definitions.PIN_PASSWORD_LEGTH) {
-                        this.alert.setAlertVisible(true, i18n.t("profile.enter_account_password.error_alert_title"), i18n.t("profile.enter_account_password.invalid_password_length_alert_message"));
-                    }
-                    else {
-                        this.loadingViewModal.setVisible(true);
-
-                        const account = {
-                            email: this.account.email,
-                            password: this.textInputPassword.state.text
-                        };
-                        HttpClient.post("http://" + Definitions.SERVER_IP + "/account/check_account_password", account).then(([response, data, error]) => {
-                            if(error == null && response.status == 200 && data != false) {
-                                this.context.appContext.changeProfile(this.profile);
-                                this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
-                            }
-                            else {
-                                this.loadingViewModal.setVisible(false);
-                                this.alert.setAlertVisible(true, i18n.t("profile.enter_account_password.error_alert_title"), i18n.t("profile.enter_account_password.invalid_password_alert_message"));
-                            }
-                        });
-                    }
-                    break;
-                }
-            }
-        }
     }
 
     render() {
@@ -94,37 +52,29 @@ export default class EnterAccountPasswordScreen extends React.Component {
                         }}>
                             <Text style={ Styles.titleText }>{ i18n.t("profile.enter_account_password.account_password_text") }</Text>
                         </View>
-                        <View style={{
-                            flex: 50,
-                            flexDirection: "row"
-                        }}>
-                            
-                            <View style={{
-                                flex: 45,
-                                flexDirection: "column"
-                            }}>
-                                <Keyboard 
-                                    ref={ component => this.keyboard = component }
-                                    keboardType={ KeyboardTypes.NORMAL }
-                                    buttonsType={ [KeyboardButtonsTypes.BACK, [KeyboardButtonsTypes.CONTINUE, 2]] }
-                                    onButtonPress={ (textInput, buttonType) => this.onKeyboardButtonPressed(textInput, buttonType) }
-                                />
-                            </View>
-                            <View style={{
-                                flex: 55,
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginLeft: Definitions.DEFAULT_MARGIN,
-                            }}>
-                                <BoxTextInput
-                                    ref={ component => this.textInputPassword = component }
-                                    placeholder={ i18n.t("profile.enter_account_password.password_placeholder") }
-                                    secureTextEntry={ true }
-                                    maxLength={ 20 }
-                                />
-                            </View>
+                        
+                        <AccountPasswordChecker
+                            account={ this.account }
+                            onInvalidPasswordLength={
+                                () => {
+                                    this.alert.setAlertVisible(true, i18n.t("profile.enter_account_password.error_alert_title"), i18n.t("profile.enter_account_password.invalid_password_length_alert_message"));
+                                }
+                            }
+                            onPasswordCheckStart={ () => this.loadingViewModal.setVisible(true) }
+                            onPasswordChecked={
+                                (successful) => {
+                                    if(successful)  {
+                                        this.context.appContext.changeProfile(this.profile);
+                                        this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
+                                    }
+                                    else {
+                                        this.loadingViewModal.setVisible(false);
+                                        this.alert.setAlertVisible(true, i18n.t("profile.enter_account_password.error_alert_title"), i18n.t("profile.enter_account_password.invalid_password_alert_message"));
+                                    }
+                                }
+                            }
+                        />
 
-                        </View>
                         <View style={{ flex: 25, flexDirection: "row" }}>
                             <View style={{ flex: 45, alignItems: "center" }}>
                                 <NormalButton

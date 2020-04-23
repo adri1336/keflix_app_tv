@@ -40,7 +40,7 @@ export default class EnterProfilePasswordScreen extends React.Component {
                 }
                 case KeyboardButtonsTypes.CONTINUE: {
                     const password = this.textInputPassword.getCode();
-                    if(password.length < Definitions.PIN_PASSWORD_LEGTH) {
+                    if(password.length < Definitions.PIN_PASSWORD_LENGTH) {
                         this.alert.setAlertVisible(true, i18n.t("profile.enter_profile_password.error_alert_title"), i18n.t("profile.enter_profile_password.invalid_password_length_alert_message"));
                     }
                     else {
@@ -109,7 +109,7 @@ export default class EnterProfilePasswordScreen extends React.Component {
                             }}>
                                 <CodeTextInput
                                     ref={ component => this.textInputPassword = component }
-                                    length={ Definitions.PIN_PASSWORD_LEGTH }
+                                    length={ Definitions.PIN_PASSWORD_LENGTH }
                                     secureTextEntry={ true }
                                 />
                             </View>

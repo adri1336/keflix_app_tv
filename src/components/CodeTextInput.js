@@ -17,7 +17,7 @@ export default class CodeTextInput extends React.Component {
             text: "",
             currentCodeIndex: 0
         };
-        this.length = this.props?.length ? this.props.length : Definitions.PIN_PASSWORD_LEGTH;
+        this.length = this.props?.length ? this.props.length : Definitions.PIN_PASSWORD_LENGTH;
         this.inputs = [];
         for(var i = 0; i < this.length; i ++) {
             this.inputs.push({

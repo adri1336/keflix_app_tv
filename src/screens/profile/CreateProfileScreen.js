@@ -101,8 +101,8 @@ export default class CreateProfileScreen extends React.Component {
                     goToColorPicker = false;
                 }
                 else {
-                    if(this.textInputPassword.state.text.length != Definitions.PIN_PASSWORD_LEGTH) {
-                        this.textInputPassword.setError(i18n.t("profile.create_profile.invalid_password_text_input_error", { password_length: Definitions.PIN_PASSWORD_LEGTH }));
+                    if(this.textInputPassword.state.text.length != Definitions.PIN_PASSWORD_LENGTH) {
+                        this.textInputPassword.setError(i18n.t("profile.create_profile.invalid_password_text_input_error", { password_length: Definitions.PIN_PASSWORD_LENGTH }));
                         goToColorPicker = false;
                     }
                 }
@@ -146,7 +146,7 @@ export default class CreateProfileScreen extends React.Component {
                     ref={ component => this.textInputRepeatPassword = component }
                     placeholder={ i18n.t("profile.create_profile.repeat_password_placeholder") }
                     secureTextEntry={ true }
-                    maxLength={ Definitions.PIN_PASSWORD_LEGTH }
+                    maxLength={ Definitions.PIN_PASSWORD_LENGTH }
                 />
             );
         }
@@ -209,7 +209,7 @@ export default class CreateProfileScreen extends React.Component {
                                         ref={ component => this.textInputPassword = component }
                                         placeholder={ i18n.t("profile.create_profile.password_placeholder") }
                                         secureTextEntry={ true }
-                                        maxLength={ Definitions.PIN_PASSWORD_LEGTH }
+                                        maxLength={ Definitions.PIN_PASSWORD_LENGTH }
                                         onTextSet={ (text) => this.onPasswordTextChanged(text) }
                                     />
                                     {

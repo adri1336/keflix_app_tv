@@ -79,8 +79,7 @@ i18n.translations = {
 				error_alert_title: "Error",
 				invalid_password_length_alert_message: "Introduce una contraseña válida.",
 				invalid_password_alert_message: "La contraseña no es correcta.",
-				use_profile_password_button: "Acceder con el PIN del perfil",
-				password_placeholder: "Escribe la contraseña de la cuenta"
+				use_profile_password_button: "Acceder con el PIN del perfil"
 			}
 		},
 		settings: {
@@ -113,13 +112,16 @@ i18n.translations = {
 			continue: "Continuar",
 			finish: "Finalizar"
 		},
-		normalAlert: {
+		normal_alert: {
 			close_button: "Cerrar"
 		},
-		mainTvNavigator: {
+		main_tv_navigator: {
 			change_profile_button: "Cambiar de perfil",
 			settings_button: "Opciones",
 			exit_app_button: "Salir de la aplicación"
+		},
+		account_password_checker: {
+			password_placeholder: "Escribe la contraseña de la cuenta"
 		}
 	}
 };
