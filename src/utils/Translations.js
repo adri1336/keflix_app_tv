@@ -103,7 +103,17 @@ i18n.translations = {
 				profile_adult_content_yes: "Contenido para adultos: sí",
 				profile_adult_content_no: "Contenido para adultos: no",
 				version_text: "Versión: {{version}}",
-				web_text: "Contacto: {{web}}"
+				web_text: "Contacto: {{web}}",
+				delete_profile_alert_title: "Eliminar perfil",
+				delete_profile_alert_message: "¿Estás seguro de que quieres eliminar este perfil?",
+				delete_profile_alert_button_cancel: "Cancelar",
+				delete_profile_alert_button_delete: "Eliminar"
+			},
+			enter_account_password: {
+				account_password_text: "Introduce la contraseña para continuar",
+				error_alert_title: "Error",
+				invalid_password_length_alert_message: "Introduce una contraseña válida.",
+				invalid_password_alert_message: "La contraseña no es correcta."
 			}
 		},
 		keyboard: {

@@ -26,7 +26,9 @@ export default class AccountPasswordChecker extends React.Component {
         if(textInput == this.textInputPassword) {
             switch(buttonType) {
                 case KeyboardButtonsTypes.BACK: {
-                    this.props.navigation.goBack();
+                    if(this.props.onBackRequested) {
+                        this.props.onBackRequested();
+                    }
                     break;
                 }
                 case KeyboardButtonsTypes.CONTINUE: {

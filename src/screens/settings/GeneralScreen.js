@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View, Text, BackHandler } from "react-native";
+import { View, Text, BackHandler, Alert } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import i18n from "i18n-js";
 import { version } from "cuervo/package.json";
@@ -91,6 +91,32 @@ export default class GeneralScreen extends React.Component {
                                 </NormalButton>
                                 <NormalButton
                                     style={{ marginBottom: 20 }}
+                                    onPress={
+                                        () => {
+                                            Alert.alert(
+                                                i18n.t("settings.general.delete_profile_alert_title"),
+                                                i18n.t("settings.general.delete_profile_alert_message"),
+                                                [
+                                                    {
+                                                        text: i18n.t("settings.general.delete_profile_alert_button_cancel"),
+                                                        style: "cancel",
+                                                    },
+                                                    {
+                                                        text: i18n.t("settings.general.delete_profile_alert_button_delete"),
+                                                        style: "destructive",
+                                                        onPress: () => {
+                                                            this.props.navigation.navigate("EnterAccountPasswordScreen", {
+                                                                delete_profile: true,
+                                                                account: this.account,
+                                                                profile: this.profile
+                                                            });
+                                                        }
+                                                    }
+                                                ],
+                                                { cancelable: true }
+                                            );
+                                        }
+                                    }
                                 >
                                     { i18n.t("settings.general.delete_profile_button") }
                                 </NormalButton>

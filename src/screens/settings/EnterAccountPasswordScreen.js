@@ -15,6 +15,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
+import * as HttpClient from "cuervo/src/utils/HttpClient";
 
 //Code
 export default class EnterAccountPasswordScreen extends React.Component {
@@ -50,7 +51,7 @@ export default class EnterAccountPasswordScreen extends React.Component {
                             justifyContent: "flex-end",
                             marginBottom: Definitions.DEFAULT_MARGIN
                         }}>
-                            <Text style={ Styles.titleText }>{ i18n.t("profile.enter_account_password.account_password_text") }</Text>
+                            <Text style={ Styles.titleText }>{ i18n.t("settings.enter_account_password.account_password_text") }</Text>
                         </View>
                         
                         <AccountPasswordChecker
@@ -58,42 +59,31 @@ export default class EnterAccountPasswordScreen extends React.Component {
                             onBackRequested={ () => this.props.navigation.goBack() }
                             onInvalidPasswordLength={
                                 () => {
-                                    this.alert.setAlertVisible(true, i18n.t("profile.enter_account_password.error_alert_title"), i18n.t("profile.enter_account_password.invalid_password_length_alert_message"));
+                                    this.alert.setAlertVisible(true, i18n.t("settings.enter_account_password.error_alert_title"), i18n.t("settings.enter_account_password.invalid_password_length_alert_message"));
                                 }
                             }
                             onPasswordCheckStart={ () => this.loadingViewModal.setVisible(true) }
                             onPasswordChecked={
                                 (successful) => {
                                     if(successful)  {
-                                        this.context.appContext.changeProfile(this.profile);
-                                        this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
+                                        HttpClient.http_delete("http://" + Definitions.SERVER_IP + "/profile/" + this.profile.id).then(([response, data, error]) => {
+                                            if(error == null && response.status == 200) {
+                                                this.context.appContext.profileLogOut();
+                                            }
+                                            else {
+                                                this.props.navigation.navigate("GeneralScreen");
+                                            }
+                                        });
                                     }
                                     else {
                                         this.loadingViewModal.setVisible(false);
-                                        this.alert.setAlertVisible(true, i18n.t("profile.enter_account_password.error_alert_title"), i18n.t("profile.enter_account_password.invalid_password_alert_message"));
+                                        this.alert.setAlertVisible(true, i18n.t("settings.enter_account_password.error_alert_title"), i18n.t("settings.enter_account_password.invalid_password_alert_message"));
                                     }
                                 }
                             }
                         />
 
-                        <View style={{ flex: 25, flexDirection: "row" }}>
-                            <View style={{ flex: 45, alignItems: "center" }}>
-                                <NormalButton
-                                    style={{ marginTop: Definitions.DEFAULT_MARGIN }}
-                                    onPress={
-                                        () => {
-                                            this.props.navigation.navigate("EnterProfilePasswordScreen", {
-                                                account: this.account,
-                                                profile: this.profile
-                                            });
-                                        }
-                                    }
-                                >
-                                    { i18n.t("profile.enter_account_password.use_profile_password_button") }
-                                </NormalButton>
-                            </View>
-                            <View style={{ flex: 55 }}/>
-                        </View>
+                        <View style={{ flex: 25 }}/>
 
                     </View>
                 </View>
