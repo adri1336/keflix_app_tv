@@ -20,8 +20,22 @@ export default class CreateProfileScreen extends React.Component {
     constructor(props) {
         super(props);
         this.account = this.props.route.params.account;
-        this.state = {
-            repeatPasswordEnabled: false
+        this.state = { repeatPasswordEnabled: false };
+        this.updating = false;
+        if(this.props.route.params.profile) {
+            this.updating = true;
+            this.profile = this.props.route.params.profile;
+            if(this.profile.password) {
+                this.state = { repeatPasswordEnabled: true };
+            }
+        }
+        else {
+            this.profile = {
+                name: null,
+                password: null,
+                color: null,
+                adult_content: false
+            };
         }
     }
 
@@ -34,7 +48,12 @@ export default class CreateProfileScreen extends React.Component {
             case this.textInputName: {
                 switch(buttonType) {
                     case KeyboardButtonsTypes.BACK: {
-                        this.props.navigation.goBack();
+                        if(this.updating) {
+                            this.props.navigation.navigate("GeneralScreen");
+                        }
+                        else {
+                            this.props.navigation.goBack();
+                        }
                         break;
                     }
                     case KeyboardButtonsTypes.NEXT: {
@@ -116,14 +135,12 @@ export default class CreateProfileScreen extends React.Component {
         }
 
         if(goToColorPicker) {
-            const profile = {
-                name: this.textInputName.state.text,
-                password: this.textInputPassword.state.text == "" ? null : this.textInputPassword.state.text,
-                adult_content: this.adult_content_checkbox.state.checked ? 1 : 0
-            };
+            this.profile.name = this.textInputName.state.text;
+            this.profile.password = this.textInputPassword.state.text == "" ? null : this.textInputPassword.state.text;
+            this.profile.adult_content = this.adult_content_checkbox.state.checked ? 1 : 0;
             this.props.navigation.navigate("SelectProfileColorScreen", {
                 account: this.account,
-                profile: profile
+                profile: this.profile
             });
         }
     }
@@ -144,6 +161,7 @@ export default class CreateProfileScreen extends React.Component {
             return (
                 <BoxTextInput
                     ref={ component => this.textInputRepeatPassword = component }
+                    text={ this.profile.password }
                     placeholder={ i18n.t("profile.create_profile.repeat_password_placeholder") }
                     secureTextEntry={ true }
                     maxLength={ Definitions.PIN_PASSWORD_LENGTH }
@@ -175,7 +193,7 @@ export default class CreateProfileScreen extends React.Component {
                             justifyContent: "flex-end",
                             marginBottom: Definitions.DEFAULT_MARGIN
                         }}>
-                            <Text style={ Styles.titleText }>{ i18n.t("profile.create_profile.create_profile_text") }</Text>
+                            <Text style={ Styles.titleText }>{ !this.updating ? i18n.t("profile.create_profile.create_profile_text") : i18n.t("profile.create_profile.edit_profile_text") }</Text>
                         </View>
                         <View style={{
                             flex: 50,
@@ -202,11 +220,13 @@ export default class CreateProfileScreen extends React.Component {
                                 }}>
                                     <BoxTextInput
                                         ref={ component => this.textInputName = component }
+                                        text={ this.profile.name }
                                         placeholder={ i18n.t("profile.create_profile.name_placeholder") }
                                         maxLength={ 24 }
                                     />
                                     <BoxTextInput
                                         ref={ component => this.textInputPassword = component }
+                                        text={ this.profile.password }
                                         placeholder={ i18n.t("profile.create_profile.password_placeholder") }
                                         secureTextEntry={ true }
                                         maxLength={ Definitions.PIN_PASSWORD_LENGTH }
@@ -221,7 +241,12 @@ export default class CreateProfileScreen extends React.Component {
                                     justifyContent: "flex-end",
                                     marginBottom: Definitions.DEFAULT_MARGIN + (Definitions.DEFAULT_MARGIN / 2)
                                 }}>
-                                    <Checkbox ref={ component => this.adult_content_checkbox = component }>{ i18n.t("profile.create_profile.adult_content_checkbox") }</Checkbox>
+                                    <Checkbox
+                                        ref={ component => this.adult_content_checkbox = component }
+                                        checked={ this.profile.adult_content ? true : false }
+                                    >
+                                        { i18n.t("profile.create_profile.adult_content_checkbox") }
+                                    </Checkbox>
                                 </View>
                             </View>
                         </View>

@@ -40,6 +40,14 @@ export default class GeneralScreen extends React.Component {
         });
     }
 
+    componentDidUpdate() {
+        if(this.props.route.params?.profile) {
+            this.profile = this.props.route.params.profile;
+            this.appContext.changeProfile(this.profile);
+            this.props.route.params.profile = undefined;
+        }
+    }
+
     componentWillUnmount() {
         this.backHandler.remove();
     }

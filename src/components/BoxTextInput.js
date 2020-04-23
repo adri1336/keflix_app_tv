@@ -14,7 +14,7 @@ export default class BoxTextInput extends React.Component {
         super(props);
         this.state = {
             focused: false,
-            text: "",
+            text: this.props.text ?? "",
             errorText: null
         };
     }

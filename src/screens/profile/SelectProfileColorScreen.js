@@ -22,22 +22,41 @@ export default class SelectProfileColorScreen extends React.Component {
         super(props);
         this.account = this.props.route.params.account;
         this.profile = this.props.route.params.profile;
+        this.updating = false;
+        if(this.profile.id) {
+            this.updating = true;
+        }
     }
 
     onColorSelected(color) {
         this.profile.color = color;
         this.loadingViewModal.setVisible(true);
-        HttpClient.post("http://" + Definitions.SERVER_IP + "/account/" + this.account.id + "/profile", this.profile).then(([response, data, error]) => {
-            if(error == null && response.status == 200 && data?.id > 0) {
-                this.props.navigation.navigate("SelectProfileScreen", {
-                    profile: data
-                });
-            }
-            else {
-                this.loadingViewModal.setVisible(false);
-                this.alert.setAlertVisible(true, i18n.t("profile.select_profile_color.error_alert_title"), i18n.t("profile.select_profile_color.create_profile_error_alert_message"));
-            }
-        });
+        if(!this.updating) {
+            HttpClient.post("http://" + Definitions.SERVER_IP + "/account/" + this.account.id + "/profile", this.profile).then(([response, data, error]) => {
+                if(error == null && response.status == 200 && data?.id > 0) {
+                    this.props.navigation.navigate("SelectProfileScreen", {
+                        profile: data
+                    });
+                }
+                else {
+                    this.loadingViewModal.setVisible(false);
+                    this.alert.setAlertVisible(true, i18n.t("profile.select_profile_color.error_alert_title"), i18n.t("profile.select_profile_color.create_profile_error_alert_message"));
+                }
+            });
+        }
+        else {
+            HttpClient.put("http://" + Definitions.SERVER_IP + "/profile/" + this.profile.id, this.profile).then(([response, data, error]) => {
+                if(error == null && response.status == 200 && data?.id > 0) {
+                    this.props.navigation.navigate("GeneralScreen", {
+                        profile: data
+                    });
+                }
+                else {
+                    this.loadingViewModal.setVisible(false);
+                    this.alert.setAlertVisible(true, i18n.t("profile.select_profile_color.error_alert_title"), i18n.t("profile.select_profile_color.edit_profile_error_alert_message"));
+                }
+            });
+        }
     }
 
     render() {

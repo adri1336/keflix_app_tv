@@ -60,12 +60,14 @@ i18n.translations = {
 				create_profile_text: "Crear perfil",
 				name_placeholder: "Escribe tu nombre",
 				password_placeholder: "Establece tu PIN de acceso (opcional)",
-				adult_content_checkbox: "Permitir mostrar contenido solo para adultos (pornografía)"
+				adult_content_checkbox: "Permitir mostrar contenido solo para adultos (pornografía)",
+				edit_profile_text: "Editar perfil"
 			},
 			select_profile_color: {
 				profile_color_text: "Selecciona tu color preferido, {{name}}",
 				error_alert_title: "Error",
 				create_profile_error_alert_message: "No se ha podido crear tu perfil, comprueba tu conexión a internet.",
+				edit_profile_error_alert_message: "No se ha podido actualizar tu perfil, comprueba tu conexión a internet."
 			},
 			enter_profile_password: {
 				profile_password_text: "Introduce tu PIN de acceso",

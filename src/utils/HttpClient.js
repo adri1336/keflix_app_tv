@@ -45,3 +45,21 @@ export async function http_delete(url, bodyData = null) {
         return [null, null, error];
     }
 }
+
+export async function put(url, bodyData) {
+    try {
+        let response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(bodyData)
+        });
+        let data = await response.json();
+        return [response, data, null];
+    }
+    catch(error) {
+        return [null, null, error];
+    }
+}

@@ -72,12 +72,17 @@ export default class EnterAccountPasswordScreen extends React.Component {
                                                     this.context.appContext.profileLogOut();
                                                 }
                                                 else {
+                                                    this.loadingViewModal.setVisible(false);
                                                     this.props.navigation.navigate("GeneralScreen");
                                                 }
                                             });
                                         }
                                         else if(this.props.route.params.update_profile) {
-                                            //TODO
+                                            this.loadingViewModal.setVisible(false);
+                                            this.props.navigation.navigate("EditProfileScreen", {
+                                                account: this.account,
+                                                profile: this.profile
+                                            });
                                         }
                                     }
                                     else {
