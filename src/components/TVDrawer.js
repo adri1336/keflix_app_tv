@@ -17,10 +17,11 @@ import Definitions, { DEFAULT_SIZES } from "cuervo/src/utils/Definitions";
 import * as Dimensions from "cuervo/src/utils/Dimensions.js";
 
 //Vars
-const DRAWER_VALUES = {
+export const DRAWER_VALUES = {
     DRAWER_OPENED_WIDTH: Dimensions.vw(30.0),
     DRAWER_CLOSED_WIDTH: 50,
     DRAWER_ANIMATION_TIME: 100,
+    DRAWER_CLOSED_ITEMS_MARGIN: 15,
     DRAWER_ITEMS_MARGIN: 40,
     DRAWER_ICON_SIZE: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
     DRAWER_PROFILE_ICON_SIZE: 30
@@ -34,7 +35,7 @@ export default class TVDrawer extends React.Component {
         this.state = {
             loading: false,
             drawerOpacity: new Animated.Value(0),
-            drawerIconsPosX: new Animated.Value(15),
+            drawerIconsPosX: new Animated.Value(DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN),
             drawerPosX: new Animated.Value((-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH)),
             drawerCanOpen: activeDescriptor.options.drawerCanOpen
         };
@@ -101,7 +102,7 @@ export default class TVDrawer extends React.Component {
         }).start();
 
         Animated.timing(this.state.drawerIconsPosX, {
-            toValue: this.props.isDrawerOpen ? DRAWER_VALUES.DRAWER_ITEMS_MARGIN : 15,
+            toValue: this.props.isDrawerOpen ? DRAWER_VALUES.DRAWER_ITEMS_MARGIN : DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN,
             duration: DRAWER_VALUES.DRAWER_ANIMATION_TIME,
             useNativeDriver: true,
             easing: Easing.linear
