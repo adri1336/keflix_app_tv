@@ -103,6 +103,7 @@ export default class TouchableOpacityFix extends React.Component {
         return (
             <TouchableOpacity
                 { ...rest }
+                ref={ this.props.touchableRef }
                 accessible={ this.props?.alwaysAccessible ? true : this.state.enabled }
                 onPress={
                     () => {

@@ -173,6 +173,7 @@ export default class MoviesScreen extends React.Component {
                     <View style={{ marginTop: Definitions.DEFAULT_MARGIN }}>
                         <Text style={[ Styles.normalText, { fontWeight: "bold", marginBottom: Definitions.DEFAULT_MARGIN / 2 } ]}>Últimas películas añadidas</Text>
                         <FlatList
+                            scrollEnabled={ false }
                             horizontal={ true }
                             data={ this.movies }
                             renderItem={ (item) => this.renderMovie(item) }
@@ -183,6 +184,7 @@ export default class MoviesScreen extends React.Component {
                     <View style={{ marginTop: Definitions.DEFAULT_MARGIN }}>
                         <Text style={[ Styles.normalText, { fontWeight: "bold", marginBottom: Definitions.DEFAULT_MARGIN / 2 } ]}>Más mierda aquí abajo</Text>
                         <FlatList
+                            scrollEnabled={ false }
                             horizontal={ true }
                             data={ this.movies }
                             renderItem={ (item) => this.renderMovie(item) }

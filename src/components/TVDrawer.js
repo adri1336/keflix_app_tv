@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View, Text, Animated, Easing, TVEventHandler, BackHandler } from "react-native";
+import { View, Text, Animated, Easing, TVEventHandler, BackHandler, findNodeHandle } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import i18n from "i18n-js";
 import { LinearGradient } from "expo-linear-gradient";
@@ -33,6 +33,7 @@ export default class TVDrawer extends React.Component {
     constructor(props) {
         super(props);
         const activeDescriptor = this.props.descriptors[this.props.currentDescriptorKey];
+        this.screen_buttons = [];
         this.state = {
             loading: false,
             drawerOpacity: new Animated.Value(0),
@@ -75,6 +76,56 @@ export default class TVDrawer extends React.Component {
     componentDidUpdate(prevProps) {
         if(this.props.isDrawerOpen != prevProps.isDrawerOpen) {
             if(this.props.isDrawerOpen) {
+                
+                this.change_profile_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.change_profile_button),
+                    nextFocusDown: findNodeHandle(this.screen_buttons[0]),
+                    nextFocusLeft: findNodeHandle(this.change_profile_button),
+                    nextFocusRight: findNodeHandle(this.change_profile_button)
+                });
+
+                this.screen_buttons.map((screen_button, index) => {
+                    var nextFocusUp = null;
+                    var nextFocusDown = null;
+
+                    //nextFocusUp 
+                    if(index == 0) {
+                        nextFocusUp = findNodeHandle(this.change_profile_button);
+                    }
+                    else {
+                        nextFocusUp = findNodeHandle(this.screen_buttons[index - 1]);
+                    }
+
+                    //nextFocusDown
+                    if(index == this.screen_buttons.length - 1) {
+                        nextFocusDown = findNodeHandle(this.settings_button);
+                    }
+                    else {
+                        nextFocusDown = findNodeHandle(this.screen_buttons[index + 1]);
+                    }
+
+                    screen_button.setNativeProps({
+                        nextFocusUp: nextFocusUp,
+                        nextFocusDown: nextFocusDown,
+                        nextFocusLeft: findNodeHandle(screen_button),
+                        nextFocusRight: findNodeHandle(screen_button)
+                    });
+                });
+
+                this.settings_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.screen_buttons[this.screen_buttons.length - 1]),
+                    nextFocusDown: findNodeHandle(this.exit_app_button),
+                    nextFocusLeft: findNodeHandle(this.settings_button),
+                    nextFocusRight: findNodeHandle(this.settings_button)
+                });
+
+                this.exit_app_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.settings_button),
+                    nextFocusDown: findNodeHandle(this.exit_app_button),
+                    nextFocusLeft: findNodeHandle(this.exit_app_button),
+                    nextFocusRight: findNodeHandle(this.exit_app_button)
+                });
+
                 disableAllButtons();
             }
             else {
@@ -229,7 +280,7 @@ export default class TVDrawer extends React.Component {
         );
     }
 
-    printDescriptorTextButton(route) {
+    printDescriptorTextButton(route, index) {
         const
             descriptorKey = route.key,
             descriptor = this.props.descriptors[descriptorKey];
@@ -247,6 +298,7 @@ export default class TVDrawer extends React.Component {
                     }}
                 >
                     <NormalButton
+                        touchableRef={ component => this.screen_buttons[index] = component }
                         alwaysAccessible={ true }
                         hasTVPreferredFocus={ this.props.isDrawerOpen && descriptorKey == this.props.currentDescriptorKey ? true : false }
                         textStyle={ Styles.bigText }
@@ -319,6 +371,7 @@ export default class TVDrawer extends React.Component {
                                 { this.props.appContext.profile.name.toUpperCase() }
                             </Text>
                             <NormalButton
+                                touchableRef={ component => this.change_profile_button = component }
                                 alwaysAccessible={ true }
                                 onPress={
                                     () => {
@@ -340,8 +393,8 @@ export default class TVDrawer extends React.Component {
                     }}
                 >
                     {
-                        this.props.routes.map((route) => {
-                            return this.printDescriptorTextButton(route);
+                        this.props.routes.map((route, index) => {
+                            return this.printDescriptorTextButton(route, index);
                         })
                     }
                 </View>
@@ -356,6 +409,7 @@ export default class TVDrawer extends React.Component {
                     }}
                 >
                     <NormalButton
+                        touchableRef={ component => this.settings_button = component }
                         alwaysAccessible={ true }
                         onPress={
                             () => {
@@ -373,6 +427,7 @@ export default class TVDrawer extends React.Component {
                         { i18n.t("main_tv_navigator.settings_button") }
                     </NormalButton>
                     <NormalButton
+                        touchableRef={ component => this.exit_app_button = component }
                         alwaysAccessible={ true }
                         onPress={
                             () => {
