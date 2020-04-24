@@ -170,7 +170,6 @@ export default class MoviesScreen extends React.Component {
                         marginRight: -Definitions.DEFAULT_MARGIN
                     }}
                 >
-                    <ScrollView>
                     <View style={{ marginTop: Definitions.DEFAULT_MARGIN }}>
                         <Text style={[ Styles.normalText, { fontWeight: "bold", marginBottom: Definitions.DEFAULT_MARGIN / 2 } ]}>Últimas películas añadidas</Text>
                         <FlatList
@@ -190,7 +189,6 @@ export default class MoviesScreen extends React.Component {
                             keyExtractor={ item => item.id.toString() }
                         />
                     </View>
-                    </ScrollView>
                 </View>
             </View>
         );

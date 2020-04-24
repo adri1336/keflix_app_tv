@@ -3,6 +3,7 @@ import React from "react";
 import { View, Text, Animated, Easing, TVEventHandler, BackHandler } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import i18n from "i18n-js";
+import { LinearGradient } from "expo-linear-gradient";
 
 //Components Imports
 import NormalButton from "cuervo/src/components/NormalButton";
@@ -119,10 +120,20 @@ export default class TVDrawer extends React.Component {
                     top: 0,
                     bottom: 0,
                     flex: 1,
-                    backgroundColor: "rgba(0, 0, 0, 0.8);"
+                    backgroundColor: "rgba(0, 0, 0, 0.6);"
                 }}
                 opacity={ this.state.drawerOpacity }
-            />
+            >
+                <LinearGradient
+                    style={{
+                        width: Dimensions.vw(50.0),
+                        height: "100%"
+                    }}
+                    colors={ ["black", "transparent"] }
+                    start={ [0.3, 0] }
+                    end={ [1, 0] }
+                />
+            </Animated.View>
         );
     }
 
