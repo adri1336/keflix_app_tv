@@ -9,7 +9,7 @@ import ConnectScreen from "cuervo/src/screens/connect/ConnectScreen";
 const ConnectNavigator = createStackNavigator();
 
 //Code
-export default () => {
+export default (props) => {
     return (
         <ConnectNavigator.Navigator 
             /*por algun motivo da warning...: (Can't perform a React state update on an unmounted component.) 

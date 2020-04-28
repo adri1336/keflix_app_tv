@@ -37,79 +37,73 @@ const storeTokens = async (accessToken, refreshToken) => {
 	await AsyncStorage.multiSet([[STORAGE_KEYS.ACCESS_TOKEN, accessToken], [STORAGE_KEYS.REFRESH_TOKEN, refreshToken]]);
 };
 
-export default () => {
-	const [state, dispatch] = React.useReducer(
-		(prevState, action) => {
-			switch (action.type) {
-				case "CONNECTED":
-				{
-					return {
-						...prevState,
-						navigator: NAVIGATORS.AUTH
-					};
-				}
-				case "NEW_TOKENS":
-				{
-					return {
-						...prevState,
-						accessToken: action.accessToken,
-						refreshToken: action.refreshToken
-					};
-				}
-				case "LOGIN": {
-					return {
-						...prevState,
-						accessToken: action.accessToken,
-						refreshToken: action.refreshToken,
-						account: action.account,
-						remember: action.remember,
-						profile: null,
-						navigator: NAVIGATORS.PROFILE
-					};
-				}
-				case "LOGOUT": {
-					return {
-						...prevState,
-						accessToken: null,
-						refreshToken: null,
-						account: null,
-						profile: null,
-						remember: false,
-						navigator: NAVIGATORS.AUTH
-					};
-				}
-				case "PROFILE_LOGIN": {
-					return {
-						...prevState,
-						profile: action.profile,
-						navigator: NAVIGATORS.MAIN
-					}
-				}
-				case "PROFILE_LOGOUT": {
-					return {
-						...prevState,
-						profile: null,
-						navigator: NAVIGATORS.PROFILE
-					}
-				}
-				case "UPDATE_PROFILE": {
-					return {
-						...prevState,
-						profile: action.profile
-					}
-				}
-			}
-		},
-		{
-			navigator: NAVIGATORS.CONNECT,
-			accessToken: null,
-			refreshToken: null,
-			account: null,
-			profile: null,
-			remember: false
-		}
-	);
+const initialState = {
+	accessToken: null,
+	refreshToken: null,
+	account: null,
+	profile: null,
+	remember: false,
+	navigator: NAVIGATORS.CONNECT
+};
 
+const reducer = (prevState, action) => {
+	switch (action.type) {
+		case "CONNECTED":
+		{
+			return {
+				...prevState,
+				navigator: NAVIGATORS.AUTH
+			};
+		}
+		case "NEW_TOKENS":
+		{
+			return {
+				...prevState,
+				accessToken: action.accessToken,
+				refreshToken: action.refreshToken
+			};
+		}
+		case "LOGIN": {
+			return {
+				...prevState,
+				accessToken: action.accessToken,
+				refreshToken: action.refreshToken,
+				account: action.account,
+				remember: action.remember,
+				profile: null,
+				navigator: NAVIGATORS.PROFILE
+			};
+		}
+		case "LOGOUT": {
+			return {
+				...prevState,
+				accessToken: null,
+				refreshToken: null,
+				account: null,
+				profile: null,
+				remember: false,
+				navigator: NAVIGATORS.AUTH
+			};
+		}
+		case "PROFILE_LOGIN": {
+			return {
+				...prevState,
+				profile: action.profile,
+				navigator: NAVIGATORS.MAIN
+			}
+		}
+		case "PROFILE_LOGOUT": {
+			return {
+				...prevState,
+				profile: null,
+				navigator: NAVIGATORS.PROFILE
+			}
+		}
+	}
+};
+
+export default () => {
+	const [state, dispatch] = React.useReducer(reducer, initialState);
 	const funcs = React.useMemo(() => {
 		return {
 			connect: async () => {
@@ -174,17 +168,15 @@ export default () => {
 			},
 			profileLogout: () => {
 				dispatch({ type: "PROFILE_LOGOUT" });
-			},
-			updateProfile: (profile) => {
-				console.log("updateProfile: ", profile);
-				dispatch({ type: "UPDATE_PROFILE", profile: profile });
 			}
 		}
 	}, []);
-
+	
 	return (
 		<AppContext.Provider value={{ funcs: funcs, state: state }}>
-			<NavigationContainer>{ getNavigator(state.navigator) }</NavigationContainer>
+			<NavigationContainer>
+				{ getNavigator(state.navigator) }
+			</NavigationContainer>
 		</AppContext.Provider>
 	);
 }

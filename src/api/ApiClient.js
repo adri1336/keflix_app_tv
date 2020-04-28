@@ -16,7 +16,7 @@ export const apiFetch = async (context, path, method = "GET", body = null) => {
             if(data) {
                 const { access_token, refresh_token } = data;
                 context.funcs.setNewTokens(access_token, refresh_token);
-                return await _fetch(path, method, accessToken, body);
+                return await _fetch(path, method, access_token, body);
             }
             else {
                 context.funcs.logout();

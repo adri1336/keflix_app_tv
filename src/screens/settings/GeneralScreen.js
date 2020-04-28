@@ -21,7 +21,6 @@ export default class GeneralScreen extends React.Component {
     static contextType = AppContext;
 
     constructor(props) {
-        console.log("CONSTRUCTOR");
         super(props);
         this.account = this.props.route.params.account;
         this.profile = this.props.route.params.profile;
@@ -39,14 +38,6 @@ export default class GeneralScreen extends React.Component {
             return false;
         });
     }
-
-    /*componentDidUpdate() {
-        if(this.props.route.params?.profile) {
-            //this.profile = this.props.route.params.profile;
-            //this.context.funcs.updateProfile(this.profile);
-            //this.props.route.params.profile = undefined;
-        }
-    }*/
 
     componentWillUnmount() {
         this.backHandler.remove();
