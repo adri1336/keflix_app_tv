@@ -114,14 +114,25 @@ export default () => {
 					refreshToken = await AsyncStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
 
 					if(accessToken && refreshToken) {
-						const [response, data, error] = await _fetch("/account", "GET", accessToken);
+						let [response, data, error] = await _fetch("/account", "GET", accessToken);
 						if(!error && response.status == 200) {
 							const account = data;
 							dispatch({ type: "LOGIN", accessToken: accessToken, refreshToken: refreshToken, account: account, remember: true });
 						}
 						else {
-							await AsyncStorage.clear();
-							dispatch({ type: "CONNECTED" });
+							//try refresh_token
+							[response, data, error] = await _fetch("/auth/token", "POST", null, { refresh_token: refreshToken });
+							if(!error && response.status == 200) {
+								//new tokens
+								const { account, token, refresh_token } = data;
+								await AsyncStorage.multiSet([[STORAGE_KEYS.ACCESS_TOKEN, token], [STORAGE_KEYS.REFRESH_TOKEN, refresh_token]]);
+								dispatch({ type: "LOGIN", accessToken: token, refreshToken: refresh_token, account: account, remember: true });
+							}
+							else {
+								//todo mal :(
+								await AsyncStorage.clear();
+								dispatch({ type: "CONNECTED" });
+							}
 						}
 					}
 					else {
