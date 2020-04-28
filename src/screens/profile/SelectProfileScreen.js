@@ -14,7 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
-import * as HttpClient from "cuervo/src/utils/HttpClient";
+import { apiFetch } from "cuervo/src/utils/HttpClient";
 
 //Code
 export default class SelectProfileScreen extends React.Component {
@@ -22,24 +22,30 @@ export default class SelectProfileScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        this.profiles = [];
         this.state = {
             loading: true
         };
     }
 
     componentDidMount() {
-        this.account = this.context.account;
-        HttpClient.get("http://" + Definitions.SERVER_IP + "/account/" + this.account.id + "/profiles").then(([response, data, error]) => {
-            if(error == null && response.status == 200) {
-                this.profiles = data;
+        const { account } = this.context.state;
+        this.account = account;
+        (
+            async () => {
+                const [response, data, error] = await apiFetch(this.context, "/profile");
+                if(!error && response.status == 200) {
+                    this.profiles = data.reverse();
+                }
+                this.profiles.push({ //ADD PROFILE
+                    id: 0,
+                    name: i18n.t("profile.select_profile.create_profile_text"),
+                    color: "gray"
+                });
+                this.setState({ loading: false });
+
             }
-            this.profiles.push({
-                id: 0,
-                name: i18n.t("profile.select_profile.create_profile_text"),
-                color: "gray"
-            });
-            this.setState({ loading: false });
-        });
+        )();
     }
 
     componentDidUpdate() {
@@ -67,8 +73,7 @@ export default class SelectProfileScreen extends React.Component {
                 });
             }
             else {
-                this.context.appContext.changeProfile(profile);
-                this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
+                this.context.funcs.profileLogin(profile);
             }
         }
     }
@@ -140,7 +145,7 @@ export default class SelectProfileScreen extends React.Component {
                                     onPress={
                                         () => {
                                             this.setState({ loading: true });
-                                            this.context.appContext.logOut();
+                                            this.context.logout();
                                         }
                                     }
                                 >{ i18n.t("profile.select_profile.logout_button").toUpperCase() }</NormalButton>

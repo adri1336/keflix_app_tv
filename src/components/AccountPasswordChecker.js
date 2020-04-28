@@ -9,10 +9,13 @@ import BoxTextInput from "cuervo/src/components/BoxTextInput";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
-import * as HttpClient from "cuervo/src/utils/HttpClient";
+import { apiFetch } from "cuervo/src/utils/HttpClient";
+import { AppContext } from "cuervo/src/AppContext";
 
 //Code
 export default class AccountPasswordChecker extends React.Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props);
         this.account = this.props.account;
@@ -22,7 +25,7 @@ export default class AccountPasswordChecker extends React.Component {
         this.keyboard.setTextInput(this.textInputPassword);
     }
 
-    onKeyboardButtonPressed(textInput, buttonType) {
+    async onKeyboardButtonPressed(textInput, buttonType) {
         if(textInput == this.textInputPassword) {
             switch(buttonType) {
                 case KeyboardButtonsTypes.BACK: {
@@ -43,22 +46,17 @@ export default class AccountPasswordChecker extends React.Component {
                             this.props.onPasswordCheckStart();
                         }
 
-                        const account = {
-                            email: this.account.email,
-                            password: this.textInputPassword.state.text
-                        };
-                        HttpClient.post("http://" + Definitions.SERVER_IP + "/account/check_account_password", account).then(([response, data, error]) => {
-                            if(error == null && response.status == 200 && data != false) {
-                                if(this.props.onPasswordChecked) {
-                                    this.props.onPasswordChecked(true);
-                                }
+                        const [response, data, error] = await apiFetch(this.context, "/account/check_password", "POST", { password: password });
+                        if(!error && response.status == 200) {
+                            if(this.props.onPasswordChecked) {
+                                this.props.onPasswordChecked(true);
                             }
-                            else {
-                                if(this.props.onPasswordChecked) {
-                                    this.props.onPasswordChecked(false);
-                                }
+                        }
+                        else {
+                            if(this.props.onPasswordChecked) {
+                                this.props.onPasswordChecked(false);
                             }
-                        });
+                        }
                     }
                     break;
                 }

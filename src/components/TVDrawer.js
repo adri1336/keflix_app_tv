@@ -22,7 +22,7 @@ export const DRAWER_VALUES = {
     DRAWER_OPENED_WIDTH: Dimensions.vw(30.0),
     DRAWER_CLOSED_WIDTH: 50,
     DRAWER_ANIMATION_TIME: 100,
-    DRAWER_CLOSED_ITEMS_MARGIN: 15,
+    DRAWER_CLOSED_ITEMS_MARGIN: 20,
     DRAWER_ITEMS_MARGIN: 40,
     DRAWER_ICON_SIZE: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
     DRAWER_PROFILE_ICON_SIZE: 30
@@ -355,7 +355,7 @@ export default class TVDrawer extends React.Component {
                                 borderColor: "white",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                backgroundColor: this.props.appContext.profile.color
+                                backgroundColor: this.props.appContext.state.profile.color
                             }}
                         >
                             <Feather name="user" size={ 20 } color="white"/>
@@ -368,7 +368,7 @@ export default class TVDrawer extends React.Component {
                             }}
                         >
                             <Text style={[ Styles.normalText, { fontWeight: "bold" } ]}>
-                                { this.props.appContext.profile.name.toUpperCase() }
+                                { this.props.appContext.state.profile.name.toUpperCase() }
                             </Text>
                             <NormalButton
                                 touchableRef={ component => this.change_profile_button = component }
@@ -376,7 +376,7 @@ export default class TVDrawer extends React.Component {
                                 onPress={
                                     () => {
                                         this.setState({ loading: true });
-                                        this.props.appContext.appContext.profileLogOut();
+                                        this.props.appContext.funcs.profileLogout();
                                     }
                                 }
                             >
@@ -417,8 +417,8 @@ export default class TVDrawer extends React.Component {
                                     screen: "GeneralScreen",
                                     params: {
                                         backRouteName: this.props.routes[this.props.currentIndex].name,
-                                        account: this.props.appContext.account,
-                                        profile: this.props.appContext.profile
+                                        account: this.props.appContext.state.account,
+                                        profile: this.props.appContext.state.profile
                                     }
                                 });
                             }

@@ -5,7 +5,6 @@ import i18n from "i18n-js";
 
 //Components Imports
 import NormalAlert from "cuervo/src/components/NormalAlert";
-import NormalButton from "cuervo/src/components/NormalButton";
 import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
 import AccountPasswordChecker from "cuervo/src/components/AccountPasswordChecker";
 
@@ -15,7 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
-import * as HttpClient from "cuervo/src/utils/HttpClient";
+import { apiFetch } from "cuervo/src/utils/HttpClient";
 
 //Code
 export default class EnterAccountPasswordScreen extends React.Component {
@@ -64,18 +63,17 @@ export default class EnterAccountPasswordScreen extends React.Component {
                             }
                             onPasswordCheckStart={ () => this.loadingViewModal.setVisible(true) }
                             onPasswordChecked={
-                                (successful) => {
+                                async (successful) => {
                                     if(successful) {
                                         if(this.props.route.params.delete_profile) {
-                                            HttpClient.http_delete("http://" + Definitions.SERVER_IP + "/profile/" + this.profile.id).then(([response, data, error]) => {
-                                                if(error == null && response.status == 200) {
-                                                    this.context.appContext.profileLogOut();
-                                                }
-                                                else {
-                                                    this.loadingViewModal.setVisible(false);
-                                                    this.props.navigation.navigate("GeneralScreen");
-                                                }
-                                            });
+                                            const [response, data, error] = await apiFetch(this.context, "/profile/" + this.profile.id, "DELETE");
+                                            if(!error && response.status == 200) {
+                                                this.context.funcs.profileLogout();
+                                            }
+                                            else {
+                                                this.loadingViewModal.setVisible(false);
+                                                this.props.navigation.navigate("GeneralScreen");
+                                            }
                                         }
                                         else if(this.props.route.params.update_profile) {
                                             this.loadingViewModal.setVisible(false);

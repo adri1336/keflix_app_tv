@@ -14,10 +14,13 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 import * as Functions from "cuervo/src/utils/Functions";
-import * as HttpClient from "cuervo/src/utils/HttpClient";
+import { apiFetch } from "cuervo/src/utils/HttpClient";
+import { AppContext } from "cuervo/src/AppContext";
 
 //Code
 export default class SelectProfileColorScreen extends React.Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props);
         this.account = this.props.route.params.account;
@@ -28,34 +31,32 @@ export default class SelectProfileColorScreen extends React.Component {
         }
     }
 
-    onColorSelected(color) {
+    async onColorSelected(color) {
         this.profile.color = color;
         this.loadingViewModal.setVisible(true);
         if(!this.updating) {
-            HttpClient.post("http://" + Definitions.SERVER_IP + "/account/" + this.account.id + "/profile", this.profile).then(([response, data, error]) => {
-                if(error == null && response.status == 200 && data?.id > 0) {
-                    this.props.navigation.navigate("SelectProfileScreen", {
-                        profile: data
-                    });
-                }
-                else {
-                    this.loadingViewModal.setVisible(false);
-                    this.alert.setAlertVisible(true, i18n.t("profile.select_profile_color.error_alert_title"), i18n.t("profile.select_profile_color.create_profile_error_alert_message"));
-                }
-            });
+            const [response, data, error] = await apiFetch(this.context, "/profile", "POST", this.profile);
+            if(!error && response.status == 200) {
+                this.props.navigation.navigate("SelectProfileScreen", {
+                    profile: data
+                });
+            }
+            else {
+                this.loadingViewModal.setVisible(false);
+                this.alert.setAlertVisible(true, i18n.t("profile.select_profile_color.error_alert_title"), i18n.t("profile.select_profile_color.create_profile_error_alert_message"));
+            }
         }
         else {
-            HttpClient.put("http://" + Definitions.SERVER_IP + "/profile/" + this.profile.id, this.profile).then(([response, data, error]) => {
-                if(error == null && response.status == 200 && data?.id > 0) {
-                    this.props.navigation.navigate("GeneralScreen", {
-                        profile: data
-                    });
-                }
-                else {
-                    this.loadingViewModal.setVisible(false);
-                    this.alert.setAlertVisible(true, i18n.t("profile.select_profile_color.error_alert_title"), i18n.t("profile.select_profile_color.edit_profile_error_alert_message"));
-                }
-            });
+            const [response, data, error] = await apiFetch(this.context, "/profile/" + this.profile.id, "PUT", this.profile);
+            if(!error && response.status == 200) {
+                this.props.navigation.navigate("GeneralScreen", {
+                    profile: data
+                });
+            }
+            else {
+                this.loadingViewModal.setVisible(false);
+                this.alert.setAlertVisible(true, i18n.t("profile.select_profile_color.error_alert_title"), i18n.t("profile.select_profile_color.edit_profile_error_alert_message"));
+            }
         }
     }
 

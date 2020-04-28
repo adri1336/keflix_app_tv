@@ -4,7 +4,7 @@ export default {
     SECONDARY_COLOR: 0xB8822FFF,
     TEXT_COLOR: 0xFFFFFFFF,
     DEFAULT_MARGIN: 8,
-    SERVER_IP: "51.77.212.177",
+    SERVER_IP: "example",
     PASSWORD_MIN_LENGTH: 3,
     PIN_PASSWORD_LENGTH: 4,
     APPLICATION_WEBPAGE: "https://github.com/adri1samp/"
@@ -28,5 +28,8 @@ export const NAVIGATORS = {
 
 export const STORAGE_KEYS = {
     EMAIL: "email",
-    PASSWORD: "password"
+    PASSWORD: "password",
+
+    ACCESS_TOKEN: "access_token",
+    REFRESH_TOKEN: "refresh_token"
 }

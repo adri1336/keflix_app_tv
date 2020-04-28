@@ -57,8 +57,8 @@ export default class MoviesScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.account = this.context.account;
-        this.profile = this.context.profile;
+        this.account = this.context.state.account;
+        this.profile = this.context.state.profile;
     }
 
     renderMovie(item) {

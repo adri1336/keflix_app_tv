@@ -12,8 +12,8 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
-import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
-import * as HttpClient from "cuervo/src/utils/HttpClient";
+import Definitions from "cuervo/src/utils/Definitions";
+import { _fetch } from "cuervo/src/utils/HttpClient";
 
 //Code
 export default () => {
@@ -21,14 +21,17 @@ export default () => {
     const [connecting, setConnecting] = React.useState(true);
     
     if(connecting) {
-        HttpClient.get("http://" + Definitions.SERVER_IP + "/checkcon").then(([response, data, error]) => {
-            if(error == null && response.status == 200 && data == true) {
-                context.appContext.changeNavigator(NAVIGATORS.AUTH);
+        (
+            async () => {
+                const [response, data, error] = await _fetch("/auth/connection");
+                if(!error && response.status == 200) {
+                    context.funcs.connect();
+                }
+                else {
+                    setConnecting(false);
+                }
             }
-            else {
-                setConnecting(false);
-            }
-        });
+        )();
     }
 
     return (

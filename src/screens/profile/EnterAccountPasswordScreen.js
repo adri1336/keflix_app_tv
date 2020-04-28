@@ -13,7 +13,7 @@ import AccountPasswordChecker from "cuervo/src/components/AccountPasswordChecker
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
+import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
 
 //Code
@@ -65,8 +65,7 @@ export default class EnterAccountPasswordScreen extends React.Component {
                             onPasswordChecked={
                                 (successful) => {
                                     if(successful)  {
-                                        this.context.appContext.changeProfile(this.profile);
-                                        this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
+                                        this.context.funcs.profileLogin(this.profile);
                                     }
                                     else {
                                         this.loadingViewModal.setVisible(false);

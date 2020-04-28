@@ -14,8 +14,8 @@ import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions, { NAVIGATORS, STORAGE_KEYS } from "cuervo/src/utils/Definitions";
-import * as HttpClient from "cuervo/src/utils/HttpClient";
+import Definitions from "cuervo/src/utils/Definitions";
+import { _fetch } from "cuervo/src/utils/HttpClient";
 import { AppContext } from "cuervo/src/AppContext";
 import * as Functions from "cuervo/src/utils/Functions";
 
@@ -75,28 +75,18 @@ export default class LoginScreen extends React.Component {
  
                             if(validated) {
                                 this.loadingViewModal.setVisible(true);
-                                HttpClient.post("http://" + Definitions.SERVER_IP + "/account/check_account_password", account).then(([response, data, error]) => {
-                                    if(error == null && response.status == 200 && data != false) {
-                                        (
-                                            async () => {
-                                                if(this.checkbox.state.checked) {
-                                                    try {
-                                                        await AsyncStorage.multiSet([[STORAGE_KEYS.EMAIL, account.email], [STORAGE_KEYS.PASSWORD, account.password]]);
-                                                    }
-                                                    catch(error) {
-                                                        console.log(error);
-                                                    }
-                                                }
-                                                this.context.appContext.changeAccount(data);
-                                                this.context.appContext.changeNavigator(NAVIGATORS.PROFILE);
-                                            }
-                                        )();
+                                (
+                                    async () => {
+                                        const [response, data, error] = await _fetch("/auth/login", "POST", null, account);
+                                        if(!error && response.status == 200) {
+                                            this.context.funcs.login(data, this.checkbox.state.checked);
+                                        }
+                                        else {
+                                            this.loadingViewModal.setVisible(false);
+                                            this.alert.setAlertVisible(true, i18n.t("auth.login.error_alert_title"), i18n.t("auth.login.login_error_alert_message"));
+                                        }
                                     }
-                                    else {
-                                        this.loadingViewModal.setVisible(false);
-                                        this.alert.setAlertVisible(true, i18n.t("auth.login.error_alert_title"), i18n.t("auth.login.login_error_alert_message"));
-                                    }
-                                });
+                                )();
                             }
                         }
                         break;

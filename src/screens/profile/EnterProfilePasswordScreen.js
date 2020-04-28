@@ -14,8 +14,9 @@ import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
 import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
-import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
+import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
+import { apiFetch } from "cuervo/src/utils/HttpClient";
 
 //Code
 export default class EnterProfilePasswordScreen extends React.Component {
@@ -31,7 +32,7 @@ export default class EnterProfilePasswordScreen extends React.Component {
         this.keyboard.setTextInput(this.textInputPassword);
     }
 
-    onKeyboardButtonPressed(textInput, buttonType) {
+    async onKeyboardButtonPressed(textInput, buttonType) {
         if(textInput == this.textInputPassword) {
             switch(buttonType) {
                 case KeyboardButtonsTypes.BACK: {
@@ -44,13 +45,15 @@ export default class EnterProfilePasswordScreen extends React.Component {
                         this.alert.setAlertVisible(true, i18n.t("profile.enter_profile_password.error_alert_title"), i18n.t("profile.enter_profile_password.invalid_password_length_alert_message"));
                     }
                     else {
-                        if(this.profile.password != password) {
-                            this.alert.setAlertVisible(true, i18n.t("profile.enter_profile_password.error_alert_title"), i18n.t("profile.enter_profile_password.invalid_password_alert_message"));
+                        this.loadingViewModal.setVisible(true);
+
+                        const [response, data, error] = await apiFetch(this.context, "/profile/" + this.profile.id + "/check_password", "POST", { password: password });
+                        if(!error && response.status == 200) {
+                            this.context.funcs.profileLogin(this.profile);
                         }
                         else {
-                            this.loadingViewModal.setVisible(true);
-                            this.context.appContext.changeProfile(this.profile);
-                            this.context.appContext.changeNavigator(NAVIGATORS.MAIN);
+                            this.loadingViewModal.setVisible(false);
+                            this.alert.setAlertVisible(true, i18n.t("profile.enter_profile_password.error_alert_title"), i18n.t("profile.enter_profile_password.invalid_password_alert_message"));
                         }
                     }
                     break;

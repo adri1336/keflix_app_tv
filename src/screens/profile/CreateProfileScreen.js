@@ -25,9 +25,7 @@ export default class CreateProfileScreen extends React.Component {
         if(this.props.route.params.profile) {
             this.updating = true;
             this.profile = this.props.route.params.profile;
-            if(this.profile.password) {
-                this.state = { repeatPasswordEnabled: true };
-            }
+            this.profile.password = null;
         }
         else {
             this.profile = {

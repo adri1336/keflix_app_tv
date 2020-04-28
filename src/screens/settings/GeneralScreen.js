@@ -30,7 +30,6 @@ export default class GeneralScreen extends React.Component {
     }
     
     componentDidMount() {
-        this.appContext = this.context.appContext;
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             if(this.props.navigation.isFocused()) {
                 this.props.navigation.navigate(this.props.route.params.backRouteName);
@@ -43,7 +42,7 @@ export default class GeneralScreen extends React.Component {
     componentDidUpdate() {
         if(this.props.route.params?.profile) {
             this.profile = this.props.route.params.profile;
-            this.appContext.changeProfile(this.profile);
+            this.context.funcs.updateProfile(this.profile);
             this.props.route.params.profile = undefined;
         }
     }
@@ -142,9 +141,9 @@ export default class GeneralScreen extends React.Component {
                                 <NormalButton
                                     onPress={
                                         () => {
-                                            if(this.appContext) {
+                                            if(this.context) {
                                                 this.setState({ loading: true });
-                                                this.appContext.profileLogOut();
+                                                this.context.funcs.profileLogout();
                                             }
                                         }
                                     }
@@ -155,9 +154,9 @@ export default class GeneralScreen extends React.Component {
                                     style={{ marginBottom: 20 }}
                                     onPress={
                                         () => {
-                                            if(this.appContext) {
+                                            if(this.context) {
                                                 this.setState({ loading: true });
-                                                this.appContext.logOut();
+                                                this.context.funcs.logout();
                                             }
                                         }
                                     }
@@ -182,7 +181,7 @@ export default class GeneralScreen extends React.Component {
                                     </Text>
                                     <Text style={ Styles.normalText }>{ i18n.t("settings.general.id_text", { id: this.account.id }) }</Text>
                                     <Text style={ Styles.normalText }>{ i18n.t("settings.general.email_text", { email: this.account.email }) }</Text>
-                                    <Text style={ Styles.normalText }>{ i18n.t("settings.general.registration_date_text", { registration_date: this.account.registration_date }) }</Text>
+                                    <Text style={ Styles.normalText }>{ i18n.t("settings.general.registration_date_text", { registration_date: this.account.createdAt }) }</Text>
                                 </View>
 
                                 <View style={{ marginBottom: 30 }}>
@@ -197,7 +196,7 @@ export default class GeneralScreen extends React.Component {
                                         <Text style={[ Styles.normalText, { color: this.profile.color } ]}> { this.profile.color }</Text>
                                     </View>
                                     <Text style={ Styles.normalText }>{ this.profile.adult_content ? i18n.t("settings.general.profile_adult_content_yes") : i18n.t("settings.general.profile_adult_content_no") }</Text>
-                                    <Text style={ Styles.normalText }>{ i18n.t("settings.general.registration_date_text", { registration_date: this.profile.registration_date }) }</Text>
+                                    <Text style={ Styles.normalText }>{ i18n.t("settings.general.registration_date_text", { registration_date: this.profile.createdAt }) }</Text>
                                 </View>
 
                                 <View>
