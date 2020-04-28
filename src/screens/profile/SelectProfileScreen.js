@@ -14,7 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
-import { apiFetch } from "cuervo/src/utils/HttpClient";
+import * as Profile from "cuervo/src/api/Profile";
 
 //Code
 export default class SelectProfileScreen extends React.Component {
@@ -33,9 +33,9 @@ export default class SelectProfileScreen extends React.Component {
         this.account = account;
         (
             async () => {
-                const [response, data, error] = await apiFetch(this.context, "/profile");
-                if(!error && response.status == 200) {
-                    this.profiles = data.reverse();
+                const profiles = await Profile.get(this.context);
+                if(profiles) {
+                    this.profiles = profiles.reverse();
                 }
                 this.profiles.push({ //ADD PROFILE
                     id: 0,
@@ -145,7 +145,7 @@ export default class SelectProfileScreen extends React.Component {
                                     onPress={
                                         () => {
                                             this.setState({ loading: true });
-                                            this.context.logout();
+                                            this.context.funcs.logout();
                                         }
                                     }
                                 >{ i18n.t("profile.select_profile.logout_button").toUpperCase() }</NormalButton>

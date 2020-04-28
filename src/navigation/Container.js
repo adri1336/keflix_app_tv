@@ -12,7 +12,8 @@ import MainNavigator from "./navigators/MainNavigator";
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
 import { NAVIGATORS, STORAGE_KEYS } from "cuervo/src/utils/Definitions";
-import { _fetch } from "cuervo/src/utils/HttpClient";
+import * as Auth from "cuervo/src/api/Auth";
+import * as Account from "cuervo/src/api/Account";
 
 //Code
 function getNavigator(navigator) {
@@ -31,6 +32,10 @@ function getNavigator(navigator) {
 		}
 	}
 }
+
+const storeTokens = async (accessToken, refreshToken) => {
+	await AsyncStorage.multiSet([[STORAGE_KEYS.ACCESS_TOKEN, accessToken], [STORAGE_KEYS.REFRESH_TOKEN, refreshToken]]);
+};
 
 export default () => {
 	const [state, dispatch] = React.useReducer(
@@ -114,22 +119,19 @@ export default () => {
 					refreshToken = await AsyncStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
 
 					if(accessToken && refreshToken) {
-						let [response, data, error] = await _fetch("/account", "GET", accessToken);
-						if(!error && response.status == 200) {
-							const account = data;
-							dispatch({ type: "LOGIN", accessToken: accessToken, refreshToken: refreshToken, account: account, remember: true });
+						const data = await Account.getPassToken(accessToken);
+						if(data) {
+							dispatch({ type: "LOGIN", accessToken: accessToken, refreshToken: refreshToken, account: data, remember: true });
 						}
 						else {
 							//try refresh_token
-							[response, data, error] = await _fetch("/auth/token", "POST", null, { refresh_token: refreshToken });
-							if(!error && response.status == 200) {
-								//new tokens
-								const { account, token, refresh_token } = data;
-								await AsyncStorage.multiSet([[STORAGE_KEYS.ACCESS_TOKEN, token], [STORAGE_KEYS.REFRESH_TOKEN, refresh_token]]);
-								dispatch({ type: "LOGIN", accessToken: token, refreshToken: refresh_token, account: account, remember: true });
+							const data = await Auth.token(refreshToken);
+							if(data) {
+								const { account, access_token, refresh_token } = data;
+								await storeTokens(access_token, refresh_token);
+								dispatch({ type: "LOGIN", accessToken: access_token, refreshToken: refresh_token, account: account, remember: true });
 							}
 							else {
-								//todo mal :(
 								await AsyncStorage.clear();
 								dispatch({ type: "CONNECTED" });
 							}
@@ -145,14 +147,14 @@ export default () => {
 			},
 			setNewTokens: async (accessToken, refreshToken) => {
 				if(state.remember) {
-					await AsyncStorage.multiSet([[STORAGE_KEYS.ACCESS_TOKEN, accessToken], [STORAGE_KEYS.REFRESH_TOKEN, refreshToken]]);
+					await storeTokens(accessToken, refreshToken);
 				}
 				dispatch({ type: "NEW_TOKENS", accessToken: accessToken, refreshToken: refreshToken });
 			},
 			login: async (data, remember) => {
 				const { account, access_token, refresh_token } = data;
 				if(remember) {
-					await AsyncStorage.multiSet([[STORAGE_KEYS.ACCESS_TOKEN, access_token], [STORAGE_KEYS.REFRESH_TOKEN, refresh_token]]);
+					await storeTokens(access_token, refresh_token);
 				}
 				dispatch({ type: "LOGIN", accessToken: access_token, refreshToken: refresh_token, account: account, remember: remember });
 			},
@@ -174,6 +176,7 @@ export default () => {
 				dispatch({ type: "PROFILE_LOGOUT" });
 			},
 			updateProfile: (profile) => {
+				console.log("updateProfile: ", profile);
 				dispatch({ type: "UPDATE_PROFILE", profile: profile });
 			}
 		}

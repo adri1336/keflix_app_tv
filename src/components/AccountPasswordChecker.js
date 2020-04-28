@@ -9,7 +9,7 @@ import BoxTextInput from "cuervo/src/components/BoxTextInput";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
-import { apiFetch } from "cuervo/src/utils/HttpClient";
+import * as Account from "cuervo/src/api/Account";
 import { AppContext } from "cuervo/src/AppContext";
 
 //Code
@@ -46,8 +46,7 @@ export default class AccountPasswordChecker extends React.Component {
                             this.props.onPasswordCheckStart();
                         }
 
-                        const [response, data, error] = await apiFetch(this.context, "/account/check_password", "POST", { password: password });
-                        if(!error && response.status == 200) {
+                        if(await Account.check_password(this.context, password)) {
                             if(this.props.onPasswordChecked) {
                                 this.props.onPasswordChecked(true);
                             }

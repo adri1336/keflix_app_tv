@@ -14,7 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
-import { apiFetch } from "cuervo/src/utils/HttpClient";
+import * as Profile from "cuervo/src/api/Profile";
 
 //Code
 export default class EnterAccountPasswordScreen extends React.Component {
@@ -66,8 +66,7 @@ export default class EnterAccountPasswordScreen extends React.Component {
                                 async (successful) => {
                                     if(successful) {
                                         if(this.props.route.params.delete_profile) {
-                                            const [response, data, error] = await apiFetch(this.context, "/profile/" + this.profile.id, "DELETE");
-                                            if(!error && response.status == 200) {
+                                            if(await Profile.destroy(this.context, this.profile.id)) {
                                                 this.context.funcs.profileLogout();
                                             }
                                             else {

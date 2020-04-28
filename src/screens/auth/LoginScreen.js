@@ -15,7 +15,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
-import { _fetch } from "cuervo/src/utils/HttpClient";
+import * as Auth from "cuervo/src/api/Auth";
 import { AppContext } from "cuervo/src/AppContext";
 import * as Functions from "cuervo/src/utils/Functions";
 
@@ -27,7 +27,7 @@ export default class LoginScreen extends React.Component {
         this.keyboard.setTextInput(this.textInputEmail);
     }
 
-    onKeyboardButtonPressed(textInput, buttonType) {
+    async onKeyboardButtonPressed(textInput, buttonType) {
         switch(textInput) {
             case this.textInputEmail: {
                 switch(buttonType) {
@@ -75,18 +75,14 @@ export default class LoginScreen extends React.Component {
  
                             if(validated) {
                                 this.loadingViewModal.setVisible(true);
-                                (
-                                    async () => {
-                                        const [response, data, error] = await _fetch("/auth/login", "POST", null, account);
-                                        if(!error && response.status == 200) {
-                                            this.context.funcs.login(data, this.checkbox.state.checked);
-                                        }
-                                        else {
-                                            this.loadingViewModal.setVisible(false);
-                                            this.alert.setAlertVisible(true, i18n.t("auth.login.error_alert_title"), i18n.t("auth.login.login_error_alert_message"));
-                                        }
-                                    }
-                                )();
+                                const data = await Auth.login(account);
+                                if(data) {
+                                    this.context.funcs.login(data, this.checkbox.state.checked);
+                                }
+                                else {
+                                    this.loadingViewModal.setVisible(false);
+                                    this.alert.setAlertVisible(true, i18n.t("auth.login.error_alert_title"), i18n.t("auth.login.login_error_alert_message"));
+                                }
                             }
                         }
                         break;

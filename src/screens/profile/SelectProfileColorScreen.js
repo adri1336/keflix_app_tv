@@ -14,7 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 import * as Functions from "cuervo/src/utils/Functions";
-import { apiFetch } from "cuervo/src/utils/HttpClient";
+import * as Profile from "cuervo/src/api/Profile";
 import { AppContext } from "cuervo/src/AppContext";
 
 //Code
@@ -35,11 +35,9 @@ export default class SelectProfileColorScreen extends React.Component {
         this.profile.color = color;
         this.loadingViewModal.setVisible(true);
         if(!this.updating) {
-            const [response, data, error] = await apiFetch(this.context, "/profile", "POST", this.profile);
-            if(!error && response.status == 200) {
-                this.props.navigation.navigate("SelectProfileScreen", {
-                    profile: data
-                });
+            const profile = await Profile.create(this.context, this.profile);
+            if(profile) {
+                this.props.navigation.navigate("SelectProfileScreen", { profile: profile });
             }
             else {
                 this.loadingViewModal.setVisible(false);
@@ -47,11 +45,9 @@ export default class SelectProfileColorScreen extends React.Component {
             }
         }
         else {
-            const [response, data, error] = await apiFetch(this.context, "/profile/" + this.profile.id, "PUT", this.profile);
-            if(!error && response.status == 200) {
-                this.props.navigation.navigate("GeneralScreen", {
-                    profile: data
-                });
+            const profile = await Profile.update(this.context, this.profile);
+            if(profile) {
+                this.props.navigation.navigate("GeneralScreen", { profile: profile });
             }
             else {
                 this.loadingViewModal.setVisible(false);

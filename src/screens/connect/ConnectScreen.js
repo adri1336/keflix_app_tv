@@ -13,7 +13,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
 import Definitions from "cuervo/src/utils/Definitions";
-import { _fetch } from "cuervo/src/utils/HttpClient";
+import * as Auth from "cuervo/src/api/Auth";
 
 //Code
 export default () => {
@@ -23,8 +23,7 @@ export default () => {
     if(connecting) {
         (
             async () => {
-                const [response, data, error] = await _fetch("/auth/connection");
-                if(!error && response.status == 200) {
+                if(await Auth.connection) {
                     context.funcs.connect();
                 }
                 else {

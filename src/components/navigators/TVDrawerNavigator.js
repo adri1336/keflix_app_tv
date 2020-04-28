@@ -38,8 +38,6 @@ function TVDrawerNavigatorRouter(options) {
                         };
                     }
                 }
-                
-
                 case "OPEN_DRAWER": {
                     if(isDrawerOpen(state)) {
                         return state;

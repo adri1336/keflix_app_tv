@@ -16,7 +16,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
-import { apiFetch } from "cuervo/src/utils/HttpClient";
+import * as Profile from "cuervo/src/api/Profile";
 
 //Code
 export default class EnterProfilePasswordScreen extends React.Component {
@@ -46,9 +46,7 @@ export default class EnterProfilePasswordScreen extends React.Component {
                     }
                     else {
                         this.loadingViewModal.setVisible(true);
-
-                        const [response, data, error] = await apiFetch(this.context, "/profile/" + this.profile.id + "/check_password", "POST", { password: password });
-                        if(!error && response.status == 200) {
+                        if(await Profile.check_password(this.context, this.profile.id, password)) {
                             this.context.funcs.profileLogin(this.profile);
                         }
                         else {
