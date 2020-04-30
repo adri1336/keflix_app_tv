@@ -10,7 +10,10 @@ export const apiFetch = async (context, path, method = "GET", body = null) => {
         }
 
         const [response, data, error] = await _fetch(path, method, accessToken, body);
-        if(!error && response.status == 403) {
+        if(error) {
+            return [null, null, error];
+        }
+        else if(response.status == 403) {
             //request new token
             const data = await Auth.token(refreshToken);
             if(data) {

@@ -33,7 +33,7 @@ export default class ConnectScreen extends React.Component {
     }
 
     async tryConnection() {
-        if(await Auth.connection) {
+        if(await Auth.connection()) {
             this.context.funcs.connect();
         }
         else {

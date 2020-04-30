@@ -2,6 +2,7 @@
 import React from "react";
 import { View, Text, Image, FlatList, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { Video } from "expo-av";
 
 //Components Imports
 import NormalButton from "cuervo/src/components/NormalButton";
@@ -123,7 +124,7 @@ export default class MoviesScreen extends React.Component {
                             flex: 1,
                             marginTop: -Definitions.DEFAULT_MARGIN,
                             marginRight: -Definitions.DEFAULT_MARGIN,
-                            marginLeft: -50,
+                            marginLeft: -100,
                             flexDirection: "column",
                         }}
                     >
@@ -132,7 +133,7 @@ export default class MoviesScreen extends React.Component {
                                 zIndex: -1,
                                 position: "absolute",
                                 left: 0,
-                                width: 30,
+                                width: 120,
                                 height: "100%"
                             }}
                             colors={ [Definitions.PRIMARY_COLOR, "transparent"] }
@@ -145,13 +146,38 @@ export default class MoviesScreen extends React.Component {
                                 position: "absolute",
                                 bottom: 0,
                                 width: "100%",
-                                height: 30
+                                height: 120
                             }}
                             colors={ [Definitions.PRIMARY_COLOR, "transparent"] }
                             start={ [0, 1] }
                             end={ [0, 0] }
                         />
-                        <Image
+                        <View
+                            style={{
+                                flex: 1,
+                                zIndex: -2,
+                                overflow: "hidden"
+                            }}
+                        >
+                            <Video
+                                source={{ uri: "file://192.168.1.41/cuervo-video/trailers/38700.mp" }} //https://cuervo-video.s3.eu-west-3.amazonaws.com/trailers/38700.mp4  \\\\192.168.1.41\\cuervo-video\\trailers\\38700.mp4
+                                posterSource={{ uri: "https://image.tmdb.org/t/p/original/upUy2QhMZEmtypPW3PdieKLAHxh.jpg" }}
+                                rate={1.0}
+                                volume={1.0}
+                                isMuted={false}
+                                resizeMode="cover"
+                                shouldPlay
+                                isLooping
+                                style={{
+                                    position: "absolute",
+                                    top: "-20%",
+                                    width: "100%",
+                                    height: "140%"
+                                }}
+                                
+                            />
+                        </View>
+                        {/*<Image
                             style={{
                                 flex: 1,
                                 zIndex: -2,
@@ -159,7 +185,7 @@ export default class MoviesScreen extends React.Component {
                             source={{
                                 uri: "https://image.tmdb.org/t/p/original/upUy2QhMZEmtypPW3PdieKLAHxh.jpg",
                             }}
-                        />
+                        />*/}
                     </View>
 
                 </View>

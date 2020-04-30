@@ -90,14 +90,14 @@ const reducer = (prevState, action) => {
 				...prevState,
 				profile: action.profile,
 				navigator: NAVIGATORS.MAIN
-			}
+			};
 		}
 		case "PROFILE_LOGOUT": {
 			return {
 				...prevState,
 				profile: null,
 				navigator: NAVIGATORS.PROFILE
-			}
+			};
 		}
 	}
 };
