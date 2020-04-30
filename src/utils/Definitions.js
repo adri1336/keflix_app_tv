@@ -14,6 +14,7 @@ export const DEFAULT_SIZES = {
     BIG_TITLE_SIZE: 5.0,
     TITLE_SIZE: 3.5,
     BIG_SIZE: 1.6,
+    BIG_SUBTITLE_SIZE: 1.5,
     NORMAL_SIZE: 1.3,
     MEDIUM_SIZE: 1.1,
     SMALL_SIZE: 0.9

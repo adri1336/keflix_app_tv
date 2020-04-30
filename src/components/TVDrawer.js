@@ -22,8 +22,8 @@ export const DRAWER_VALUES = {
     DRAWER_OPENED_WIDTH: Dimensions.vw(30.0),
     DRAWER_CLOSED_WIDTH: 50,
     DRAWER_ANIMATION_TIME: 100,
-    DRAWER_CLOSED_ITEMS_MARGIN: 20,
-    DRAWER_ITEMS_MARGIN: 40,
+    DRAWER_CLOSED_ITEMS_MARGIN: 30,
+    DRAWER_ITEMS_MARGIN: 60,
     DRAWER_ICON_SIZE: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
     DRAWER_PROFILE_ICON_SIZE: 30
 };
@@ -39,7 +39,8 @@ export default class TVDrawer extends React.Component {
             drawerOpacity: new Animated.Value(0),
             drawerIconsPosX: new Animated.Value(DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN),
             drawerPosX: new Animated.Value((-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH)),
-            drawerCanOpen: activeDescriptor.options.drawerCanOpen
+            drawerCanOpen: activeDescriptor.options.drawerCanOpen,
+            currentFocusedScreenButton: null
         };
     }
 
@@ -226,7 +227,11 @@ export default class TVDrawer extends React.Component {
                         <descriptor.options.icon.library
                             name={ descriptor.options.icon.name }
                             size={ DRAWER_VALUES.DRAWER_ICON_SIZE }
-                            color={ this.state.drawerCanOpen ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);" }
+                            color={
+                                this.props.isDrawerOpen ?
+                                    (this.state.currentFocusedScreenButton == route.name ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);") :
+                                    (this.state.drawerCanOpen ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);")
+                            }
                         />
                         { this.printBottomBarIfIsActiveDescriptor(descriptorKey) }
                     </View>
@@ -302,11 +307,8 @@ export default class TVDrawer extends React.Component {
                         alwaysAccessible={ true }
                         hasTVPreferredFocus={ this.props.isDrawerOpen && descriptorKey == this.props.currentDescriptorKey ? true : false }
                         textStyle={ Styles.bigText }
-                        onPress={
-                            () => {
-                                this.props.navigation.navigate(route.name);
-                            }
-                        }
+                        onFocus={ () => this.setState({ currentFocusedScreenButton: route.name }) }
+                        onPress={ () => this.props.navigation.navigate(route.name) }
                     >
                         { descriptor.options.title }
                     </NormalButton>
@@ -379,6 +381,7 @@ export default class TVDrawer extends React.Component {
                                         this.props.appContext.funcs.profileLogout();
                                     }
                                 }
+                                onFocus={ () => this.setState({ currentFocusedScreenButton: null }) }
                             >
                                 { i18n.t("main_tv_navigator.change_profile_button") }
                             </NormalButton>
@@ -423,6 +426,7 @@ export default class TVDrawer extends React.Component {
                                 });
                             }
                         }
+                        onFocus={ () => this.setState({ currentFocusedScreenButton: null }) }
                     >
                         { i18n.t("main_tv_navigator.settings_button") }
                     </NormalButton>

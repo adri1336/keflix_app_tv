@@ -115,7 +115,15 @@ export default class MoviesScreen extends React.Component {
                             <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>2h 30min</Text>
                             <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>7.2/10</Text>
                         </View>
-                        <Text style={[ Styles.normalText, { marginTop: Definitions.DEFAULT_MARGIN } ]}>
+                        <Text
+                            style={[
+                                Styles.bigSubtitleText,
+                                {
+                                    marginTop: Definitions.DEFAULT_MARGIN,
+                                    color: "rgba(255, 255, 255, 0.6)"
+                                }
+                            ]}
+                        >
                             El Departamento de Policía de Miami y su equipo de élite AMMO intentan derribar a Armando Armas, jefe de un cartel de la droga. Armando es un asesino de sangre fría con una naturaleza viciosa y contaminante. Él está comprometido con el trabajo del cartel y es enviado por su madre Isabel, para matar a Mike.
                         </Text>
                     </View>
@@ -146,7 +154,7 @@ export default class MoviesScreen extends React.Component {
                                 position: "absolute",
                                 bottom: 0,
                                 width: "100%",
-                                height: 120
+                                height: 60
                             }}
                             colors={ [Definitions.PRIMARY_COLOR, "transparent"] }
                             start={ [0, 1] }
@@ -160,7 +168,7 @@ export default class MoviesScreen extends React.Component {
                             }}
                         >
                             <Video
-                                source={{ uri: "file://192.168.1.41/cuervo-video/trailers/38700.mp" }} //https://cuervo-video.s3.eu-west-3.amazonaws.com/trailers/38700.mp4  \\\\192.168.1.41\\cuervo-video\\trailers\\38700.mp4
+                                source={{ uri: "https://cuervo-video.s3.eu-west-3.amazonaws.com/trailers/38700.mp4" }}
                                 posterSource={{ uri: "https://image.tmdb.org/t/p/original/upUy2QhMZEmtypPW3PdieKLAHxh.jpg" }}
                                 rate={1.0}
                                 volume={1.0}

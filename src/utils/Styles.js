@@ -23,6 +23,11 @@ const Styles = StyleSheet.create({
 		fontSize: Dimensions.vw(DEFAULT_SIZES.BIG_SIZE),
 		fontFamily: "Roboto-Regular"
 	},
+	bigSubtitleText: {
+		color: Definitions.TEXT_COLOR,
+		fontSize: Dimensions.vw(DEFAULT_SIZES.BIG_SUBTITLE_SIZE),
+		fontFamily: "Roboto-Regular"
+	},
 	normalText: {
 		color: Definitions.TEXT_COLOR,
 		fontSize: Dimensions.vw(DEFAULT_SIZES.NORMAL_SIZE),
