@@ -1,14 +1,9 @@
 //Imports
 import React from "react";
-import { View, Text, Image, FlatList, ScrollView } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { Video } from "expo-av";
+import { View } from "react-native";
 
 //Components Imports
-import NormalButton from "cuervo/src/components/NormalButton";
-
-//Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import HeaderMedia from "cuervo/src/components/HeaderMedia";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
@@ -19,71 +14,25 @@ import { DRAWER_VALUES } from "cuervo/src/components/TVDrawer";
 export default class MoviesScreen extends React.Component {
     static contextType = AppContext;
 
-    constructor(props) {
-        super(props);
-        this.movies = [
-            {
-                id: 0,
-                poster: "https://image.tmdb.org/t/p/original/hIX9L34Zq6TMr81LhKMMZHYJYJ5.jpg"
-            },
-            {
-                id: 1,
-                poster: "https://image.tmdb.org/t/p/original/kK6Oq4JywUNXmJ299efUkv1h6Mn.jpg"
-            },
-            {
-                id: 3,
-                poster: "https://image.tmdb.org/t/p/original/A7hhUj9Fq6E6FhGsENJTCmnCmt4.jpg"
-            },
-            {
-                id: 4,
-                poster: "https://image.tmdb.org/t/p/original/jlHL2BH176JApGiLnNQLQgdjMFd.jpg"
-            },
-            {
-                id: 5,
-                poster: "https://image.tmdb.org/t/p/original/16G2wZAkmKqSGK3it2VPjco5oyn.jpg"
-            },
-            {
-                id: 6,
-                poster: "https://image.tmdb.org/t/p/original/im0jKiVtVyxynKVnzOyd6efbqYE.jpg"
-            },
-            {
-                id: 7,
-                poster: "https://image.tmdb.org/t/p/original/dicP4RZkcgJi9udelg6QuYxf4K7.jpg"
-            },
-            {
-                id: 8,
-                poster: "https://image.tmdb.org/t/p/original/b1bTpxh0lRfw7kwRrWPeMOo7jbY.jpg"
-            },
-        ];
-    }
-
     componentDidMount() {
         this.account = this.context.state.account;
         this.profile = this.context.state.profile;
-    }
-
-    renderMovie(item) {
-        const movie = item.item;
-        return (
-            <View
-                style={{
-                    width: 115,
-                    height: 165,
-                    marginRight: 4,
-                    borderWidth: 2,
-                    borderColor: movie.id == 0 ? "white" : "#00000000"
-                }}
-            >
-                <Image
-                    style={{
-                        flex: 1
-                    }}
-                    source={{
-                        uri: movie.poster
-                    }}
-                />
-            </View>
-        );
+        this.headerMedia.setInfo({
+            title: {
+                text: "Bad Boys For Life",
+                image: "https://i.imgur.com/HlcljK9.png"
+            },
+            info: {
+                releaseDate: "2020",
+                runtime: 128,
+                vote_average: 7.2,
+            },
+            description: "El Departamento de Policía de Miami y su equipo de élite AMMO intentan derribar a Armando Armas, jefe de un cartel de la droga. Armando es un asesino de sangre fría con una naturaleza viciosa y contaminante. Él está comprometido con el trabajo del cartel y es enviado por su madre Isabel, para matar a Mike.",
+            backdrop: {
+                image: "https://image.tmdb.org/t/p/original/upUy2QhMZEmtypPW3PdieKLAHxh.jpg",
+                video: null //"https://cuervo-video.s3.eu-west-3.amazonaws.com/trailers/38700.mp4"
+            }
+        });
     }
 
     render() {
@@ -96,107 +45,9 @@ export default class MoviesScreen extends React.Component {
                     backgroundColor: Definitions.PRIMARY_COLOR
                 }}
             >
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: "row"
-                    }}
-                >
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: "column",
-                            justifyContent: "center"
-                        }}
-                    >
-                        <Text style={[ Styles.titleText, { fontWeight: "bold" } ]}>Bad Boys For Life</Text>
-                        <View style={{ flexDirection: "row" }}>
-                            <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>2009</Text>
-                            <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>2h 30min</Text>
-                            <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>7.2/10</Text>
-                        </View>
-                        <Text
-                            style={[
-                                Styles.bigSubtitleText,
-                                {
-                                    marginTop: Definitions.DEFAULT_MARGIN,
-                                    color: "rgba(255, 255, 255, 0.6)"
-                                }
-                            ]}
-                        >
-                            El Departamento de Policía de Miami y su equipo de élite AMMO intentan derribar a Armando Armas, jefe de un cartel de la droga. Armando es un asesino de sangre fría con una naturaleza viciosa y contaminante. Él está comprometido con el trabajo del cartel y es enviado por su madre Isabel, para matar a Mike.
-                        </Text>
-                    </View>
-                    <View
-                        style={{
-                            flex: 1,
-                            marginTop: -Definitions.DEFAULT_MARGIN,
-                            marginRight: -Definitions.DEFAULT_MARGIN,
-                            marginLeft: -100,
-                            flexDirection: "column",
-                        }}
-                    >
-                        <LinearGradient
-                            style={{
-                                zIndex: -1,
-                                position: "absolute",
-                                left: 0,
-                                width: 120,
-                                height: "100%"
-                            }}
-                            colors={ [Definitions.PRIMARY_COLOR, "transparent"] }
-                            start={ [0, 0] }
-                            end={ [1, 0] }
-                        />
-                        <LinearGradient
-                            style={{
-                                zIndex: -1,
-                                position: "absolute",
-                                bottom: 0,
-                                width: "100%",
-                                height: 60
-                            }}
-                            colors={ [Definitions.PRIMARY_COLOR, "transparent"] }
-                            start={ [0, 1] }
-                            end={ [0, 0] }
-                        />
-                        <View
-                            style={{
-                                flex: 1,
-                                zIndex: -2,
-                                overflow: "hidden"
-                            }}
-                        >
-                            <Video
-                                source={{ uri: "https://cuervo-video.s3.eu-west-3.amazonaws.com/trailers/38700.mp4" }}
-                                posterSource={{ uri: "https://image.tmdb.org/t/p/original/upUy2QhMZEmtypPW3PdieKLAHxh.jpg" }}
-                                rate={1.0}
-                                volume={1.0}
-                                isMuted={false}
-                                resizeMode="cover"
-                                shouldPlay
-                                isLooping
-                                style={{
-                                    position: "absolute",
-                                    top: "-20%",
-                                    width: "100%",
-                                    height: "140%"
-                                }}
-                                
-                            />
-                        </View>
-                        {/*<Image
-                            style={{
-                                flex: 1,
-                                zIndex: -2,
-                            }}
-                            source={{
-                                uri: "https://image.tmdb.org/t/p/original/upUy2QhMZEmtypPW3PdieKLAHxh.jpg",
-                            }}
-                        />*/}
-                    </View>
-
-                </View>
+                <HeaderMedia
+                    ref={ component => this.headerMedia = component }
+                />
                 <View
                     style={{
                         flex: 1,
@@ -204,27 +55,7 @@ export default class MoviesScreen extends React.Component {
                         marginRight: -Definitions.DEFAULT_MARGIN
                     }}
                 >
-                    <View style={{ marginTop: Definitions.DEFAULT_MARGIN }}>
-                        <Text style={[ Styles.normalText, { fontWeight: "bold", marginBottom: Definitions.DEFAULT_MARGIN / 2 } ]}>Últimas películas añadidas</Text>
-                        <FlatList
-                            scrollEnabled={ false }
-                            horizontal={ true }
-                            data={ this.movies }
-                            renderItem={ (item) => this.renderMovie(item) }
-                            keyExtractor={ item => item.id.toString() }
-                        />
-                    </View>
-
-                    <View style={{ marginTop: Definitions.DEFAULT_MARGIN }}>
-                        <Text style={[ Styles.normalText, { fontWeight: "bold", marginBottom: Definitions.DEFAULT_MARGIN / 2 } ]}>Más mierda aquí abajo</Text>
-                        <FlatList
-                            scrollEnabled={ false }
-                            horizontal={ true }
-                            data={ this.movies }
-                            renderItem={ (item) => this.renderMovie(item) }
-                            keyExtractor={ item => item.id.toString() }
-                        />
-                    </View>
+                    
                 </View>
             </View>
         );
