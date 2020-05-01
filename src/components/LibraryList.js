@@ -4,6 +4,8 @@ import { View, Text, Image, Easing, Animated, FlatList, Dimensions, TVEventHandl
 import Styles from "cuervo/src/utils/Styles";
 import Definitions from "cuervo/src/utils/Definitions";
 import TouchableOpacityFix from "cuervo/src/components/TouchableOpacityFix";
+import { AppContext } from "cuervo/src/AppContext";
+import * as Movie from "cuervo/src/api/Movie";
 
 //Vars
 const COVER_ITEM_VALUES = {
@@ -24,6 +26,8 @@ const
 
 //Code
 export default class LibraryList extends React.Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props);
 
@@ -39,9 +43,12 @@ export default class LibraryList extends React.Component {
     }
 
     setData(title, covers) {
+        let finalCovers = covers;
+        finalCovers.unshift({ id: "startMargin" });
+        finalCovers.push({ id: "endMargin" });
         this.setState({
             title: title,
-            covers: covers
+            covers: finalCovers
         });
     }
 
@@ -93,12 +100,15 @@ export default class LibraryList extends React.Component {
                         borderColor: "transparent"
                     }}
                 >
-                    <Image
-                        style={{ flex: 1 }}
-                        source={{
-                            uri: "https://image.tmdb.org/t/p/original" + cover.poster_path
-                        }}
-                    />
+                    {
+                        cover.mediaInfo.poster ? 
+                            <Image
+                                style={{ flex: 1, backgroundColor: "rgba(128, 128, 128, 0.2)" }}
+                                source={{ uri: Movie.getPoster(this.context, cover.id) }}
+                            />
+                        :
+                            <View style={{ flex: 1, backgroundColor: "rgba(128, 128, 128, 0.2)" }}/>
+                    }
                 </TouchableOpacityFix>
             );
         }

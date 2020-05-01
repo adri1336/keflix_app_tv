@@ -1,6 +1,6 @@
 //Vars
 export const REQUEST_TIMEOUT_ERROR_CODE = 504;
-const SERVER_API_IP = "http://192.168.1.41:3000";
+export const SERVER_API_IP = "http://192.168.1.41:3000";
 const FETCH_TIMEOUT = 5000;
 
 //Code

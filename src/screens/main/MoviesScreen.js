@@ -29,21 +29,21 @@ export default class MoviesScreen extends React.Component {
     }
 
     setHeaderInfo(movie) {
-        const { title, release_date, runtime, vote_average, overview, backdrop_path } = movie;
+        const { title, release_date, runtime, vote_average, overview } = movie;
         this.headerMedia.setInfo({
             title: {
                 text: title,
-                image: null
+                image: movie.mediaInfo.logo ? Movie.getLogo(this.context, movie.id) : null
             },
             info: {
-                releaseDate: "2020",
+                releaseDate: release_date.substr(0, 4),
                 runtime: runtime,
                 vote_average: vote_average,
             },
             description: overview,
             backdrop: {
-                image: "https://image.tmdb.org/t/p/original" + backdrop_path,
-                video: null//"http://192.168.1.41:8888/cuervo/peli.mkv"
+                image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
+                video: movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
             }
         });
     }

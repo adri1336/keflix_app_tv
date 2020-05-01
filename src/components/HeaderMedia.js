@@ -55,6 +55,7 @@ export default class HeaderMedia extends React.Component {
             }
 
             if(this.videoPlayer && this.state.backdrop.video) {
+                this.videoPlayer.loadAsync({ uri: this.state.backdrop.video });
                 this.delayVideoTimeout = setTimeout(() => {
                     this.videoPlayer.playAsync();
                 }, VIDEO_PLAY_DELAY);
@@ -63,11 +64,17 @@ export default class HeaderMedia extends React.Component {
     }
 
     setInfo(info) {
+        if(this.state.backdrop.video) {
+            this.videoPlayer.stopAsync();
+        }
         this.fadeBack(false);
         this.setState(info);
     }
 
     fadeBack(fade_in) {
+        if(fade_in && this.videoPlayer) {
+            this.videoPlayer.pauseAsync();
+        }
         Animated.timing(this.state.backOpacity, {
             toValue: fade_in ? 0.8 : 0.0,
             duration: BACK_FADE_DURATION,
@@ -165,7 +172,7 @@ export default class HeaderMedia extends React.Component {
             return (
                 <Video
                     ref={ component => this.videoPlayer = component }
-                    source={{ uri: this.state.backdrop.video }}
+                    /*source={{ uri: this.state.backdrop.video }}*/
                     usePoster={ this.state.backdrop.image ? true : false }
                     posterSource={{ uri: this.state.backdrop.image || null }}
                     rate={ 1.0 } //velocidad
