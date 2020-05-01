@@ -4,8 +4,7 @@ import { View } from "react-native";
 
 //Components Imports
 import HeaderMedia from "cuervo/src/components/HeaderMedia";
-import LibraryList from "cuervo/src/components/LibraryList";
-import NormalButton from "cuervo/src/components/NormalButton";
+import LibrarySectionGrid from "cuervo/src/components/LibrarySectionGrid";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
@@ -25,7 +24,12 @@ export default class MoviesScreen extends React.Component {
 
     async refreshMovies() {
         const movies = await Movie.discover(this.context);
-        this.libraryList.setData("Últimas películas añadidas", movies);
+        const movies2 = await Movie.discover(this.context);
+        const sections = [
+            { title: "Últimas películas añadidas", covers: movies },
+            { title: "Lo más visto de hoy", covers: movies2 }
+        ];
+        this.librarySectionGrid.setSections(sections);
     }
 
     setHeaderInfo(movie) {
@@ -61,22 +65,12 @@ export default class MoviesScreen extends React.Component {
                 <HeaderMedia
                     ref={ component => this.headerMedia = component }
                 />
-                <View
-                    style={{
-                        flex: 1,
-                        marginBottom: -Definitions.DEFAULT_MARGIN,
-                        marginRight: -Definitions.DEFAULT_MARGIN
-                    }}
-                >
-                    <LibraryList
-                        ref={ component => this.libraryList = component }
-                        firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
-                        hasTVPreferredFocus={ true }
-                        onScrollStarted={ () => this.headerMedia.fadeBack(true) }
-                        onCoverFocused={ movie => this.setHeaderInfo(movie) }
-                    />
-                </View>
-                <NormalButton/>
+                <LibrarySectionGrid
+                    ref={ component => this.librarySectionGrid = component }
+                    firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
+                    onScrollStarted={ () => this.headerMedia.fadeBack(true) }
+                    onCoverFocused={ movie => this.setHeaderInfo(movie) }
+                />
             </View>
         );
     }

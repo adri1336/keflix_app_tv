@@ -154,7 +154,6 @@ export default class HeaderMedia extends React.Component {
         if(this.state.backdrop && this.state.backdrop.image) {
             return (
                 <Image
-                    onLoadEnd={()=>console.log("onLoadEnd")}
                     style={{
                         flex: 1,
                         zIndex: -2,

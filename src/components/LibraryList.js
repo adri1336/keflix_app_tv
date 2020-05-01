@@ -1,14 +1,13 @@
 //Imports
 import React from "react";
-import { View, Text, Image, Easing, Animated, FlatList, Dimensions, TVEventHandler } from "react-native";
+import { View, Text, Image, FlatList, Dimensions, TVEventHandler } from "react-native";
 import Styles from "cuervo/src/utils/Styles";
 import Definitions from "cuervo/src/utils/Definitions";
-import TouchableOpacityFix from "cuervo/src/components/TouchableOpacityFix";
 import { AppContext } from "cuervo/src/AppContext";
 import * as Movie from "cuervo/src/api/Movie";
 
 //Vars
-const COVER_ITEM_VALUES = {
+export const COVER_ITEM_VALUES = {
     WIDTH: 115,
     HEIGHT: 165,
     MARGIN: 4,
@@ -21,7 +20,7 @@ const SCREEN_VALUES = {
 };
 
 const
-    TOTAL_COVERS_IN_SCREEN = Math.ceil(SCREEN_VALUES.WIDTH / (COVER_ITEM_VALUES.WIDTH + COVER_ITEM_VALUES.MARGIN)),
+    MAX_COVERS_IN_SCREEN = Math.ceil(SCREEN_VALUES.WIDTH / (COVER_ITEM_VALUES.WIDTH + COVER_ITEM_VALUES.MARGIN)),
     FOCUS_DELAY_TIME = 1000;
 
 //Code
@@ -31,25 +30,96 @@ export default class LibraryList extends React.Component {
     constructor(props) {
         super(props);
 
+        this.focused = this.props.focused || false;
+        this.currentCoverIndex = 1;
         this.firstCoverMarginLeft = this.props.firstCoverMarginLeft;
-        this.currentCoverIndex = 0;
+        this.sectionIndex = this.props.sectionIndex;
         this.lastFocusTime = 0;
         this.delayOnFocusTimeout = null;
 
+        const finalCovers = this.getFinalCovers(this.props.covers);
         this.state = {
-            title: null,
-            covers: null
+            title: this.props.title || null,
+            covers: finalCovers,
         };
     }
 
-    setData(title, covers) {
-        let finalCovers = covers;
-        finalCovers.unshift({ id: "startMargin" });
-        finalCovers.push({ id: "endMargin" });
-        this.setState({
-            title: title,
-            covers: finalCovers
-        });
+    componentDidMount() {
+        this.enableTVEventHandler();
+        if(this.focused) {
+            this.onCoverFocus(1);
+        }
+    }
+
+    componentWillUnmount() {
+        this.disableTVEventHandler();
+    }
+
+    setFocused(focus) {
+        this.focused = focus;
+        if(focus) {
+            this.onCoverFocus(this.currentCoverIndex);
+        }
+    }
+
+    onCoverFocus(index) {
+        const diff = Date.now() - this.lastFocusTime;
+        if(diff > 200) {
+            if(this.props.onScrollStarted) {
+                this.props.onScrollStarted();
+            }
+        }
+        this.lastFocusTime = Date.now();
+
+        if(this.delayOnFocusTimeout) {
+            clearTimeout(this.delayOnFocusTimeout);
+            this.delayOnFocusTimeout = null;
+        }
+        this.delayOnFocusTimeout = setTimeout(() => {
+            if(this.props.onCoverFocused) {
+                this.props.onCoverFocused(this.state.covers[this.currentCoverIndex]);
+            }
+        }, FOCUS_DELAY_TIME);
+        this.scrollToIndex(index);
+    }
+
+    enableTVEventHandler() {
+        if(!this.tvEventHandler) {
+            this.tvEventHandler = new TVEventHandler();
+            this.tvEventHandler.enable(this, (cmp, evt) => {
+                if(this.focused && evt && evt.eventKeyAction == 1) {
+                    if(evt.eventType == "left") {
+                        if(this.currentCoverIndex > 1) {
+                            this.onCoverFocus(this.currentCoverIndex - 1);
+                        }
+                    }
+                    else if(evt.eventType == "right") {
+                        if(this.currentCoverIndex >= this.state.covers.length - 2) {
+                            this.onCoverFocus(1);
+                        }
+                        else {
+                            this.onCoverFocus(this.currentCoverIndex + 1);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    disableTVEventHandler() {
+        if(this.tvEventHandler) {
+            this.tvEventHandler.disable();
+        }
+    }
+
+    getFinalCovers(covers) {
+        if(covers) {
+            let finalCovers = covers;
+            finalCovers.unshift({ id: "startMargin" });
+            finalCovers.push({ id: "endMargin" });
+            return finalCovers;
+        }
+        return null;
     }
 
     scrollToIndex(index) {
@@ -67,30 +137,7 @@ export default class LibraryList extends React.Component {
         }
         else {
             return (
-                <TouchableOpacityFix
-                    activeOpacity={ 1 }
-                    onFocus={
-                        () => {
-                            const diff = Date.now() - this.lastFocusTime;
-                            if(diff > 200) {
-                                if(this.props.onScrollStarted) {
-                                    this.props.onScrollStarted();
-                                }
-                            }
-                            this.lastFocusTime = Date.now();
-
-                            if(this.delayOnFocusTimeout) {
-                                clearTimeout(this.delayOnFocusTimeout);
-                                this.delayOnFocusTimeout = null;
-                            }
-                            this.delayOnFocusTimeout = setTimeout(() => {
-                                if(this.props.onCoverFocused) {
-                                    this.props.onCoverFocused(cover);
-                                }
-                            }, FOCUS_DELAY_TIME);
-                            this.scrollToIndex(index);
-                        }
-                    }
+                <View
                     hasTVPreferredFocus={ index == 1 && this.props.hasTVPreferredFocus ? true : false }
                     style={{
                         width: COVER_ITEM_VALUES.WIDTH,
@@ -109,7 +156,7 @@ export default class LibraryList extends React.Component {
                         :
                             <View style={{ flex: 1, backgroundColor: "rgba(128, 128, 128, 0.2)" }}/>
                     }
-                </TouchableOpacityFix>
+                </View>
             );
         }
     }
@@ -118,22 +165,23 @@ export default class LibraryList extends React.Component {
         if(this.state.covers) {
             return (
                 <View style={{ marginTop: Definitions.DEFAULT_MARGIN }}>
-                    <Text style={[ Styles.normalText, { fontWeight: "bold", marginBottom: Definitions.DEFAULT_MARGIN / 2 } ]}>Últimas películas añadidas</Text>
+                    <Text
+                        style={[
+                            Styles.normalText,
+                            {
+                                fontWeight: "bold",
+                                marginLeft: this.firstCoverMarginLeft,
+                                marginBottom: Definitions.DEFAULT_MARGIN / 2,
+                            }
+                        ]}
+                    >
+                        { this.state.title }
+                    </Text>
                     <View
                         style={{
                             position: "absolute",
                             bottom: 0,
-                            width: COVER_ITEM_VALUES.WIDTH,
-                            height: COVER_ITEM_VALUES.HEIGHT,
-                            borderWidth: COVER_ITEM_VALUES.BORDER,
-                            borderColor: "white"
-                        }}
-                    />
-                    <View
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            left: -this.firstCoverMarginLeft,
+                            left: 0,
                             width: this.firstCoverMarginLeft,
                             height: COVER_ITEM_VALUES.HEIGHT,
                             backgroundColor: Definitions.PRIMARY_COLOR,
@@ -145,16 +193,13 @@ export default class LibraryList extends React.Component {
                         data={ this.state.covers }
                         keyExtractor={ (item, index) => String(index) }
                         renderItem={ ({ item, index }) => this.renderCover(item, index) }
-                        initialNumToRender={ TOTAL_COVERS_IN_SCREEN }
-                        maxToRenderPerBatch={ TOTAL_COVERS_IN_SCREEN }
+                        initialNumToRender={ MAX_COVERS_IN_SCREEN }
+                        maxToRenderPerBatch={ MAX_COVERS_IN_SCREEN }
                         removeClippedSubviews={ true }
                         showsHorizontalScrollIndicator={ false }
                         scrollEnabled={ false }
                         horizontal={ true }
-                        style={{
-                            marginLeft: -this.firstCoverMarginLeft,
-                            zIndex: -1
-                        }}
+                        style={{ zIndex: -1 }}
                     />
                 </View>
             );
