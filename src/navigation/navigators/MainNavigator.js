@@ -40,7 +40,7 @@ export default () => {
             }}/>
             <MainNavigator.Screen name="MoviesScreen" component={MoviesScreen} options={{
                 drawer: true,
-                drawerCanOpen: true,
+                drawerCanOpen: false,
                 title: i18n.t("main_navigator.movies_screen_title"),
                 showScreenInDrawer: true,
                 icon: {

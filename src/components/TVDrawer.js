@@ -28,6 +28,8 @@ export const DRAWER_VALUES = {
     DRAWER_PROFILE_ICON_SIZE: 30
 };
 
+export const SCREEN_MARGIN_LEFT = (DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN * 2) + DRAWER_VALUES.DRAWER_ICON_SIZE;
+
 //Code
 export default class TVDrawer extends React.Component {
     constructor(props) {

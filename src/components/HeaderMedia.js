@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Video } from "expo-av";
 import Styles from "cuervo/src/utils/Styles";
@@ -10,7 +10,9 @@ import Definitions from "cuervo/src/utils/Definitions";
 import { timeConvert } from "cuervo/src/utils/Functions";
 
 //Vars
-const VIDEO_PLAY_DELAY = 2000;
+const
+    VIDEO_PLAY_DELAY = 2000,
+    BACK_FADE_DURATION = 500;
 
 //Code
 export default class HeaderMedia extends React.Component {
@@ -31,7 +33,8 @@ export default class HeaderMedia extends React.Component {
                 image: null,
                 video: null
             },
-            imageTitleAspestRatio: 1 / 1
+            imageTitleAspestRatio: 1 / 1,
+            backOpacity: new Animated.Value(0.8)
         };
         this.delayVideoTimeout = null;
     }
@@ -60,7 +63,16 @@ export default class HeaderMedia extends React.Component {
     }
 
     setInfo(info) {
+        this.fadeBack(false);
         this.setState(info);
+    }
+
+    fadeBack(fade_in) {
+        Animated.timing(this.state.backOpacity, {
+            toValue: fade_in ? 0.8 : 0.0,
+            duration: BACK_FADE_DURATION,
+            useNativeDriver: true
+        }).start();
     }
 
     renderTitle() {
@@ -82,7 +94,12 @@ export default class HeaderMedia extends React.Component {
             else if(this.state.title.text) {
                 return (
                     <View>
-                        <Text numberOfLines={ 1 } style={[ Styles.titleText, { fontWeight: "bold" } ]}>{ this.state.title.text }</Text>
+                        <Text
+                            numberOfLines={ 2 }
+                            style={[ Styles.titleText, { fontWeight: "bold" } ]}
+                        >
+                            { this.state.title.text }
+                        </Text>
                     </View>
                 );
             }
@@ -130,6 +147,7 @@ export default class HeaderMedia extends React.Component {
         if(this.state.backdrop && this.state.backdrop.image) {
             return (
                 <Image
+                    onLoadEnd={()=>console.log("onLoadEnd")}
                     style={{
                         flex: 1,
                         zIndex: -2,
@@ -168,9 +186,21 @@ export default class HeaderMedia extends React.Component {
             <View
                 style={{
                     flex: 1,
-                    flexDirection: "row"
+                    flexDirection: "row",
+                    overflowY: "hidden"
                 }}
             >
+                <Animated.View
+                    opacity={ this.state.backOpacity }
+                    style={{
+                        position: "absolute",
+                        top: "-50%",
+                        width: "150%",
+                        height: "150%",
+                        backgroundColor: Definitions.PRIMARY_COLOR,
+                        zIndex: 1
+                    }}
+                />
                 <View
                     style={{
                         flex: 1,
