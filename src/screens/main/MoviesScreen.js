@@ -19,6 +19,7 @@ export default class MoviesScreen extends React.Component {
     componentDidMount() {
         this.account = this.context.state.account;
         this.profile = this.context.state.profile;
+        this.mediaInfo = null;
         this.refreshMovies();
 
         this.onDrawerOpenedEvent = this.props.navigation.addListener("onDrawerOpened", () => {
@@ -48,10 +49,17 @@ export default class MoviesScreen extends React.Component {
 
     setHeaderInfo(movie) {
         const { title, release_date, runtime, vote_average, overview } = movie;
+
+        this.mediaInfo = {
+            logo: movie.mediaInfo.logo ? Movie.getLogo(this.context, movie.id) : null,
+            image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
+            trailer: movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
+        };
+
         this.headerMedia.setInfo({
             title: {
                 text: title,
-                image: movie.mediaInfo.logo ? Movie.getLogo(this.context, movie.id) : null
+                image: this.mediaInfo.logo
             },
             info: {
                 releaseDate: release_date.substr(0, 4),
@@ -60,8 +68,8 @@ export default class MoviesScreen extends React.Component {
             },
             description: overview,
             backdrop: {
-                image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
-                video: movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
+                image: this.mediaInfo.image,
+                video: this.mediaInfo.trailer
             }
         });
     }
@@ -92,6 +100,18 @@ export default class MoviesScreen extends React.Component {
                         (movie, rowIndex) => {
                             this.setHeaderInfo(movie);
                             this.props.navigation.setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
+                        }
+                    }
+                    onCoverSelected={
+                        movie => {
+                            this.props.navigation.navigate("MediaNavigator", {
+                                screen: "InfoScreen",
+                                params: {
+                                    backRouteName: this.props.route.name,
+                                    media: movie,
+                                    mediaInfo: this.mediaInfo
+                                }
+                            });
                         }
                     }
                 />

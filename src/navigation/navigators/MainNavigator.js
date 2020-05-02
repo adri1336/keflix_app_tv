@@ -11,6 +11,7 @@ import SearchScreen from "cuervo/src/screens/main/SearchScreen";
 import MoviesScreen from "cuervo/src/screens/main/MoviesScreen";
 import MyListScreen from "cuervo/src/screens/main/MyListScreen";
 import SettingsNavigator from "./SettingsNavigator";
+import MediaNavigator from "./MediaNavigator";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
@@ -59,6 +60,11 @@ export default () => {
                 }
             }}/>
             <MainNavigator.Screen name="SettingsNavigator" component={SettingsNavigator} options={{
+                drawer: false,
+                drawerCanOpen: false,
+                showScreenInDrawer: false
+            }}/>
+            <MainNavigator.Screen name="MediaNavigator" component={MediaNavigator} options={{
                 drawer: false,
                 drawerCanOpen: false,
                 showScreenInDrawer: false

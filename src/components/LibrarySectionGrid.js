@@ -88,6 +88,7 @@ export default class LibrarySectionGrid extends React.Component {
                     sectionIndex={ index }
                     onScrollStarted={ toRowIndex => this.props.onScrollStarted(toRowIndex) }
                     onCoverFocused={ (movie, rowIndex) => this.props.onCoverFocused(movie, rowIndex) }
+                    onCoverSelected={ this.props.onCoverSelected }
                 />
             );
         }

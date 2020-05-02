@@ -62,7 +62,8 @@ export default class LibraryList extends React.Component {
             this.delayFocusTimeout = null;
         }
         this.delayFocusTimeout = setTimeout(() => {
-            this.focused = focus;    
+            this.delayFocusTimeout = null;
+            this.focused = focus;
         }, FOCUS_DELAY_TIME);
 
         if(focus) {
@@ -85,6 +86,7 @@ export default class LibraryList extends React.Component {
         }
         this.delayOnFocusTimeout = setTimeout(() => {
             if(this.props.onCoverFocused) {
+                this.delayOnFocusTimeout = null;
                 this.props.onCoverFocused(this.state.covers[this.currentCoverIndex], index);
             }
         }, FOCUS_DELAY_TIME);
@@ -107,6 +109,11 @@ export default class LibraryList extends React.Component {
                         }
                         else {
                             this.onCoverFocus(this.currentCoverIndex + 1);
+                        }
+                    }
+                    else if(evt.eventType == "select") {
+                        if(this.props.onCoverSelected && !this.delayOnFocusTimeout) {
+                            this.props.onCoverSelected(this.state.covers[this.currentCoverIndex]);
                         }
                     }
                 }

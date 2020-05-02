@@ -41,6 +41,13 @@ export default class HeaderMedia extends React.Component {
         this.videoPaused = false;
     }
 
+    componentWillUnmount() {
+        if(this.delayVideoTimeout) {
+            clearTimeout(this.delayVideoTimeout);
+            this.delayVideoTimeout = null;
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if(this.state.title && (this.state.title.image != prevState.title.image)) {
             Image.getSize(this.state.title.image, (width, height) => {
@@ -59,6 +66,7 @@ export default class HeaderMedia extends React.Component {
             if(this.videoPlayer && this.state.backdrop.video) {
                 
                 this.delayVideoTimeout = setTimeout(async () => {
+                    this.delayVideoTimeout = null;
                     try {
                         if(!this.videoPaused) {
                             const playbackStatus = await this.videoPlayer.loadAsync({ uri: this.state.backdrop.video });
