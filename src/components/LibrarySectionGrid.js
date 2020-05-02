@@ -37,7 +37,10 @@ export default class LibrarySectionGrid extends React.Component {
                         }
                     }
                     else if(evt.eventType == "down") {
-                        if(this.currentSectionIndex < this.state.sections.length - 2) {
+                        if(this.currentSectionIndex >= this.state.sections.length - 2) {
+                            this.scrollToIndex(0);
+                        }
+                        else {
                             this.scrollToIndex(this.currentSectionIndex + 1);
                         }
                     }
@@ -62,6 +65,7 @@ export default class LibrarySectionGrid extends React.Component {
 
     setFocus(focus) {
         this.focused = focus;
+        this.listRefs[this.currentSectionIndex].setFocus(focus);
     }
 
     setSections(sections) {
@@ -82,8 +86,8 @@ export default class LibrarySectionGrid extends React.Component {
                     title={ section.title }
                     covers={ section.covers }
                     sectionIndex={ index }
-                    onScrollStarted={ () => this.props.onScrollStarted() }
-                    onCoverFocused={ movie => this.props.onCoverFocused(movie) }
+                    onScrollStarted={ toRowIndex => this.props.onScrollStarted(toRowIndex) }
+                    onCoverFocused={ (movie, rowIndex) => this.props.onCoverFocused(movie, rowIndex) }
                 />
             );
         }
@@ -91,12 +95,12 @@ export default class LibrarySectionGrid extends React.Component {
 
     scrollToIndex(index) {
         if(this.currentSectionIndex != index) {
-            this.listRefs[this.currentSectionIndex].setFocused(false);
+            this.listRefs[this.currentSectionIndex].setFocus(false);
 
             this.currentSectionIndex = index;
             this.flatList.scrollToIndex({ index: this.currentSectionIndex, animated: true });
 
-            this.listRefs[this.currentSectionIndex].setFocused(true);
+            this.listRefs[this.currentSectionIndex].setFocus(true);
         }
     }
 

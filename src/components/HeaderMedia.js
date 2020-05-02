@@ -33,10 +33,12 @@ export default class HeaderMedia extends React.Component {
                 image: null,
                 video: null
             },
+            showVideo: false,
             imageTitleAspestRatio: 1 / 1,
             backOpacity: new Animated.Value(0.8)
         };
         this.delayVideoTimeout = null;
+        this.videoPaused = false;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -55,9 +57,20 @@ export default class HeaderMedia extends React.Component {
             }
 
             if(this.videoPlayer && this.state.backdrop.video) {
-                this.videoPlayer.loadAsync({ uri: this.state.backdrop.video });
-                this.delayVideoTimeout = setTimeout(() => {
-                    this.videoPlayer.playAsync();
+                
+                this.delayVideoTimeout = setTimeout(async () => {
+                    try {
+                        if(!this.videoPaused) {
+                            const playbackStatus = await this.videoPlayer.loadAsync({ uri: this.state.backdrop.video });
+                            if(playbackStatus.isLoaded) {
+                                this.videoPlayer.playAsync();
+                                this.setState({ showVideo: true });
+                            }
+                        }
+                    }
+                    catch(error) {
+                        console.log(error);
+                    }
                 }, VIDEO_PLAY_DELAY);
             }
         }
@@ -68,7 +81,7 @@ export default class HeaderMedia extends React.Component {
             this.videoPlayer.stopAsync();
         }
         this.fadeBack(false);
-        this.setState(info);
+        this.setState({ ...info, showVideo: false });
     }
 
     fadeBack(fade_in) {
@@ -80,6 +93,20 @@ export default class HeaderMedia extends React.Component {
             duration: BACK_FADE_DURATION,
             useNativeDriver: true
         }).start();
+    }
+
+    async pauseVideo() {
+        if(this.videoPlayer) {
+            const playbackStatus = await this.videoPlayer.getStatusAsync();
+            if(playbackStatus.isLoaded) {
+                this.videoPaused = true;
+                this.videoPlayer.pauseAsync();
+            }
+        }
+    }
+
+    playVideo() {
+        this.videoPaused = false;
     }
 
     renderTitle() {
@@ -176,6 +203,7 @@ export default class HeaderMedia extends React.Component {
                     posterSource={{ uri: this.state.backdrop.image || null }}
                     rate={ 1.0 } //velocidad
                     resizeMode="cover"
+                    opacity={ this.state.showVideo ? 1.0 : 0.0 }
                     style={{
                         position: "absolute",
                         top: "-20%",

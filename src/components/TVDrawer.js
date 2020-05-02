@@ -76,7 +76,7 @@ export default class TVDrawer extends React.Component {
         this.disableTVEventHandler();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         if(this.props.isDrawerOpen != prevProps.isDrawerOpen) {
             if(this.props.isDrawerOpen) {
                 
@@ -136,8 +136,9 @@ export default class TVDrawer extends React.Component {
             }
             this.animateDrawer();
         }
-        if(this.props.currentDescriptorKey != prevProps.currentDescriptorKey) {
-            const activeDescriptor = this.props.descriptors[this.props.currentDescriptorKey];
+
+        const activeDescriptor = this.props.descriptors[this.props.currentDescriptorKey];
+        if(activeDescriptor.options.drawerCanOpen != prevState.drawerCanOpen) {
             this.setState({ drawerCanOpen: activeDescriptor.options.drawerCanOpen });
         }
     }

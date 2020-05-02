@@ -46,7 +46,7 @@ function TVDrawerNavigatorRouter(options) {
                     return {
                         ...state,
                         history: [
-                            { type: "drawer" }
+                            { type: "drawer", drawer: "opened" }
                         ]
                     };
                 }
@@ -57,7 +57,9 @@ function TVDrawerNavigatorRouter(options) {
                     
                     return {
                         ...state,
-                        history: []
+                        history: [
+                            { drawer: "closed" }
+                        ]
                     };
                 }
                 default: {
@@ -93,6 +95,16 @@ function TVDrawerNavigator({ initialRouteName, children, appContext }) {
         { routes, index } = state,
         currentDescriptorKey = routes[index].key,
         descriptor = descriptors[currentDescriptorKey];
+
+    //console.log("state: ", state);
+    if(state.history[0]?.drawer == "opened") {
+        state.history[0].drawer = null;
+        navigation.emit({ type: "onDrawerOpened" });
+    }
+    else if(state.history[0]?.drawer == "closed") {
+        state.history[0].drawer = null;
+        navigation.emit({ type: "onDrawerClosed" });
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

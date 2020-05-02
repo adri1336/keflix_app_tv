@@ -20,14 +20,28 @@ export default class MoviesScreen extends React.Component {
         this.account = this.context.state.account;
         this.profile = this.context.state.profile;
         this.refreshMovies();
+
+        this.onDrawerOpenedEvent = this.props.navigation.addListener("onDrawerOpened", () => {
+            if(this.librarySectionGrid) {
+                this.librarySectionGrid.setFocus(false);
+                this.headerMedia.pauseVideo();
+            }
+        });
+        this.onDrawerClosedEvent = this.props.navigation.addListener("onDrawerClosed", () => {
+            this.librarySectionGrid.setFocus(true);
+            this.headerMedia.playVideo();
+        });
+    }
+
+    componentWillUnmount() {
+        this.onDrawerOpenedEvent();
+        this.onDrawerClosedEvent();
     }
 
     async refreshMovies() {
         const movies = await Movie.discover(this.context);
-        const movies2 = await Movie.discover(this.context);
         const sections = [
-            { title: "Últimas películas añadidas", covers: movies },
-            { title: "Lo más visto de hoy", covers: movies2 }
+            { title: "Últimas películas añadidas", covers: movies }
         ];
         this.librarySectionGrid.setSections(sections);
     }
@@ -68,8 +82,18 @@ export default class MoviesScreen extends React.Component {
                 <LibrarySectionGrid
                     ref={ component => this.librarySectionGrid = component }
                     firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
-                    onScrollStarted={ () => this.headerMedia.fadeBack(true) }
-                    onCoverFocused={ movie => this.setHeaderInfo(movie) }
+                    onScrollStarted={
+                        toRowIndex => {
+                            this.headerMedia.fadeBack(true);
+                            this.props.navigation.setOptions({ drawerCanOpen: toRowIndex == 1 ? true : false });
+                        }
+                    }
+                    onCoverFocused={
+                        (movie, rowIndex) => {
+                            this.setHeaderInfo(movie);
+                            this.props.navigation.setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
+                        }
+                    }
                 />
             </View>
         );

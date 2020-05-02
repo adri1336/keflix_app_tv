@@ -36,6 +36,7 @@ export default class LibraryList extends React.Component {
         this.sectionIndex = this.props.sectionIndex;
         this.lastFocusTime = 0;
         this.delayOnFocusTimeout = null;
+        this.delayFocusTimeout = null;
 
         const finalCovers = this.getFinalCovers(this.props.covers);
         this.state = {
@@ -55,8 +56,15 @@ export default class LibraryList extends React.Component {
         this.disableTVEventHandler();
     }
 
-    setFocused(focus) {
-        this.focused = focus;
+    setFocus(focus) {
+        if(this.delayFocusTimeout) {
+            clearTimeout(this.delayFocusTimeout);
+            this.delayFocusTimeout = null;
+        }
+        this.delayFocusTimeout = setTimeout(() => {
+            this.focused = focus;    
+        }, FOCUS_DELAY_TIME);
+
         if(focus) {
             this.onCoverFocus(this.currentCoverIndex);
         }
@@ -66,7 +74,7 @@ export default class LibraryList extends React.Component {
         const diff = Date.now() - this.lastFocusTime;
         if(diff > 200) {
             if(this.props.onScrollStarted) {
-                this.props.onScrollStarted();
+                this.props.onScrollStarted(index);
             }
         }
         this.lastFocusTime = Date.now();
@@ -77,7 +85,7 @@ export default class LibraryList extends React.Component {
         }
         this.delayOnFocusTimeout = setTimeout(() => {
             if(this.props.onCoverFocused) {
-                this.props.onCoverFocused(this.state.covers[this.currentCoverIndex]);
+                this.props.onCoverFocused(this.state.covers[this.currentCoverIndex], index);
             }
         }, FOCUS_DELAY_TIME);
         this.scrollToIndex(index);
