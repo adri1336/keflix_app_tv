@@ -5,6 +5,7 @@ import { View } from "react-native";
 //Components Imports
 import HeaderMedia from "cuervo/src/components/HeaderMedia";
 import LibrarySectionGrid from "cuervo/src/components/LibrarySectionGrid";
+import NormalButton from "cuervo/src/components/NormalButton";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
@@ -44,7 +45,9 @@ export default class MoviesScreen extends React.Component {
         const sections = [
             { title: "Últimas películas añadidas", covers: movies }
         ];
-        this.librarySectionGrid.setSections(sections);
+        if(this.librarySectionGrid) {
+            this.librarySectionGrid.setSections(sections);
+        }
     }
 
     setHeaderInfo(movie) {
@@ -87,6 +90,7 @@ export default class MoviesScreen extends React.Component {
                 <HeaderMedia
                     ref={ component => this.headerMedia = component }
                 />
+                <NormalButton hasTVPreferredFocus={ true }/>
                 <LibrarySectionGrid
                     ref={ component => this.librarySectionGrid = component }
                     firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }

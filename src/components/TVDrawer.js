@@ -79,7 +79,6 @@ export default class TVDrawer extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if(this.props.isDrawerOpen != prevProps.isDrawerOpen) {
             if(this.props.isDrawerOpen) {
-                
                 this.change_profile_button.setNativeProps({
                     nextFocusUp: findNodeHandle(this.change_profile_button),
                     nextFocusDown: findNodeHandle(this.screen_buttons[0]),
@@ -130,9 +129,11 @@ export default class TVDrawer extends React.Component {
                 });
 
                 disableAllButtons();
+                this.props.navigation.emit({ type: "onDrawerOpened" });
             }
             else {
                 enableAllButtons();
+                this.props.navigation.emit({ type: "onDrawerClosed" });
             }
             this.animateDrawer();
         }

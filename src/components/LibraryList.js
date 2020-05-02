@@ -57,17 +57,19 @@ export default class LibraryList extends React.Component {
     }
 
     setFocus(focus) {
-        if(this.delayFocusTimeout) {
-            clearTimeout(this.delayFocusTimeout);
-            this.delayFocusTimeout = null;
-        }
-        this.delayFocusTimeout = setTimeout(() => {
-            this.delayFocusTimeout = null;
-            this.focused = focus;
-        }, FOCUS_DELAY_TIME);
-
         if(focus) {
+            if(this.delayFocusTimeout) {
+                clearTimeout(this.delayFocusTimeout);
+                this.delayFocusTimeout = null;
+            }
+            this.delayFocusTimeout = setTimeout(() => {
+                this.delayFocusTimeout = null;
+                this.focused = focus;
+            }, FOCUS_DELAY_TIME);
             this.onCoverFocus(this.currentCoverIndex);
+        }
+        else {
+            this.focused = focus;
         }
     }
 
