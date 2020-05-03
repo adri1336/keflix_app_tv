@@ -41,8 +41,7 @@ export default class TVDrawer extends React.Component {
             drawerOpacity: new Animated.Value(0),
             drawerIconsPosX: new Animated.Value(DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN),
             drawerPosX: new Animated.Value((-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH)),
-            drawerCanOpen: this.props.currentOptions.drawerCanOpen || false,
-            currentFocusedScreenButton: null
+            drawerCanOpen: this.props.currentOptions.drawerCanOpen || false
         };
     }
 
@@ -238,7 +237,7 @@ export default class TVDrawer extends React.Component {
                         size={ DRAWER_VALUES.DRAWER_ICON_SIZE }
                         color={
                             this.state.isDrawerOpen ?
-                                (this.state.currentFocusedScreenButton == route ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);") :
+                                Definitions.TEXT_COLOR :
                                 (this.state.drawerCanOpen ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);")
                         }
                     />
@@ -294,7 +293,7 @@ export default class TVDrawer extends React.Component {
     }
 
     printDescriptorTextButton(tab, index) {
-        const { route, title } = tab;
+        const { navigator, route, title } = tab;
         return (
             <View
                 key={ route }
@@ -310,12 +309,16 @@ export default class TVDrawer extends React.Component {
                     alwaysAccessible={ true }
                     hasTVPreferredFocus={ this.state.isDrawerOpen && route == this.props.currentRouteName ? true : false }
                     textStyle={ Styles.bigText }
-                    onFocus={ () => this.setState({ currentFocusedScreenButton: route }) }
                     onPress={
                         () => {
                             this.setState({ isDrawerOpen: false }, function() {
                                 if(this.props.currentRouteName != route) {
-                                    this.props.navigation.navigate(route);
+                                    if(navigator) {
+                                        this.props.navigation.navigate(navigator, { screen: route });
+                                    }
+                                    else {
+                                        this.props.navigation.navigate(route);
+                                    }
                                 }
                             });
                         }
@@ -391,7 +394,6 @@ export default class TVDrawer extends React.Component {
                                         this.props.appContext.funcs.profileLogout();
                                     }
                                 }
-                                onFocus={ () => this.setState({ currentFocusedScreenButton: null }) }
                             >
                                 { i18n.t("main_tv_navigator.change_profile_button") }
                             </NormalButton>
@@ -426,17 +428,19 @@ export default class TVDrawer extends React.Component {
                         alwaysAccessible={ true }
                         onPress={
                             () => {
-                                this.props.navigation.navigate("SettingsNavigator", {
-                                    screen: "GeneralScreen",
-                                    params: {
-                                        backRouteName: this.props.routes[this.props.currentIndex].name,
-                                        account: this.props.appContext.state.account,
-                                        profile: this.props.appContext.state.profile
-                                    }
+                                this.setState({ isDrawerOpen: false }, function() {
+                                    this.props.navigation.navigate("SettingsNavigator", {
+                                        screen: "GeneralScreen",
+                                        params: {
+                                            backRouteName: this.props.currentRouteName,
+                                            account: this.props.appContext.state.account,
+                                            profile: this.props.appContext.state.profile
+                                        }
+                                    });
                                 });
+                                
                             }
                         }
-                        onFocus={ () => this.setState({ currentFocusedScreenButton: null }) }
                     >
                         { i18n.t("main_tv_navigator.settings_button") }
                     </NormalButton>

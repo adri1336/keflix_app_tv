@@ -10,8 +10,8 @@ import { createTVDrawerNavigator } from "cuervo/src/components/navigators/TVDraw
 import SearchScreen from "cuervo/src/screens/main/SearchScreen";
 import MoviesScreen from "cuervo/src/screens/main/MoviesScreen";
 import MyListScreen from "cuervo/src/screens/main/MyListScreen";
-import SettingsNavigator from "./SettingsNavigator";
 import MediaNavigator from "./MediaNavigator";
+import SettingsNavigator from "./SettingsNavigator";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
@@ -46,11 +46,11 @@ export default () => {
                 drawer: true,
                 drawerCanOpen: true
             }}/>
-            <MainNavigator.Screen name="SettingsNavigator" component={SettingsNavigator} options={{
+            <MainNavigator.Screen name="MediaNavigator" component={MediaNavigator} options={{
                 drawer: false,
                 drawerCanOpen: false
             }}/>
-            <MainNavigator.Screen name="MediaNavigator" component={MediaNavigator} options={{
+            <MainNavigator.Screen name="SettingsNavigator" component={SettingsNavigator} options={{
                 drawer: false,
                 drawerCanOpen: false
             }}/>

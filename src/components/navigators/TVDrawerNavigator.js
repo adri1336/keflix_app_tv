@@ -1,33 +1,29 @@
 //Imports
 import React from "react";
 import { SafeAreaView, View } from "react-native";
-import { StackRouter, useNavigationBuilder, createNavigatorFactory } from "@react-navigation/native";
-import { StackView } from "@react-navigation/stack";
+import { TabRouter, useNavigationBuilder, createNavigatorFactory } from "@react-navigation/native";
 
 //Components Imports
 import TVDrawer from "cuervo/src/components/TVDrawer";
 
 //Code
 function TVDrawerNavigator({ initialRouteName, children, appContext, tabs, ...rest }) {
-    const { state, navigation, descriptors } = useNavigationBuilder(StackRouter, {
+    const { state, navigation, descriptors } = useNavigationBuilder(TabRouter, {
         initialRouteName,
         children
     });
     
     const
         { routes, index } = state,
-        currentRouteName = routes[index].name,
-        currentOptions = descriptors[routes[index].key].options;
-        
+        descriptor = descriptors[routes[index].key],
+        currentRouteName = descriptor.options.currentRoute || routes[index].name,
+        currentOptions = descriptor.options;
+    
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <StackView
-                style={{ flex: 1 }}
-                state={ state }
-                navigation={ navigation }
-                descriptors={ descriptors }
-                { ...rest }
-            />
+            <View style={{ flex: 1 }}>
+                { descriptor.render() }
+            </View>
             <TVDrawer
                 appContext={ appContext }
                 navigation={ navigation }

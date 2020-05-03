@@ -3,8 +3,8 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Screen Imports
-import GeneralScreen from "cuervo/src/screens/settings/GeneralScreen";
-import EnterAccountPasswordScreen from "cuervo/src/screens/settings/EnterAccountPasswordScreen";
+import GeneralScreen from "cuervo/src/screens/main/settings/GeneralScreen";
+import EnterAccountPasswordScreen from "cuervo/src/screens/main/settings/EnterAccountPasswordScreen";
 import EditProfileScreen from "cuervo/src/screens/profile/CreateProfileScreen";
 import SelectProfileColorScreen from "cuervo/src/screens/profile/SelectProfileColorScreen";
 

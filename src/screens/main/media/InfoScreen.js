@@ -3,6 +3,9 @@ import { View, BackHandler } from "react-native";
 import HeaderMedia from "cuervo/src/components/HeaderMedia";
 import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
 import Definitions from "cuervo/src/utils/Definitions";
+import NormalButton from "cuervo/src/components/NormalButton";
+import Styles from "cuervo/src/utils/Styles";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
 
 export default class InfoScreen extends React.Component {
     constructor(props) {
@@ -63,11 +66,45 @@ export default class InfoScreen extends React.Component {
                 <View
                     style={{
                         flex: 1,
+                        marginTop: 50,
+                        marginLeft: Definitions.DEFAULT_MARGIN,
                         marginBottom: -Definitions.DEFAULT_MARGIN,
                         marginRight: -Definitions.DEFAULT_MARGIN
                     }}
                 >
-                    
+                    <NormalButton
+                        hasTVPreferredFocus={ true }
+                        textStyle={ Styles.bigText }
+                        icon={{
+                            library: MaterialIcons,
+                            name: "play-arrow"
+                        }}
+                        style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
+                    >
+                        Reproducir ahora
+                    </NormalButton>
+
+                    <NormalButton
+                        textStyle={ Styles.bigText }
+                        icon={{
+                            library: MaterialIcons,
+                            name: "local-play"
+                        }}
+                        style={{ marginBottom: 20 }}
+                    >
+                        Ver tráiler
+                    </NormalButton>
+
+                    <NormalButton
+                        textStyle={ Styles.bigText }
+                        icon={{
+                            library: MaterialIcons,
+                            name: "playlist-add"
+                        }}
+                        style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
+                    >
+                        Añadir a mi lista
+                    </NormalButton>
                 </View>
             </View>
         );

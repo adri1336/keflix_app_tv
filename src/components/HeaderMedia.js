@@ -115,6 +115,7 @@ export default class HeaderMedia extends React.Component {
 
     playVideo() {
         this.videoPaused = false;
+        this.videoPlayer.playAsync();
     }
 
     renderTitle() {
