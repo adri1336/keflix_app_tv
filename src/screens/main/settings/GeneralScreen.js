@@ -32,7 +32,12 @@ export default class GeneralScreen extends React.Component {
     componentDidMount() {
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             if(this.props.navigation.isFocused()) {
-                this.props.navigation.navigate(this.props.route.params.backRouteName);
+                if(this.props.route.params.backNavigator) {
+                    this.props.navigation.navigate(this.props.route.params.backNavigator, { screen: this.props.route.params.backRouteName });
+                }
+                else {
+                    this.props.navigation.navigate(this.props.route.params.backRouteName);
+                }
                 return true;
             }
             return false;

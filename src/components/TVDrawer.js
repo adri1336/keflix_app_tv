@@ -86,12 +86,14 @@ export default class TVDrawer extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if(this.state.isDrawerOpen != prevState.isDrawerOpen) {
             if(this.state.isDrawerOpen) {
-                this.change_profile_button.setNativeProps({
-                    nextFocusUp: findNodeHandle(this.change_profile_button),
-                    nextFocusDown: findNodeHandle(this.screen_buttons[0]),
-                    nextFocusLeft: findNodeHandle(this.change_profile_button),
-                    nextFocusRight: findNodeHandle(this.change_profile_button)
-                });
+                if(this.change_profile_button) {
+                    this.change_profile_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.change_profile_button),
+                        nextFocusDown: findNodeHandle(this.screen_buttons[0]),
+                        nextFocusLeft: findNodeHandle(this.change_profile_button),
+                        nextFocusRight: findNodeHandle(this.change_profile_button)
+                    });
+                }
 
                 this.screen_buttons.map((screen_button, index) => {
                     var nextFocusUp = null;
@@ -121,19 +123,23 @@ export default class TVDrawer extends React.Component {
                     });
                 });
 
-                this.settings_button.setNativeProps({
-                    nextFocusUp: findNodeHandle(this.screen_buttons[this.screen_buttons.length - 1]),
-                    nextFocusDown: findNodeHandle(this.exit_app_button),
-                    nextFocusLeft: findNodeHandle(this.settings_button),
-                    nextFocusRight: findNodeHandle(this.settings_button)
-                });
+                if(this.settings_button) {
+                    this.settings_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.screen_buttons[this.screen_buttons.length - 1]),
+                        nextFocusDown: findNodeHandle(this.exit_app_button),
+                        nextFocusLeft: findNodeHandle(this.settings_button),
+                        nextFocusRight: findNodeHandle(this.settings_button)
+                    });
+                }
 
-                this.exit_app_button.setNativeProps({
-                    nextFocusUp: findNodeHandle(this.settings_button),
-                    nextFocusDown: findNodeHandle(this.exit_app_button),
-                    nextFocusLeft: findNodeHandle(this.exit_app_button),
-                    nextFocusRight: findNodeHandle(this.exit_app_button)
-                });
+                if(this.exit_app_button) {
+                    this.exit_app_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.settings_button),
+                        nextFocusDown: findNodeHandle(this.exit_app_button),
+                        nextFocusLeft: findNodeHandle(this.exit_app_button),
+                        nextFocusRight: findNodeHandle(this.exit_app_button)
+                    });
+                }
 
                 disableAllButtons();
                 this.props.currentOptions.isDrawerOpen = true;
@@ -432,6 +438,7 @@ export default class TVDrawer extends React.Component {
                                     this.props.navigation.navigate("SettingsNavigator", {
                                         screen: "GeneralScreen",
                                         params: {
+                                            backNavigator: this.props.currentNavigator,
                                             backRouteName: this.props.currentRouteName,
                                             account: this.props.appContext.state.account,
                                             profile: this.props.appContext.state.profile

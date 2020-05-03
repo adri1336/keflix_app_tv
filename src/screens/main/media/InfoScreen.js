@@ -5,13 +5,16 @@ import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
 import Definitions from "cuervo/src/utils/Definitions";
 import NormalButton from "cuervo/src/components/NormalButton";
 import Styles from "cuervo/src/utils/Styles";
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as Movie from "cuervo/src/api/Movie";
+import { AppContext } from "cuervo/src/AppContext";
 
 export default class InfoScreen extends React.Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props);
         this.media = this.props.route.params.media;
-        this.mediaInfo = this.props.route.params.mediaInfo;
     }
 
     componentDidMount() {
@@ -31,11 +34,11 @@ export default class InfoScreen extends React.Component {
     }
 
     setHeaderInfo() {
-        const { title, release_date, runtime, vote_average, overview } = this.media;
+        const { id, title, release_date, runtime, vote_average, overview, mediaInfo } = this.media;
         this.headerMedia.setInfo({
             title: {
                 text: title,
-                image: this.mediaInfo.logo
+                image: mediaInfo.logo ? Movie.getLogo(this.context, id) : null
             },
             info: {
                 releaseDate: release_date.substr(0, 4),
@@ -44,7 +47,7 @@ export default class InfoScreen extends React.Component {
             },
             description: overview,
             backdrop: {
-                image: this.mediaInfo.image,
+                image: mediaInfo.backdrop ? Movie.getBackdrop(this.context, id) : null,
                 video: null
             }
         });

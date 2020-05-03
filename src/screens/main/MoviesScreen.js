@@ -23,19 +23,36 @@ export default class MoviesScreen extends React.Component {
         this.mediaInfo = null;
         this.refreshMovies();
 
-        this.onDrawerOpenedEvent = this.props.navigation.addListener("onDrawerOpened", () => {
+        this.onFocusEvent = this.props.navigation.addListener("focus", () => {
+            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true });
+            if(this.librarySectionGrid) {
+                this.librarySectionGrid.setFocus(true, false);
+            }
+            if(this.headerMedia) {
+                this.headerMedia.playVideo();
+            }
+
+        });
+        this.onDrawerOpenedEvent = this.props.navigation.dangerouslyGetParent().addListener("onDrawerOpened", () => {
             if(this.librarySectionGrid) {
                 this.librarySectionGrid.setFocus(false);
+            }
+            if(this.headerMedia) {
                 this.headerMedia.pauseVideo();
             }
         });
-        this.onDrawerClosedEvent = this.props.navigation.addListener("onDrawerClosed", () => {
-            this.librarySectionGrid.setFocus(true, false);
-            this.headerMedia.playVideo();
+        this.onDrawerClosedEvent = this.props.navigation.dangerouslyGetParent().addListener("onDrawerClosed", () => {
+            if(this.librarySectionGrid) {
+                this.librarySectionGrid.setFocus(true, false);
+            }
+            if(this.headerMedia) {
+                this.headerMedia.playVideo();
+            }
         });
     }
 
     componentWillUnmount() {
+        this.onFocusEvent();
         this.onDrawerOpenedEvent();
         this.onDrawerClosedEvent();
     }
@@ -53,16 +70,10 @@ export default class MoviesScreen extends React.Component {
     setHeaderInfo(movie) {
         const { title, release_date, runtime, vote_average, overview } = movie;
 
-        this.mediaInfo = {
-            logo: movie.mediaInfo.logo ? Movie.getLogo(this.context, movie.id) : null,
-            image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
-            trailer: movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
-        };
-
         this.headerMedia.setInfo({
             title: {
                 text: title,
-                image: this.mediaInfo.logo
+                image: movie.mediaInfo.logo ? Movie.getLogo(this.context, movie.id) : null
             },
             info: {
                 releaseDate: release_date.substr(0, 4),
@@ -71,8 +82,8 @@ export default class MoviesScreen extends React.Component {
             },
             description: overview,
             backdrop: {
-                image: this.mediaInfo.image,
-                video: this.mediaInfo.trailer
+                image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
+                video: movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
             }
         });
     }
@@ -97,23 +108,29 @@ export default class MoviesScreen extends React.Component {
                     onScrollStarted={
                         toRowIndex => {
                             this.headerMedia.fadeBack(true);
-                            this.props.navigation.setOptions({ drawerCanOpen: toRowIndex == 1 ? true : false });
+                            this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: toRowIndex == 1 ? true : false });
                         }
                     }
                     onCoverFocused={
                         (movie, rowIndex) => {
                             this.setHeaderInfo(movie);
-                            this.props.navigation.setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
+                            this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
                         }
                     }
                     onCoverSelected={
                         movie => {
+                            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false });
+                            if(this.librarySectionGrid) {
+                                this.librarySectionGrid.setFocus(false);
+                            }
+                            if(this.headerMedia) {
+                                this.headerMedia.pauseVideo();
+                            }
                             this.props.navigation.navigate("MediaNavigator", {
                                 screen: "InfoScreen",
                                 params: {
                                     backRouteName: this.props.route.name,
-                                    media: movie,
-                                    mediaInfo: this.mediaInfo
+                                    media: movie
                                 }
                             });
                         }

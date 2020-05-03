@@ -65,7 +65,9 @@ export default class LibrarySectionGrid extends React.Component {
 
     setFocus(focus, updateCover = true) {
         this.focused = focus;
-        this.listRefs[this.currentSectionIndex].setFocus(focus, updateCover);
+        if(this.listRefs[this.currentSectionIndex]) {
+            this.listRefs[this.currentSectionIndex].setFocus(focus, updateCover);
+        }
     }
 
     setSections(sections) {

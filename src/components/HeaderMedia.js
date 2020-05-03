@@ -114,8 +114,10 @@ export default class HeaderMedia extends React.Component {
     }
 
     playVideo() {
-        this.videoPaused = false;
-        this.videoPlayer.playAsync();
+        if(this.videoPlayer) {
+            this.videoPaused = false;
+            this.videoPlayer.playAsync();
+        }
     }
 
     renderTitle() {
@@ -213,6 +215,13 @@ export default class HeaderMedia extends React.Component {
                     rate={ 1.0 } //velocidad
                     resizeMode="cover"
                     opacity={ this.state.showVideo ? 1.0 : 0.0 }
+                    onPlaybackStatusUpdate={
+                        playbackStatus => {
+                            if(playbackStatus.didJustFinish) {
+                                this.setState({ showVideo: false });
+                            }
+                        }
+                    }
                     style={{
                         position: "absolute",
                         top: "-20%",
@@ -239,7 +248,7 @@ export default class HeaderMedia extends React.Component {
                         position: "absolute",
                         top: "-50%",
                         width: "150%",
-                        height: "150%",
+                        height: "155%",
                         backgroundColor: Definitions.PRIMARY_COLOR,
                         zIndex: 1
                     }}
@@ -260,7 +269,7 @@ export default class HeaderMedia extends React.Component {
                         flex: 1,
                         marginTop: -Definitions.DEFAULT_MARGIN,
                         marginRight: -Definitions.DEFAULT_MARGIN,
-                        marginLeft: -100,
+                        marginLeft: -130,
                         flexDirection: "column",
                     }}
                 >

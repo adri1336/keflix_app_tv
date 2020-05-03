@@ -16,9 +16,17 @@ function TVDrawerNavigator({ initialRouteName, children, appContext, tabs, ...re
     const
         { routes, index } = state,
         descriptor = descriptors[routes[index].key],
-        currentRouteName = descriptor.options.currentRoute || routes[index].name,
         currentOptions = descriptor.options;
     
+    let currentNavigator, currentRouteName = null;
+    if(descriptor.options.currentRoute) {
+        currentNavigator = routes[index].name;
+        currentRouteName = descriptor.options.currentRoute;
+    }
+    else {
+        currentNavigator = null;
+        currentRouteName = routes[index].name;
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
@@ -27,6 +35,7 @@ function TVDrawerNavigator({ initialRouteName, children, appContext, tabs, ...re
             <TVDrawer
                 appContext={ appContext }
                 navigation={ navigation }
+                currentNavigator={ currentNavigator }
                 currentRouteName={ currentRouteName }
                 currentOptions={ currentOptions }
                 tabs={ tabs }
