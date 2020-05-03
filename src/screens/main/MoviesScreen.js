@@ -24,7 +24,7 @@ export default class MoviesScreen extends React.Component {
         this.refreshMovies();
 
         this.onFocusEvent = this.props.navigation.addListener("focus", () => {
-            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true });
+            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.librarySectionGrid.getCurrentRowIndex() == 1 ? true : false });
             if(this.librarySectionGrid) {
                 this.librarySectionGrid.setFocus(true, false);
             }
@@ -119,7 +119,7 @@ export default class MoviesScreen extends React.Component {
                     }
                     onCoverSelected={
                         movie => {
-                            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false });
+                            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false, drawerCanOpen: false });
                             if(this.librarySectionGrid) {
                                 this.librarySectionGrid.setFocus(false);
                             }

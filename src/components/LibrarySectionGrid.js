@@ -70,6 +70,13 @@ export default class LibrarySectionGrid extends React.Component {
         }
     }
 
+    getCurrentRowIndex() {
+        if(this.listRefs[this.currentSectionIndex]) {
+            return this.listRefs[this.currentSectionIndex].currentCoverIndex;
+        }
+        return 0;
+    }
+
     setSections(sections) {
         sections.push("endMargin");
         this.setState({ sections: sections });

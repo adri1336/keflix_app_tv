@@ -13,6 +13,10 @@ export const getTrailer = (context, id_movie) => {
     return SERVER_API_IP + "/api/movie/" + id_movie + "/trailer.mp4?token=" + context.state.accessToken;
 };
 
+export const getVideo = (context, id_movie) => {
+    return SERVER_API_IP + "/api/movie/" + id_movie + "/video.mp4?token=" + context.state.accessToken;
+};
+
 export const getPoster = (context, id_movie) => {
     return SERVER_API_IP + "/api/movie/" + id_movie + "/poster.png?token=" + context.state.accessToken;
 };

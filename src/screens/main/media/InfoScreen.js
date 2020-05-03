@@ -83,6 +83,11 @@ export default class InfoScreen extends React.Component {
                             name: "play-arrow"
                         }}
                         style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
+                        onPress={
+                            () => {
+                                this.props.navigation.navigate("VideoScreen", { media: this.media });
+                            }
+                        }
                     >
                         Reproducir ahora
                     </NormalButton>
