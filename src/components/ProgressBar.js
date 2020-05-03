@@ -13,14 +13,8 @@ export default class ProgressBar extends React.Component {
         this.bgColor = this.props.bgColor || "white";
         this.color = this.props.color || Definitions.SECONDARY_COLOR
         this.state = {
-            progress: this.props.progress || 10
+            progress: this.props.progress || 0
         };
-    }
-
-    setProgress(progress) {
-        if(progress < 0) progress = 0;
-        else if(progress > 100) progress = 100;
-        this.setState({ progress: progress });
     }
 
     render () {

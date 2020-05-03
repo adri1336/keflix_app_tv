@@ -17,3 +17,8 @@ export function timeConvert(sec) {
         seconds: Math.floor(sec % 3600 % 60)
     };
 }
+
+export function timeConverFormatted(sec) {
+    const { hours, minutes, seconds } = timeConvert(sec);
+    return (hours ? (hours + ":") : "") + minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+}
