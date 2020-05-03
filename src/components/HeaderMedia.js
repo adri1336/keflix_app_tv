@@ -49,7 +49,7 @@ export default class HeaderMedia extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(this.state.title && (this.state.title.image != prevState.title.image)) {
+        if(this.state.title && this.state.title.image && (this.state.title.image != prevState.title.image)) {
             Image.getSize(this.state.title.image, (width, height) => {
                 this.setState({
                     ...this.state,
