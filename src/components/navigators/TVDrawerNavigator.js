@@ -1,112 +1,39 @@
 //Imports
 import React from "react";
 import { SafeAreaView, View } from "react-native";
-import { TabRouter, useNavigationBuilder, createNavigatorFactory } from "@react-navigation/native";
+import { StackRouter, useNavigationBuilder, createNavigatorFactory } from "@react-navigation/native";
+import { StackView } from "@react-navigation/stack";
 
 //Components Imports
 import TVDrawer from "cuervo/src/components/TVDrawer";
 
 //Code
-function isDrawerOpen(state) {
-    var _state$history;
-    if((_state$history = state.history) === null || _state$history === void 0 ? void 0 : _state$history.find(it => it.type === "drawer")) {
-        return true
-    }
-    return false;
-}
-
-function TVDrawerNavigatorRouter(options) {
-    const router = TabRouter(options);
-    return {
-        ...router,
-        getStateForAction(state, action, options) {
-            switch (action.type) {
-                case "GO_BACK":
-                case "TOGGLE_DRAWER": {
-                    if(isDrawerOpen(state)) {
-                        return {
-                            ...state,
-                            history: []
-                        };
-                    }
-                    else {
-                        return {
-                            ...state,
-                            history: [
-                                { type: "drawer" }
-                            ]
-                        };
-                    }
-                }
-                case "OPEN_DRAWER": {
-                    if(isDrawerOpen(state)) {
-                        return state;
-                    }
-
-                    return {
-                        ...state,
-                        history: [
-                            { type: "drawer" }
-                        ]
-                    };
-                }
-                case "CLOSE_DRAWER": {
-                    if(!isDrawerOpen(state)) {
-                        return state;
-                    }
-                    
-                    return {
-                        ...state,
-                        history: []
-                    };
-                }
-                default: {
-                    return router.getStateForAction({
-                        ...state,
-                        history: []
-                    }, action, options);
-                }
-            }
-        },
-        actionCreators: {
-            ...router.actionCreators,
-            openDrawer() {
-                return { type: "OPEN_DRAWER" };
-            },
-            closeDrawer() {
-                return { type: "CLOSE_DRAWER" };
-            },
-            toggleDrawer() {
-                return { type: "TOGGLE_DRAWER" };
-            }
-        }
-    };
-}
-
-function TVDrawerNavigator({ initialRouteName, children, appContext }) {
-    const { state, navigation, descriptors } = useNavigationBuilder(TVDrawerNavigatorRouter, {
+function TVDrawerNavigator({ initialRouteName, children, appContext, tabs, ...rest }) {
+    const { state, navigation, descriptors } = useNavigationBuilder(StackRouter, {
         initialRouteName,
         children
     });
     
     const
         { routes, index } = state,
-        currentDescriptorKey = routes[index].key,
-        descriptor = descriptors[currentDescriptorKey];
-
+        currentRouteName = routes[index].name,
+        currentOptions = descriptors[routes[index].key].options;
+        
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ flex: 1 }}>
-                { descriptor.render() }
-            </View>
+            <StackView
+                style={{ flex: 1 }}
+                state={ state }
+                navigation={ navigation }
+                descriptors={ descriptors }
+                { ...rest }
+            />
             <TVDrawer
                 appContext={ appContext }
-                isDrawerOpen={ isDrawerOpen(state) }
-                currentDescriptorKey={ currentDescriptorKey }
-                currentIndex={ index }
-                descriptors={ descriptors }
-                routes={ routes }
                 navigation={ navigation }
+                currentRouteName={ currentRouteName }
+                currentOptions={ currentOptions }
+                tabs={ tabs }
             />
         </SafeAreaView>
     );

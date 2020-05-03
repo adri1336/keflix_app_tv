@@ -34,14 +34,14 @@ export const SCREEN_MARGIN_LEFT = (DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN * 2)
 export default class TVDrawer extends React.Component {
     constructor(props) {
         super(props);
-        const activeDescriptor = this.props.descriptors[this.props.currentDescriptorKey];
         this.screen_buttons = [];
         this.state = {
+            isDrawerOpen: this.props.currentOptions.isDrawerOpen || false,
             loading: false,
             drawerOpacity: new Animated.Value(0),
             drawerIconsPosX: new Animated.Value(DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN),
             drawerPosX: new Animated.Value((-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH)),
-            drawerCanOpen: activeDescriptor.options.drawerCanOpen,
+            drawerCanOpen: this.props.currentOptions.drawerCanOpen || false,
             currentFocusedScreenButton: null
         };
     }
@@ -51,11 +51,11 @@ export default class TVDrawer extends React.Component {
             this.tvEventHandler = new TVEventHandler();
             this.tvEventHandler.enable(this, (cmp, evt) => {
                 if(evt && evt.eventKeyAction > 0) {
-                    if(evt.eventType == "left" && this.state.drawerCanOpen && !this.props.isDrawerOpen) {
-                        this.props.navigation.openDrawer();
+                    if(evt.eventType == "left" && this.state.drawerCanOpen && !this.state.isDrawerOpen) {
+                        this.setState({ isDrawerOpen: true });
                     }
-                    else if(evt.eventType == "right" && this.props.isDrawerOpen) {
-                        this.props.navigation.closeDrawer();
+                    else if(evt.eventType == "right" && this.state.isDrawerOpen) {
+                        this.setState({ isDrawerOpen: false });
                     }
                 }
             });
@@ -69,16 +69,24 @@ export default class TVDrawer extends React.Component {
     }
 
     componentDidMount() {
+        this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+            if(this.props.currentOptions.drawer) {
+                this.setState({ isDrawerOpen: !this.state.isDrawerOpen });
+                return true;
+            }
+            return false;
+        });
         this.enableTVEventHandler();
     }
 
     componentWillUnmount() {
+        this.backHandler.remove();
         this.disableTVEventHandler();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(this.props.isDrawerOpen != prevProps.isDrawerOpen) {
-            if(this.props.isDrawerOpen) {
+        if(this.state.isDrawerOpen != prevState.isDrawerOpen) {
+            if(this.state.isDrawerOpen) {
                 this.change_profile_button.setNativeProps({
                     nextFocusUp: findNodeHandle(this.change_profile_button),
                     nextFocusDown: findNodeHandle(this.screen_buttons[0]),
@@ -129,37 +137,38 @@ export default class TVDrawer extends React.Component {
                 });
 
                 disableAllButtons();
+                this.props.currentOptions.isDrawerOpen = true;
                 this.props.navigation.emit({ type: "onDrawerOpened" });
             }
             else {
                 enableAllButtons();
+                this.props.currentOptions.isDrawerOpen = false;
                 this.props.navigation.emit({ type: "onDrawerClosed" });
             }
             this.animateDrawer();
         }
 
-        const activeDescriptor = this.props.descriptors[this.props.currentDescriptorKey];
-        if(activeDescriptor.options.drawerCanOpen != prevState.drawerCanOpen) {
-            this.setState({ drawerCanOpen: activeDescriptor.options.drawerCanOpen });
+        if(this.props.currentOptions.drawerCanOpen != prevState.drawerCanOpen) {
+            this.setState({ drawerCanOpen: this.props.currentOptions.drawerCanOpen });
         }
     }
 
     animateDrawer() {
         Animated.timing(this.state.drawerOpacity, {
-            toValue: this.props.isDrawerOpen ? 1.0 : 0.0,
+            toValue: this.state.isDrawerOpen ? 1.0 : 0.0,
             duration: DRAWER_VALUES.DRAWER_ANIMATION_TIME,
             useNativeDriver: true
         }).start();
 
         Animated.timing(this.state.drawerPosX, {
-            toValue: this.props.isDrawerOpen ? 0 : (-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH),
+            toValue: this.state.isDrawerOpen ? 0 : (-DRAWER_VALUES.DRAWER_OPENED_WIDTH + DRAWER_VALUES.DRAWER_CLOSED_WIDTH),
             duration: DRAWER_VALUES.DRAWER_ANIMATION_TIME,
             useNativeDriver: true,
             easing: Easing.linear
         }).start();
 
         Animated.timing(this.state.drawerIconsPosX, {
-            toValue: this.props.isDrawerOpen ? DRAWER_VALUES.DRAWER_ITEMS_MARGIN : DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN,
+            toValue: this.state.isDrawerOpen ? DRAWER_VALUES.DRAWER_ITEMS_MARGIN : DRAWER_VALUES.DRAWER_CLOSED_ITEMS_MARGIN,
             duration: DRAWER_VALUES.DRAWER_ANIMATION_TIME,
             useNativeDriver: true,
             easing: Easing.linear
@@ -193,8 +202,8 @@ export default class TVDrawer extends React.Component {
         );
     }
 
-    printBottomBarIfIsActiveDescriptor(descriptorKey) {
-        if(this.props.currentDescriptorKey == descriptorKey) {
+    printBottomBarIfIsActiveDescriptor(routeName) {
+        if(this.props.currentRouteName == routeName) {
             return (
                 <View
                     style={{
@@ -209,51 +218,46 @@ export default class TVDrawer extends React.Component {
         }
     }
 
-    printDescriptorIcon(route) {
-        const
-            descriptorKey = route.key,
-            descriptor = this.props.descriptors[descriptorKey];
-
-        if(descriptor.options.showScreenInDrawer) {
-            if(descriptor.options.icon) {
-                return (
-                    <View
-                        key={ descriptorKey }
-                        style={{
-                            width: DRAWER_VALUES.DRAWER_ICON_SIZE,
-                            height: 20,
-                            marginTop: Definitions.DEFAULT_MARGIN,
-                            marginBottom: Definitions.DEFAULT_MARGIN,
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}
-                    >
-                        <descriptor.options.icon.library
-                            name={ descriptor.options.icon.name }
-                            size={ DRAWER_VALUES.DRAWER_ICON_SIZE }
-                            color={
-                                this.props.isDrawerOpen ?
-                                    (this.state.currentFocusedScreenButton == route.name ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);") :
-                                    (this.state.drawerCanOpen ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);")
-                            }
-                        />
-                        { this.printBottomBarIfIsActiveDescriptor(descriptorKey) }
-                    </View>
-                );
-            }
-            else {
-                return (
-                    <View
-                        key={ descriptorKey }
-                        style={{
-                            height: 20,
-                            margin: Definitions.DEFAULT_MARGIN,
-                            marginLeft: 20,
-                            justifyContent: "center"
-                        }}
+    printDescriptorIcon(tab) {
+        const { route, icon } = tab;
+        if(icon) {
+            return (
+                <View
+                    key={ route }
+                    style={{
+                        width: DRAWER_VALUES.DRAWER_ICON_SIZE,
+                        height: 20,
+                        marginTop: Definitions.DEFAULT_MARGIN,
+                        marginBottom: Definitions.DEFAULT_MARGIN,
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                >
+                    <icon.library
+                        name={ icon.name }
+                        size={ DRAWER_VALUES.DRAWER_ICON_SIZE }
+                        color={
+                            this.state.isDrawerOpen ?
+                                (this.state.currentFocusedScreenButton == route ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);") :
+                                (this.state.drawerCanOpen ? Definitions.TEXT_COLOR : "rgba(255, 255, 255, 0.4);")
+                        }
                     />
-                );
-            }
+                    { this.printBottomBarIfIsActiveDescriptor(route) }
+                </View>
+            );
+        }
+        else {
+            return (
+                <View
+                    key={ route }
+                    style={{
+                        height: 20,
+                        margin: Definitions.DEFAULT_MARGIN,
+                        marginLeft: 20,
+                        justifyContent: "center"
+                    }}
+                />
+            );
         }
     }
 
@@ -279,8 +283,8 @@ export default class TVDrawer extends React.Component {
                     }}
                 >
                     {
-                        this.props.routes.map((route) => {
-                            return this.printDescriptorIcon(route);
+                        this.props.tabs.map(tab => {
+                            return this.printDescriptorIcon(tab);
                         })
                     }
                 </View>
@@ -289,36 +293,38 @@ export default class TVDrawer extends React.Component {
         );
     }
 
-    printDescriptorTextButton(route, index) {
-        const
-            descriptorKey = route.key,
-            descriptor = this.props.descriptors[descriptorKey];
-        
-        if(descriptor.options.showScreenInDrawer) {
-            return (
-                
-                <View
-                    key={ descriptorKey }
-                    style={{
-                        height: 20,
-                        margin: Definitions.DEFAULT_MARGIN,
-                        marginLeft: DRAWER_VALUES.DRAWER_ITEMS_MARGIN + DRAWER_VALUES.DRAWER_ICON_SIZE + (Definitions.DEFAULT_MARGIN * 2),
-                        justifyContent: "center"
-                    }}
+    printDescriptorTextButton(tab, index) {
+        const { route, title } = tab;
+        return (
+            <View
+                key={ route }
+                style={{
+                    height: 20,
+                    margin: Definitions.DEFAULT_MARGIN,
+                    marginLeft: DRAWER_VALUES.DRAWER_ITEMS_MARGIN + DRAWER_VALUES.DRAWER_ICON_SIZE + (Definitions.DEFAULT_MARGIN * 2),
+                    justifyContent: "center"
+                }}
+            >
+                <NormalButton
+                    touchableRef={ component => this.screen_buttons[index] = component }
+                    alwaysAccessible={ true }
+                    hasTVPreferredFocus={ this.state.isDrawerOpen && route == this.props.currentRouteName ? true : false }
+                    textStyle={ Styles.bigText }
+                    onFocus={ () => this.setState({ currentFocusedScreenButton: route }) }
+                    onPress={
+                        () => {
+                            this.setState({ isDrawerOpen: false }, function() {
+                                if(this.props.currentRouteName != route) {
+                                    this.props.navigation.navigate(route);
+                                }
+                            });
+                        }
+                    }
                 >
-                    <NormalButton
-                        touchableRef={ component => this.screen_buttons[index] = component }
-                        alwaysAccessible={ true }
-                        hasTVPreferredFocus={ this.props.isDrawerOpen && descriptorKey == this.props.currentDescriptorKey ? true : false }
-                        textStyle={ Styles.bigText }
-                        onFocus={ () => this.setState({ currentFocusedScreenButton: route.name }) }
-                        onPress={ () => this.props.navigation.navigate(route.name) }
-                    >
-                        { descriptor.options.title }
-                    </NormalButton>
-                </View>
-            );
-        }
+                    { title }
+                </NormalButton>
+            </View>
+        );
     }
 
     renderDrawer() {
@@ -400,8 +406,8 @@ export default class TVDrawer extends React.Component {
                     }}
                 >
                     {
-                        this.props.routes.map((route, index) => {
-                            return this.printDescriptorTextButton(route, index);
+                        this.props.tabs.map((tab, index) => {
+                            return this.printDescriptorTextButton(tab, index);
                         })
                     }
                 </View>
@@ -455,7 +461,7 @@ export default class TVDrawer extends React.Component {
             return <LoadingView/>;
         }
         
-        const drawer = this.props.descriptors[this.props.currentDescriptorKey].options.drawer;
+        const drawer = this.props.currentOptions.drawer;
         if(drawer) {
             return (
                 <View
@@ -469,7 +475,7 @@ export default class TVDrawer extends React.Component {
                 >
                     { this.renderDrawerBackground() }
                     { this.renderScreenIcons() }
-                    { this.props.isDrawerOpen && this.renderDrawer() }
+                    { this.state.isDrawerOpen && this.renderDrawer() }
                 </View>
             );
         }

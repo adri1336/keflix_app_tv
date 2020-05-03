@@ -56,7 +56,7 @@ export default class LibraryList extends React.Component {
         this.disableTVEventHandler();
     }
 
-    setFocus(focus) {
+    setFocus(focus, updateCover) {
         if(focus) {
             if(this.delayFocusTimeout) {
                 clearTimeout(this.delayFocusTimeout);
@@ -65,8 +65,11 @@ export default class LibraryList extends React.Component {
             this.delayFocusTimeout = setTimeout(() => {
                 this.delayFocusTimeout = null;
                 this.focused = focus;
-            }, FOCUS_DELAY_TIME);
-            this.onCoverFocus(this.currentCoverIndex);
+            }, 300);
+
+            if(updateCover) {
+                this.onCoverFocus(this.currentCoverIndex);
+            }
         }
         else {
             this.focused = focus;
@@ -114,7 +117,7 @@ export default class LibraryList extends React.Component {
                         }
                     }
                     else if(evt.eventType == "select") {
-                        if(this.props.onCoverSelected && !this.delayOnFocusTimeout) {
+                        if(this.props.onCoverSelected && !this.delayFocusTimeout) {
                             this.props.onCoverSelected(this.state.covers[this.currentCoverIndex]);
                         }
                     }

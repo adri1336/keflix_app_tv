@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View } from "react-native";
+import { View, BackHandler } from "react-native";
 
 //Components Imports
 import HeaderMedia from "cuervo/src/components/HeaderMedia";
@@ -30,7 +30,7 @@ export default class MoviesScreen extends React.Component {
             }
         });
         this.onDrawerClosedEvent = this.props.navigation.addListener("onDrawerClosed", () => {
-            this.librarySectionGrid.setFocus(true);
+            this.librarySectionGrid.setFocus(true, false);
             this.headerMedia.playVideo();
         });
     }
@@ -82,8 +82,8 @@ export default class MoviesScreen extends React.Component {
             <View
                 style={{
                     flex: 1,
-                    margin: Definitions.DEFAULT_MARGIN,
-                    marginLeft: SCREEN_MARGIN_LEFT,
+                    padding: Definitions.DEFAULT_MARGIN,
+                    paddingLeft: SCREEN_MARGIN_LEFT,
                     backgroundColor: Definitions.PRIMARY_COLOR
                 }}
             >

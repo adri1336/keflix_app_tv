@@ -63,9 +63,9 @@ export default class LibrarySectionGrid extends React.Component {
         this.disableTVEventHandler();
     }
 
-    setFocus(focus) {
+    setFocus(focus, updateCover = true) {
         this.focused = focus;
-        this.listRefs[this.currentSectionIndex].setFocus(focus);
+        this.listRefs[this.currentSectionIndex].setFocus(focus, updateCover);
     }
 
     setSections(sections) {

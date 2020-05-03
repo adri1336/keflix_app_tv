@@ -27,47 +27,32 @@ export default () => {
         <MainNavigator.Navigator 
             headerMode="none"
             initialRouteName="MoviesScreen"
+            tabs={[
+                { route: "SearchScreen", title: i18n.t("main_navigator.search_screen_title"), icon: { library: FontAwesome, name: "search" } },
+                { route: "MoviesScreen", title: i18n.t("main_navigator.movies_screen_title"), icon: { library: MaterialCommunityIcons, name: "movie" } },
+                { route: "MyListScreen", title: i18n.t("main_navigator.my_list_screen_title"), icon: { library: FontAwesome, name: "plus" } }
+            ]}
             appContext={ appContext }
         >
             <MainNavigator.Screen name="SearchScreen" component={SearchScreen} options={{
                 drawer: true, //activa el drawer en esta pantalla
                 drawerCanOpen: true, //permite o no abrir el drawer en la pantalla (mediante el mando)
-                showScreenInDrawer: true,
-                title: i18n.t("main_navigator.search_screen_title"),
-                icon: {
-                    library: FontAwesome,
-                    name: "search"
-                }
             }}/>
             <MainNavigator.Screen name="MoviesScreen" component={MoviesScreen} options={{
                 drawer: true,
-                drawerCanOpen: true,
-                title: i18n.t("main_navigator.movies_screen_title"),
-                showScreenInDrawer: true,
-                icon: {
-                    library: MaterialCommunityIcons,
-                    name: "movie"
-                }
+                drawerCanOpen: true
             }}/>
             <MainNavigator.Screen name="MyListScreen" component={MyListScreen} options={{
                 drawer: true,
-                drawerCanOpen: true,
-                showScreenInDrawer: true,
-                title: i18n.t("main_navigator.my_list_screen_title"),
-                icon: {
-                    library: FontAwesome,
-                    name: "plus"
-                }
+                drawerCanOpen: true
             }}/>
             <MainNavigator.Screen name="SettingsNavigator" component={SettingsNavigator} options={{
                 drawer: false,
-                drawerCanOpen: false,
-                showScreenInDrawer: false
+                drawerCanOpen: false
             }}/>
             <MainNavigator.Screen name="MediaNavigator" component={MediaNavigator} options={{
                 drawer: false,
-                drawerCanOpen: false,
-                showScreenInDrawer: false
+                drawerCanOpen: false
             }}/>
         </MainNavigator.Navigator>
     );
