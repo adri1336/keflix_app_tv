@@ -53,7 +53,7 @@ export default class InfoScreen extends React.Component {
             <View
                 style={{
                     flex: 1,
-                    backgroundColor: Definitions.PRIMARY_COLOR,
+                    backgroundColor: "black",
                     justifyContent: "center",
                     alignItems: "center"
                 }}

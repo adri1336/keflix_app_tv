@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Animated, Easing, Text, TVEventHandler } from "react-native";
+import { View, Animated, Easing, Text, TVEventHandler, findNodeHandle, ActivityIndicator } from "react-native";
 import { Video } from "expo-av";
 import { MaterialIcons } from "@expo/vector-icons";
 import IconButton from "cuervo/src/components/IconButton";
@@ -28,7 +28,8 @@ export default class VideoPlayer extends React.Component {
             topControlsPosY: new Animated.Value(- CLOSED_CONTROLLER_Y_POSITION),
             bottomControlsPosY: new Animated.Value(CLOSED_CONTROLLER_Y_POSITION),
 
-            playPauseIcon: "pause",
+            paused: false,
+            buffering: true,
             bottomControlState: {
                 currentTime: "0:00",
                 progress: 0,
@@ -43,9 +44,6 @@ export default class VideoPlayer extends React.Component {
             this.tvEventHandler.enable(this, (cmp, evt) => {
                 if(!this.state.controlsFocused) {
                     if(evt && evt.eventKeyAction == 1) {
-                        if(evt.eventType == "select") {
-                            this.playOrPauseVideo();
-                        }
                         this.setState({ controlsFocused: true });
                     }
                 }
@@ -64,6 +62,7 @@ export default class VideoPlayer extends React.Component {
 
     componentDidMount() {
         this.enableTVEventHandler();
+        this.setButtonsNextFocus();
         this.setState({ controlsFocused: true });
     }
 
@@ -79,6 +78,66 @@ export default class VideoPlayer extends React.Component {
         if(this.state.controlsFocused != prevState.controlsFocused) {
             this.animateControls();
             this.hideControlsTimer();
+            this.setButtonsNextFocus();
+        }
+    }
+
+    setButtonsNextFocus() {
+        if(this.state.controlsFocused) {
+            if(this.go_back_button) {
+                this.go_back_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.go_back_button),
+                    nextFocusDown: findNodeHandle(this.playPause_button),
+                    nextFocusLeft: findNodeHandle(this.go_back_button),
+                    nextFocusRight: findNodeHandle(this.replay_button)
+                });
+            }
+
+            if(this.replay_button) {
+                this.replay_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.replay_button),
+                    nextFocusDown: findNodeHandle(this.playPause_button),
+                    nextFocusLeft: findNodeHandle(this.go_back_button),
+                    nextFocusRight: findNodeHandle(this.replay_button)
+                });
+            }
+
+            if(this.playPause_button) {
+                this.playPause_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.go_back_button),
+                    nextFocusDown: findNodeHandle(this.playPause_button),
+                    nextFocusLeft: findNodeHandle(this.playPause_button),
+                    nextFocusRight: findNodeHandle(this.playPause_button)
+                });
+            }
+        }
+        else {
+            if(this.go_back_button) {
+                this.go_back_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.go_back_button),
+                    nextFocusDown: findNodeHandle(this.go_back_button),
+                    nextFocusLeft: findNodeHandle(this.go_back_button),
+                    nextFocusRight: findNodeHandle(this.go_back_button)
+                });
+            }
+
+            if(this.replay_button) {
+                this.replay_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.replay_button),
+                    nextFocusDown: findNodeHandle(this.replay_button),
+                    nextFocusLeft: findNodeHandle(this.replay_button),
+                    nextFocusRight: findNodeHandle(this.replay_button)
+                });
+            }
+
+            if(this.playPause_button) {
+                this.playPause_button.setNativeProps({
+                    nextFocusUp: findNodeHandle(this.playPause_button),
+                    nextFocusDown: findNodeHandle(this.playPause_button),
+                    nextFocusLeft: findNodeHandle(this.playPause_button),
+                    nextFocusRight: findNodeHandle(this.playPause_button)
+                });
+            }
         }
     }
 
@@ -95,21 +154,16 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
-    async playOrPauseVideo() {
-        try {
-            if(!this.video) throw "no video";
-            const playbackStatus = await this.video.getStatusAsync();
-            if(playbackStatus.isPlaying) {
-                this.video.pauseAsync();
-                this.setState({ playPauseIcon: "play-arrow" });
+    playOrPauseVideo() {
+        if(this.video) {
+            if(this.state.paused) {
+                this.video.playAsync();
+                this.setState({ paused: false });
             }
             else {
-                this.video.playAsync();
-                this.setState({ playPauseIcon: "pause" });
+                this.video.pauseAsync();
+                this.setState({ paused: true });
             }
-        }
-        catch(error) {
-            console.log(error);
         }
     }
 
@@ -132,12 +186,29 @@ export default class VideoPlayer extends React.Component {
         if(playbackStatus.isPlaying) {
             const remainingMillis = playbackStatus.durationMillis - playbackStatus.positionMillis;
             const progress = 100 - ((remainingMillis * 100) / playbackStatus.durationMillis);
+            
             const bottomControlState = {
                 currentTime: timeConverFormatted(playbackStatus.positionMillis / 1000),
                 progress: progress,
                 remainingTime: timeConverFormatted(remainingMillis / 1000)
             };
-            this.setState({ bottomControlState: bottomControlState });
+
+            if(this.state.buffering) this.setState({ buffering: false, bottomControlState: bottomControlState });
+            else this.setState({ bottomControlState: bottomControlState });
+        }
+        else if(playbackStatus.isBuffering) {
+            if(!this.state.paused && !this.state.buffering) {
+                this.setState({ buffering: true });
+            }
+            else if(this.state.paused && this.state.buffering) {
+                this.setState({ buffering: false });
+            }
+        }
+    }
+
+    renderBufferingIcon() {
+        if(this.state.buffering) {
+            return <ActivityIndicator size="large" color={Definitions.SECONDARY_COLOR}/>;
         }
     }
 
@@ -154,6 +225,7 @@ export default class VideoPlayer extends React.Component {
                         zIndex: 1
                     }}
                 >
+                    { this.renderBufferingIcon() }
                     <Animated.View
                         style={{
                             position: "absolute",
@@ -169,6 +241,7 @@ export default class VideoPlayer extends React.Component {
                         }}
                     >
                         <IconButton
+                            touchableRef={ component => this.go_back_button = component }
                             size={ ICON_SIZE }
                             icon={{
                                 library: MaterialIcons,
@@ -179,6 +252,7 @@ export default class VideoPlayer extends React.Component {
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
                         />
                         <IconButton
+                            touchableRef={ component => this.replay_button = component }
                             size={ ICON_SIZE }
                             icon={{
                                 library: MaterialIcons,
@@ -207,11 +281,12 @@ export default class VideoPlayer extends React.Component {
                         }}
                     >
                         <IconButton
+                            touchableRef={ component => this.playPause_button = component }
                             hasTVPreferredFocus={ true }
                             size={ ICON_SIZE }
                             icon={{
                                 library: MaterialIcons,
-                                name: this.state.playPauseIcon
+                                name: this.state.paused ? "play-arrow" : "pause"
                             }}
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
                             onPress={ () => this.playOrPauseVideo() }
@@ -228,6 +303,7 @@ export default class VideoPlayer extends React.Component {
                         <Text style={ Styles.bigSubtitleText }>{ this.state.bottomControlState.remainingTime }</Text>
                     </Animated.View>
                 </View>
+                
                 <Video
                     ref={ component => this.video = component }
                     resizeMode="contain"

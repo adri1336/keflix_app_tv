@@ -17,6 +17,12 @@ export default class ProgressBar extends React.Component {
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if(prevProps.progress != this.props.progress) {
+            this.state.progress = this.props.progress;
+        }
+    }
+
     render () {
         return (
             <View

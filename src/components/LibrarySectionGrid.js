@@ -146,7 +146,8 @@ export default class LibrarySectionGrid extends React.Component {
                                 width: COVER_ITEM_VALUES.WIDTH,
                                 height: COVER_ITEM_VALUES.HEIGHT,
                                 borderWidth: COVER_ITEM_VALUES.BORDER,
-                                borderColor: "white"
+                                borderColor: "white",
+                                zIndex: 2
                             }}
                         />
                     </View>
