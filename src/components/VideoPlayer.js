@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Animated, Easing, Text, TVEventHandler, findNodeHandle, ActivityIndicator } from "react-native";
+import { View, Animated, Easing, Text, TVEventHandler, findNodeHandle, ActivityIndicator, Image } from "react-native";
 import { Video } from "expo-av";
 import { MaterialIcons } from "@expo/vector-icons";
 import IconButton from "cuervo/src/components/IconButton";
@@ -14,6 +14,7 @@ const
     CLOSED_CONTROLLER_Y_POSITION = 100,
     CONTROLLER_ANIMATION_DURATION = 500,
     HIDE_CONTROLS_TIME = 4000,
+    HIDE_CONTROLS_PAUSED_TIME = 10000,
     
     SEEKING_MILLIS = 10000,
     SEEKING_ACCEL = 1.5;
@@ -35,6 +36,7 @@ export default class VideoPlayer extends React.Component {
             topControlsPosY: new Animated.Value(- CLOSED_CONTROLLER_Y_POSITION),
             bottomControlsPosY: new Animated.Value(CLOSED_CONTROLLER_Y_POSITION),
 
+            showTitle: false,
             seeking: false,
             paused: false,
             buffering: true,
@@ -135,6 +137,7 @@ export default class VideoPlayer extends React.Component {
             }
             this.seekingAccel = 0;
             this.setState({ seeking: false });
+            this.hideControlsTimer();
         }
     }
 
@@ -242,9 +245,9 @@ export default class VideoPlayer extends React.Component {
             this.hideControlsTimeout = setTimeout(async () => {
                 if(!this.state.seeking) {
                     this.hideControlsTimeout = null;
-                    this.setState({ controlsFocused: false });
+                    this.setState({ controlsFocused: false, showTitle: this.state.paused ? true : false });
                 }
-            }, HIDE_CONTROLS_TIME);
+            }, this.state.paused ? HIDE_CONTROLS_PAUSED_TIME : HIDE_CONTROLS_TIME);
         }
     }
 
@@ -252,7 +255,7 @@ export default class VideoPlayer extends React.Component {
         if(this.video) {
             if(this.state.paused) {
                 this.video.playAsync();
-                this.setState({ paused: false });
+                this.setState({ paused: false, showTitle: false });
             }
             else {
                 this.video.pauseAsync();
@@ -295,7 +298,7 @@ export default class VideoPlayer extends React.Component {
     updateBottomControls(positionMillis, seeking = false) {
         if(positionMillis < 0) positionMillis = 0;
         else if(positionMillis > this.durationMillis) positionMillis = this.durationMillis;
-        
+
         const remainingMillis = this.durationMillis - positionMillis;
         const progress = 100 - ((remainingMillis * 100) / this.durationMillis);
         
@@ -319,6 +322,49 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
+    renderTitle() {
+        if(this.state.showTitle) {
+            return (
+                <View
+                    style={{
+                        position:"absolute",
+                        width: "100%",
+                        height: "100%",
+                        paddingLeft: 110,
+                        backgroundColor: "black",
+                        justifyContent: "center",
+                        opacity: 0.6
+                    }}
+                >
+                    {
+                        (
+                            () => {
+                                if(this.props.title.image) {
+                                    return (
+                                        <Image
+                                            style={{ width: 250, height: 250 }}
+                                            resizeMode="center"
+                                            source={{ uri: this.props.title.image }}
+                                        />
+                                    );
+                                }
+                                else if(this.props.title.text) {
+                                    return (
+                                        <Text
+                                            style={[ Styles.titleText, { fontWeight: "bold" } ]}
+                                        >
+                                            { this.props.title.text }
+                                        </Text>
+                                    );
+                                }
+                            }
+                        )()
+                    }
+                </View>
+            );
+        }
+    }
+
     render() {
         return (
             <View style={{ width: "100%", height: "100%" }}>
@@ -333,6 +379,7 @@ export default class VideoPlayer extends React.Component {
                     }}
                 >
                     { this.renderBufferingIcon() }
+                    { this.renderTitle() }
                     <Animated.View
                         style={{
                             position: "absolute",
@@ -372,7 +419,6 @@ export default class VideoPlayer extends React.Component {
                             onFocus={ () => this.canSeek = false }
                         />
                     </Animated.View>
-
                     
                     <Animated.View
                         style={{

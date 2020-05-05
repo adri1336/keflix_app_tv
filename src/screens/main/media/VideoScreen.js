@@ -17,11 +17,15 @@ export default class InfoScreen extends React.Component {
     }
 
     renderVideoPlayer() {
-        const { mediaInfo, id } = this.media;
+        const { mediaInfo, id, title } = this.media;
         if(mediaInfo.video) {
             return (
                 <VideoPlayer
                     ref={ component => this.videoPlayer = component }
+                    title={{
+                        text: title,
+                        image: mediaInfo.logo ? Movie.getLogo(this.context, id) : null
+                    }}
                     videoProps={{
                         source: { uri: Movie.getVideo(this.context, id) },
                         shouldPlay: true
