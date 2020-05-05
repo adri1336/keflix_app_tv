@@ -163,6 +163,10 @@ export default class VideoPlayer extends React.Component {
             this.video.stopAsync();
         }
         if(goToBackground) {
+            if(this.hideControlsTimeout) {
+                clearTimeout(this.hideControlsTimeout);
+                this.hideControlsTimeout = null;
+            }
             this.setState({ inBackground: true, controlsFocused: false, buffering: false, showBackdrop: true });
         }
     }
@@ -309,7 +313,7 @@ export default class VideoPlayer extends React.Component {
             this.hideControlsTimeout = setTimeout(async () => {
                 if(!this.state.seeking) {
                     this.hideControlsTimeout = null;
-                    this.setState({ controlsFocused: false, showTitle: this.state.paused ? true : false });
+                    this.setState({ controlsFocused: false, showTitle: this.state.paused && !this.state.inBackground ? true : false });
                 }
             }, this.state.paused ? HIDE_CONTROLS_PAUSED_TIME : HIDE_CONTROLS_TIME);
         }
