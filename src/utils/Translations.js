@@ -139,6 +139,10 @@ i18n.translations = {
 			search_screen_title: "Búsqueda",
 			movies_screen_title: "Películas",
 			my_list_screen_title: "Mi lista"
+		},
+		video_player: {
+			exit_button: "Salir",
+			replay_button: "Reproducir desde el principio"
 		}
 	}
 };

@@ -7,6 +7,7 @@ import ProgressBar from "cuervo/src/components/ProgressBar";
 import Definitions from "cuervo/src/utils/Definitions";
 import Styles from "cuervo/src/utils/Styles";
 import { timeConverFormatted } from "cuervo/src/utils/Functions";
+import i18n from "i18n-js";
 
 const
     ICON_SIZE = 30,
@@ -36,6 +37,7 @@ export default class VideoPlayer extends React.Component {
             topControlsPosY: new Animated.Value(- CLOSED_CONTROLLER_Y_POSITION),
             bottomControlsPosY: new Animated.Value(CLOSED_CONTROLLER_Y_POSITION),
 
+            inBackground: this.props.inBackground || false,
             showTitle: false,
             seeking: false,
             paused: false,
@@ -53,38 +55,40 @@ export default class VideoPlayer extends React.Component {
             this.tvEventHandler = new TVEventHandler();
             this.tvEventHandler.enable(this, (cmp, evt) => {
                 if(evt) {
-                    if(this.state.seeking) {
-                        if(evt.eventKeyAction == 1) {
-                            this.stopSeeking();
-                        }
-                        else {
-                            if(Date.now() - this.lastTvSeek > 200) {
-                                if(evt.eventType == "left") {
-                                    this.seek(-SEEKING_MILLIS);
-                                }
-                                else if(evt.eventType == "right") {
-                                    this.seek(SEEKING_MILLIS);
-                                }
-                                this.lastTvSeek = Date.now();
-                            }
-                        }
-                    }
-                    else {
-                        if(!this.state.controlsFocused) {
+                    if(!this.state.inBackground) {
+                        if(this.state.seeking) {
                             if(evt.eventKeyAction == 1) {
-                                this.setState({ controlsFocused: true });
+                                this.stopSeeking();
+                            }
+                            else {
+                                if(Date.now() - this.lastTvSeek > 200) {
+                                    if(evt.eventType == "left") {
+                                        this.seek(-SEEKING_MILLIS);
+                                    }
+                                    else if(evt.eventType == "right") {
+                                        this.seek(SEEKING_MILLIS);
+                                    }
+                                    this.lastTvSeek = Date.now();
+                                }
                             }
                         }
                         else {
-                            if(this.canSeek && !this.state.buffering) {
-                                if(evt.eventType == "left") {
-                                    this.startSeeking(-SEEKING_MILLIS);
-                                }
-                                else if(evt.eventType == "right") {
-                                    this.startSeeking(SEEKING_MILLIS);
+                            if(!this.state.controlsFocused) {
+                                if(evt.eventKeyAction == 1) {
+                                    this.setState({ controlsFocused: true, showTitle: false });
                                 }
                             }
-                            this.hideControlsTimer();
+                            else {
+                                if(this.canSeek && !this.state.buffering) {
+                                    if(evt.eventType == "left") {
+                                        this.startSeeking(-SEEKING_MILLIS);
+                                    }
+                                    else if(evt.eventType == "right") {
+                                        this.startSeeking(SEEKING_MILLIS);
+                                    }
+                                }
+                                this.hideControlsTimer();
+                            }
                         }
                     }
                 }
@@ -101,7 +105,9 @@ export default class VideoPlayer extends React.Component {
     componentDidMount() {
         this.enableTVEventHandler();
         this.setButtonsNextFocus();
-        this.setState({ controlsFocused: true });
+        if(!this.state.inBackground) {
+            this.setState({ controlsFocused: true });
+        }
     }
 
     componentWillUnmount() {
@@ -252,7 +258,7 @@ export default class VideoPlayer extends React.Component {
     }
 
     playOrPauseVideo() {
-        if(this.video) {
+        if(this.video && !this.state.inBackground) {
             if(this.state.paused) {
                 this.video.playAsync();
                 this.setState({ paused: false, showTitle: false });
@@ -317,7 +323,7 @@ export default class VideoPlayer extends React.Component {
     }
 
     renderBufferingIcon() {
-        if(this.state.buffering) {
+        if(this.state.buffering && !this.state.inBackground) {
             return <ActivityIndicator size="large" color={Definitions.SECONDARY_COLOR}/>;
         }
     }
@@ -330,19 +336,25 @@ export default class VideoPlayer extends React.Component {
                         position:"absolute",
                         width: "100%",
                         height: "100%",
-                        paddingLeft: 110,
-                        backgroundColor: "black",
                         justifyContent: "center",
-                        opacity: 0.6
                     }}
                 >
+                    <View
+                        style={{
+                            position: "absolute",
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: "black",
+                            opacity: 0.6
+                        }}
+                    />
                     {
                         (
                             () => {
                                 if(this.props.title.image) {
                                     return (
                                         <Image
-                                            style={{ width: 250, height: 250 }}
+                                            style={{ width: 250, height: 250, marginLeft: 110 }}
                                             resizeMode="center"
                                             source={{ uri: this.props.title.image }}
                                         />
@@ -351,7 +363,7 @@ export default class VideoPlayer extends React.Component {
                                 else if(this.props.title.text) {
                                     return (
                                         <Text
-                                            style={[ Styles.titleText, { fontWeight: "bold" } ]}
+                                            style={[ Styles.titleText, { fontWeight: "bold", marginLeft: 110 } ]}
                                         >
                                             { this.props.title.text }
                                         </Text>
@@ -401,10 +413,17 @@ export default class VideoPlayer extends React.Component {
                                 library: MaterialIcons,
                                 name: "arrow-back"
                             }}
-                            text={ "Salir" }
+                            text={ i18n.t("video_player.exit_button") }
                             textStyle={ Styles.bigSubtitleText }
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
                             onFocus={ () => this.canSeek = false }
+                            onPress={
+                                () => {
+                                    if(this.props.onVideoBackPressed) {
+                                        this.props.onVideoBackPressed();
+                                    }
+                                }
+                            }
                         />
                         <IconButton
                             touchableRef={ component => this.replay_button = component }
@@ -413,10 +432,17 @@ export default class VideoPlayer extends React.Component {
                                 library: MaterialIcons,
                                 name: "skip-previous"
                             }}
-                            text={ "Reproducir desde el principio" }
+                            text={ i18n.t("video_player.replay_button") }
                             textStyle={ Styles.bigSubtitleText }
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
                             onFocus={ () => this.canSeek = false }
+                            onPress={
+                                () => {
+                                    if(this.video) {
+                                        this.video.setStatusAsync({ positionMillis: 0 });
+                                    }
+                                }
+                            }
                         />
                     </Animated.View>
                     
