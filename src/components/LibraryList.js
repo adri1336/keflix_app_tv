@@ -5,6 +5,7 @@ import Styles from "cuervo/src/utils/Styles";
 import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
 import * as Movie from "cuervo/src/api/Movie";
+import NormalButton from "cuervo/src/components/NormalButton";
 
 //Vars
 export const COVER_ITEM_VALUES = {
@@ -56,7 +57,7 @@ export default class LibraryList extends React.Component {
         this.disableTVEventHandler();
     }
 
-    setFocus(focus, updateCover) {
+    setFocus(focus, updateCover = true) {
         if(focus) {
             if(this.delayFocusTimeout) {
                 clearTimeout(this.delayFocusTimeout);

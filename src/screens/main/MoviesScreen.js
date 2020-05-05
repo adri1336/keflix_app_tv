@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View, BackHandler } from "react-native";
+import { View } from "react-native";
 
 //Components Imports
 import HeaderMedia from "cuervo/src/components/HeaderMedia";
@@ -20,16 +20,12 @@ export default class MoviesScreen extends React.Component {
     componentDidMount() {
         this.account = this.context.state.account;
         this.profile = this.context.state.profile;
-        this.mediaInfo = null;
         this.refreshMovies();
 
         this.onFocusEvent = this.props.navigation.addListener("focus", () => {
             this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.librarySectionGrid.getCurrentRowIndex() == 1 ? true : false });
             if(this.librarySectionGrid) {
                 this.librarySectionGrid.setFocus(true, false);
-            }
-            if(this.headerMedia) {
-                this.headerMedia.playVideo();
             }
 
         });
@@ -83,7 +79,7 @@ export default class MoviesScreen extends React.Component {
             description: overview,
             backdrop: {
                 image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
-                video: movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
+                video: this.props.navigation.isFocused() && movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
             }
         });
     }
@@ -124,7 +120,7 @@ export default class MoviesScreen extends React.Component {
                                 this.librarySectionGrid.setFocus(false);
                             }
                             if(this.headerMedia) {
-                                this.headerMedia.pauseVideo();
+                                this.headerMedia.stopVideo();
                             }
                             this.props.navigation.navigate("MediaNavigator", {
                                 screen: "InfoScreen",

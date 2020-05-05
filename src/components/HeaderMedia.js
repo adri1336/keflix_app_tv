@@ -64,7 +64,6 @@ export default class HeaderMedia extends React.Component {
             }
 
             if(this.videoPlayer && this.state.backdrop.video) {
-                
                 this.delayVideoTimeout = setTimeout(async () => {
                     this.delayVideoTimeout = null;
                     try {
@@ -86,6 +85,7 @@ export default class HeaderMedia extends React.Component {
 
     setInfo(info) {
         if(this.state.backdrop.video) {
+            this.videoPaused = false;
             this.videoPlayer.stopAsync();
         }
         this.fadeBack(false);
@@ -110,6 +110,18 @@ export default class HeaderMedia extends React.Component {
                 this.videoPaused = true;
                 this.videoPlayer.pauseAsync();
             }
+        }
+    }
+
+    stopVideo() {
+        if(this.videoPlayer) {
+            if(this.delayVideoTimeout) {
+                clearTimeout(this.delayVideoTimeout);
+                this.delayVideoTimeout = null;
+            }
+            this.videoPaused = true;
+            this.videoPlayer.stopAsync();
+            this.setState({ showVideo: false });
         }
     }
 

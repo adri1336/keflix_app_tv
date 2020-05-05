@@ -13,7 +13,10 @@ const
     CONTROLLERS_MARGIN = 25,
     CLOSED_CONTROLLER_Y_POSITION = 100,
     CONTROLLER_ANIMATION_DURATION = 500,
-    HIDE_CONTROLS_TIME = 4000;
+    HIDE_CONTROLS_TIME = 4000,
+    
+    SEEKING_MILLIS = 10000,
+    SEEKING_ACCEL = 1.5;
 
 export default class VideoPlayer extends React.Component {
     constructor(props) {
@@ -21,13 +24,18 @@ export default class VideoPlayer extends React.Component {
         
         this.videoProps = this.props.videoProps;
         this.hideControlsTimeout = null;
+        this.canSeek = false;
+        this.durationMillis = 0;
+        this.seekingAccel = 0;
+        this.seekingPositionMillis = 0;
+        this.lastTvSeek = 0;
 
         this.state = {
-            controllable: true,
             controlsFocused: false,
             topControlsPosY: new Animated.Value(- CLOSED_CONTROLLER_Y_POSITION),
             bottomControlsPosY: new Animated.Value(CLOSED_CONTROLLER_Y_POSITION),
 
+            seeking: false,
             paused: false,
             buffering: true,
             bottomControlState: {
@@ -42,13 +50,41 @@ export default class VideoPlayer extends React.Component {
         if(!this.tvEventHandler) {
             this.tvEventHandler = new TVEventHandler();
             this.tvEventHandler.enable(this, (cmp, evt) => {
-                if(!this.state.controlsFocused) {
-                    if(evt && evt.eventKeyAction == 1) {
-                        this.setState({ controlsFocused: true });
+                if(evt) {
+                    if(this.state.seeking) {
+                        if(evt.eventKeyAction == 1) {
+                            this.stopSeeking();
+                        }
+                        else {
+                            if(Date.now() - this.lastTvSeek > 200) {
+                                if(evt.eventType == "left") {
+                                    this.seek(-SEEKING_MILLIS);
+                                }
+                                else if(evt.eventType == "right") {
+                                    this.seek(SEEKING_MILLIS);
+                                }
+                                this.lastTvSeek = Date.now();
+                            }
+                        }
                     }
-                }
-                else {
-                    this.hideControlsTimer();
+                    else {
+                        if(!this.state.controlsFocused) {
+                            if(evt.eventKeyAction == 1) {
+                                this.setState({ controlsFocused: true });
+                            }
+                        }
+                        else {
+                            if(this.canSeek && !this.state.buffering) {
+                                if(evt.eventType == "left") {
+                                    this.startSeeking(-SEEKING_MILLIS);
+                                }
+                                else if(evt.eventType == "right") {
+                                    this.startSeeking(SEEKING_MILLIS);
+                                }
+                            }
+                            this.hideControlsTimer();
+                        }
+                    }
                 }
             });
         }
@@ -82,36 +118,34 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
-    setButtonsNextFocus() {
-        if(this.state.controlsFocused) {
-            if(this.go_back_button) {
-                this.go_back_button.setNativeProps({
-                    nextFocusUp: findNodeHandle(this.go_back_button),
-                    nextFocusDown: findNodeHandle(this.playPause_button),
-                    nextFocusLeft: findNodeHandle(this.go_back_button),
-                    nextFocusRight: findNodeHandle(this.replay_button)
-                });
-            }
-
-            if(this.replay_button) {
-                this.replay_button.setNativeProps({
-                    nextFocusUp: findNodeHandle(this.replay_button),
-                    nextFocusDown: findNodeHandle(this.playPause_button),
-                    nextFocusLeft: findNodeHandle(this.go_back_button),
-                    nextFocusRight: findNodeHandle(this.replay_button)
-                });
-            }
-
-            if(this.playPause_button) {
-                this.playPause_button.setNativeProps({
-                    nextFocusUp: findNodeHandle(this.go_back_button),
-                    nextFocusDown: findNodeHandle(this.playPause_button),
-                    nextFocusLeft: findNodeHandle(this.playPause_button),
-                    nextFocusRight: findNodeHandle(this.playPause_button)
-                });
-            }
+    async startSeeking(amount = 0) {
+        if(this.video) {
+            this.video.pauseAsync();
+            const { positionMillis } = await this.video.getStatusAsync();
+            this.seekingPositionMillis = positionMillis + amount;
+            this.updateBottomControls(this.seekingPositionMillis, true);
         }
-        else {
+    }
+
+    async stopSeeking() {
+        if(this.video) {
+            await this.video.setStatusAsync({ positionMillis: this.seekingPositionMillis });
+            if(!this.state.paused) {
+                this.video.playAsync();
+            }
+            this.seekingAccel = 0;
+            this.setState({ seeking: false });
+        }
+    }
+
+    seek(amount) {
+        this.seekingAccel += SEEKING_ACCEL;
+        this.seekingPositionMillis += amount * this.seekingAccel;
+        this.updateBottomControls(this.seekingPositionMillis, true);
+    }
+
+    setButtonsNextFocus() {
+        if(this.state.seeking) {
             if(this.go_back_button) {
                 this.go_back_button.setNativeProps({
                     nextFocusUp: findNodeHandle(this.go_back_button),
@@ -139,6 +173,64 @@ export default class VideoPlayer extends React.Component {
                 });
             }
         }
+        else {
+            if(this.state.controlsFocused) {
+                if(this.go_back_button) {
+                    this.go_back_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.go_back_button),
+                        nextFocusDown: findNodeHandle(this.playPause_button),
+                        nextFocusLeft: findNodeHandle(this.go_back_button),
+                        nextFocusRight: findNodeHandle(this.replay_button)
+                    });
+                }
+
+                if(this.replay_button) {
+                    this.replay_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.replay_button),
+                        nextFocusDown: findNodeHandle(this.playPause_button),
+                        nextFocusLeft: findNodeHandle(this.go_back_button),
+                        nextFocusRight: findNodeHandle(this.replay_button)
+                    });
+                }
+
+                if(this.playPause_button) {
+                    this.playPause_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.go_back_button),
+                        nextFocusDown: findNodeHandle(this.playPause_button),
+                        nextFocusLeft: findNodeHandle(this.playPause_button),
+                        nextFocusRight: findNodeHandle(this.playPause_button)
+                    });
+                }
+            }
+            else {
+                if(this.go_back_button) {
+                    this.go_back_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.go_back_button),
+                        nextFocusDown: findNodeHandle(this.go_back_button),
+                        nextFocusLeft: findNodeHandle(this.go_back_button),
+                        nextFocusRight: findNodeHandle(this.go_back_button)
+                    });
+                }
+
+                if(this.replay_button) {
+                    this.replay_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.replay_button),
+                        nextFocusDown: findNodeHandle(this.replay_button),
+                        nextFocusLeft: findNodeHandle(this.replay_button),
+                        nextFocusRight: findNodeHandle(this.replay_button)
+                    });
+                }
+
+                if(this.playPause_button) {
+                    this.playPause_button.setNativeProps({
+                        nextFocusUp: findNodeHandle(this.playPause_button),
+                        nextFocusDown: findNodeHandle(this.playPause_button),
+                        nextFocusLeft: findNodeHandle(this.playPause_button),
+                        nextFocusRight: findNodeHandle(this.playPause_button)
+                    });
+                }
+            }
+        }
     }
 
     hideControlsTimer() {
@@ -148,8 +240,10 @@ export default class VideoPlayer extends React.Component {
                 this.hideControlsTimeout = null;
             }
             this.hideControlsTimeout = setTimeout(async () => {
-                this.hideControlsTimeout = null;
-                this.setState({ controlsFocused: false });
+                if(!this.state.seeking) {
+                    this.hideControlsTimeout = null;
+                    this.setState({ controlsFocused: false });
+                }
             }, HIDE_CONTROLS_TIME);
         }
     }
@@ -183,27 +277,40 @@ export default class VideoPlayer extends React.Component {
     }
 
     onPlaybackStatusUpdate(playbackStatus) {
-        if(playbackStatus.isPlaying) {
-            const remainingMillis = playbackStatus.durationMillis - playbackStatus.positionMillis;
-            const progress = 100 - ((remainingMillis * 100) / playbackStatus.durationMillis);
-            
-            const bottomControlState = {
-                currentTime: timeConverFormatted(playbackStatus.positionMillis / 1000),
-                progress: progress,
-                remainingTime: timeConverFormatted(remainingMillis / 1000)
-            };
+        if(!this.state.seeking) {
+            if(playbackStatus.isPlaying) {
+                this.updateBottomControls(playbackStatus.positionMillis);   
+            }
+            else if(playbackStatus.isBuffering) {
+                if(!this.state.paused && !this.state.buffering) {
+                    this.setState({ buffering: true });
+                }
+                else if(this.state.paused && this.state.buffering) {
+                    this.setState({ buffering: false });
+                }
+            }
+        }
+    }
 
-            if(this.state.buffering) this.setState({ buffering: false, bottomControlState: bottomControlState });
-            else this.setState({ bottomControlState: bottomControlState });
-        }
-        else if(playbackStatus.isBuffering) {
-            if(!this.state.paused && !this.state.buffering) {
-                this.setState({ buffering: true });
-            }
-            else if(this.state.paused && this.state.buffering) {
-                this.setState({ buffering: false });
-            }
-        }
+    updateBottomControls(positionMillis, seeking = false) {
+        if(positionMillis < 0) positionMillis = 0;
+        else if(positionMillis > this.durationMillis) positionMillis = this.durationMillis;
+        
+        const remainingMillis = this.durationMillis - positionMillis;
+        const progress = 100 - ((remainingMillis * 100) / this.durationMillis);
+        
+        const bottomControlState = {
+            currentTime: timeConverFormatted(positionMillis / 1000),
+            progress: progress,
+            remainingTime: timeConverFormatted(remainingMillis / 1000)
+        };
+
+        if(this.state.buffering) this.setState({ seeking: seeking, buffering: false, bottomControlState: bottomControlState });
+        else this.setState({ seeking: seeking, bottomControlState: bottomControlState });
+    }
+
+    onReadyForDisplay(info) {
+        this.durationMillis = info.status.durationMillis;
     }
 
     renderBufferingIcon() {
@@ -250,6 +357,7 @@ export default class VideoPlayer extends React.Component {
                             text={ "Salir" }
                             textStyle={ Styles.bigSubtitleText }
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
+                            onFocus={ () => this.canSeek = false }
                         />
                         <IconButton
                             touchableRef={ component => this.replay_button = component }
@@ -261,6 +369,7 @@ export default class VideoPlayer extends React.Component {
                             text={ "Reproducir desde el principio" }
                             textStyle={ Styles.bigSubtitleText }
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
+                            onFocus={ () => this.canSeek = false }
                         />
                     </Animated.View>
 
@@ -290,6 +399,7 @@ export default class VideoPlayer extends React.Component {
                             }}
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
                             onPress={ () => this.playOrPauseVideo() }
+                            onFocus={ () => this.canSeek = true }
                         />
                         <Text style={ Styles.bigSubtitleText }>{ this.state.bottomControlState.currentTime }</Text>
                         <ProgressBar
@@ -309,6 +419,7 @@ export default class VideoPlayer extends React.Component {
                     resizeMode="contain"
                     style={{ width: "100%", height: "100%" }}
                     onPlaybackStatusUpdate={ (playbackStatus) => this.onPlaybackStatusUpdate(playbackStatus) }
+                    onReadyForDisplay={ (info) => this.onReadyForDisplay(info) }
                     {...this.videoProps}
                 />
             </View>
