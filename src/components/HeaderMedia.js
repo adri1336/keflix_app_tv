@@ -211,7 +211,7 @@ export default class HeaderMedia extends React.Component {
                     posterSource={{ uri: this.state.backdrop.image || null }}
                     rate={ 1.0 } //velocidad
                     resizeMode="cover"
-                    opacity={ this.state.showVideo ? 0.8 : 0.0 }
+                    opacity={ this.state.showVideo ? 1.0 : 0.0 }
                     onPlaybackStatusUpdate={
                         playbackStatus => {
                             if(playbackStatus.didJustFinish) {
@@ -223,8 +223,7 @@ export default class HeaderMedia extends React.Component {
                         position: "absolute",
                         top: "-20%",
                         width: "100%",
-                        height: "140%",
-                        backgroundColor: Definitions.PRIMARY_COLOR
+                        height: "140%"
                     }}
                 />
             );
