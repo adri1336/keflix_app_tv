@@ -85,7 +85,16 @@ export default class GeneralScreen extends React.Component {
                                         library: Entypo,
                                         name: "back"
                                     }}
-                                    onPress={ () => this.props.navigation.navigate(this.props.route.params.backRouteName) }
+                                    onPress={
+                                        () => {
+                                            if(this.props.route.params.backNavigator) {
+                                                this.props.navigation.navigate(this.props.route.params.backNavigator, { screen: this.props.route.params.backRouteName });
+                                            }
+                                            else {
+                                                this.props.navigation.navigate(this.props.route.params.backRouteName);
+                                            }
+                                        }
+                                    }
                                 >
                                     { i18n.t("settings.general.back_button") }
                                 </NormalButton>

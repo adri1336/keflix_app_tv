@@ -15,6 +15,7 @@ export default () => {
     return (
         <MediaNavigator.Navigator 
             headerMode="none"
+            screenOptions={{ animationEnabled: false }}
             initialRouteName="MoviesScreen"
         >
             <MediaNavigator.Screen name="MoviesScreen" component={MoviesScreen}/>

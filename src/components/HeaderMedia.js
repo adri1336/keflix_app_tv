@@ -192,10 +192,7 @@ export default class HeaderMedia extends React.Component {
         if(this.state.backdrop && this.state.backdrop.image) {
             return (
                 <Image
-                    style={{
-                        flex: 1,
-                        zIndex: -2,
-                    }}
+                    style={{ flex: 1 }}
                     source={{
                         uri: this.state.backdrop.image,
                     }}
@@ -214,7 +211,7 @@ export default class HeaderMedia extends React.Component {
                     posterSource={{ uri: this.state.backdrop.image || null }}
                     rate={ 1.0 } //velocidad
                     resizeMode="cover"
-                    opacity={ this.state.showVideo ? 1.0 : 0.0 }
+                    opacity={ this.state.showVideo ? 0.8 : 0.0 }
                     onPlaybackStatusUpdate={
                         playbackStatus => {
                             if(playbackStatus.didJustFinish) {
@@ -226,7 +223,8 @@ export default class HeaderMedia extends React.Component {
                         position: "absolute",
                         top: "-20%",
                         width: "100%",
-                        height: "140%"
+                        height: "140%",
+                        backgroundColor: Definitions.PRIMARY_COLOR
                     }}
                 />
             );
@@ -248,16 +246,17 @@ export default class HeaderMedia extends React.Component {
                         position: "absolute",
                         top: "-50%",
                         width: "150%",
-                        height: "155%",
+                        height: "300%",
                         backgroundColor: Definitions.PRIMARY_COLOR,
-                        zIndex: 1
+                        zIndex: -1
                     }}
                 />
                 <View
                     style={{
-                        flex: 1,
+                        flex: 45,
                         flexDirection: "column",
-                        justifyContent: "center"
+                        justifyContent: "center",
+                        zIndex: -2
                     }}
                 >
                     { this.renderTitle() }
@@ -266,19 +265,20 @@ export default class HeaderMedia extends React.Component {
                 </View>
                 <View
                     style={{
-                        flex: 1,
+                        flex: 55,
                         marginTop: -Definitions.DEFAULT_MARGIN,
                         marginRight: -Definitions.DEFAULT_MARGIN,
-                        marginLeft: -130,
+                        marginLeft: -100,
+                        marginBottom: -35,
                         flexDirection: "column",
                     }}
                 >
                     <LinearGradient
                         style={{
-                            zIndex: -1,
+                            zIndex: -3,
                             position: "absolute",
                             left: 0,
-                            width: 120,
+                            width: 80,
                             height: "100%"
                         }}
                         colors={ [Definitions.PRIMARY_COLOR, "transparent"] }
@@ -287,11 +287,11 @@ export default class HeaderMedia extends React.Component {
                     />
                     <LinearGradient
                         style={{
-                            zIndex: -1,
+                            zIndex: -3,
                             position: "absolute",
                             bottom: 0,
                             width: "100%",
-                            height: 60
+                            height: 40
                         }}
                         colors={ [Definitions.PRIMARY_COLOR, "transparent"] }
                         start={ [0, 1] }
@@ -300,7 +300,7 @@ export default class HeaderMedia extends React.Component {
                     <View
                         style={{
                             flex: 1,
-                            zIndex: -2,
+                            zIndex: -4,
                             overflow: "hidden"
                         }}
                     >
