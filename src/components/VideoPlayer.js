@@ -26,6 +26,8 @@ export default class VideoPlayer extends React.Component {
         
         this.videoProps = this.props.videoProps;
         this.hideControlsTimeout = null;
+        this.playInTimeout = null;
+        this.ready = false;
         this.canSeek = false;
         this.durationMillis = 0;
         this.seekingAccel = 0;
@@ -38,6 +40,7 @@ export default class VideoPlayer extends React.Component {
             bottomControlsPosY: new Animated.Value(CLOSED_CONTROLLER_Y_POSITION),
 
             inBackground: this.props.inBackground || false,
+            showBackdrop: this.props.backdrop || false,
             showTitle: false,
             seeking: false,
             paused: false,
@@ -108,6 +111,60 @@ export default class VideoPlayer extends React.Component {
         if(!this.state.inBackground) {
             this.setState({ controlsFocused: true });
         }
+        this.playInTimer();
+    }
+
+    cancelPlayInTimer() {
+        if(this.playInTimeout) {
+            clearTimeout(this.playInTimeout);
+            this.playInTimeout = null;
+        }
+    }
+
+    playInTimer() {
+        this.cancelPlayInTimer();
+        if(this.props.playIn) {
+            this.playInTimeout = setTimeout(async () => {
+                if(!this.ready) {
+                    this.playInTimer();
+                }
+                else {
+                    this.playInTimeout = null;
+                    if(this.props.onPlayStarted) {
+                        this.props.onPlayStarted();
+                    }
+                    if(this.video) {
+                        this.video.playAsync();
+                        this.setState({ showBackdrop: false, inBackground: false });
+                    }
+                }
+            }, this.props.playIn * 1000);
+        }
+    }
+
+    playNow() {
+        this.cancelPlayInTimer();
+        if(this.video) {
+            this.video.playAsync();
+        }
+        this.setState({ showBackdrop: false, inBackground: false });
+    }
+
+    areControlsEnabled() {
+        return this.state.controlsFocused;
+    }
+
+    toggleControls(toggle) {
+        this.setState({ controlsFocused: toggle });
+    }
+
+    stopVideo(goToBackground = false) {
+        if(this.video) {
+            this.video.stopAsync();
+        }
+        if(goToBackground) {
+            this.setState({ inBackground: true, controlsFocused: false, buffering: false, showBackdrop: true });
+        }
     }
 
     componentWillUnmount() {
@@ -116,6 +173,7 @@ export default class VideoPlayer extends React.Component {
             clearTimeout(this.hideControlsTimeout);
             this.hideControlsTimeout = null;
         }
+        this.cancelPlayInTimer();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -320,6 +378,7 @@ export default class VideoPlayer extends React.Component {
 
     onReadyForDisplay(info) {
         this.durationMillis = info.status.durationMillis;
+        this.ready = true;
     }
 
     renderBufferingIcon() {
@@ -377,6 +436,29 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
+    renderBackdrop() {
+        if(this.props.backdrop && this.state.showBackdrop) {
+            return (
+                <View
+                    style={{
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "black"
+                    }}
+                >
+                    <Image
+                        style={{
+                            flex: 1,
+                            opacity: 0.3
+                        }}
+                        source={{ uri: this.props.backdrop }}
+                    />
+                </View>
+            );
+        }
+    }
+
     render() {
         return (
             <View style={{ width: "100%", height: "100%" }}>
@@ -407,6 +489,8 @@ export default class VideoPlayer extends React.Component {
                         }}
                     >
                         <IconButton
+                            accessible={ this.state.inBackground ? false : true }
+                            focusable={ this.state.inBackground ? false : true }
                             touchableRef={ component => this.go_back_button = component }
                             size={ ICON_SIZE }
                             icon={{
@@ -426,6 +510,8 @@ export default class VideoPlayer extends React.Component {
                             }
                         />
                         <IconButton
+                            accessible={ this.state.inBackground ? false : true }
+                            focusable={ this.state.inBackground ? false : true }
                             touchableRef={ component => this.replay_button = component }
                             size={ ICON_SIZE }
                             icon={{
@@ -462,8 +548,10 @@ export default class VideoPlayer extends React.Component {
                         }}
                     >
                         <IconButton
+                            hasTVPreferredFocus={ this.state.inBackground ? false : true }
+                            accessible={ this.state.inBackground ? false : true }
+                            focusable={ this.state.inBackground ? false : true }
                             touchableRef={ component => this.playPause_button = component }
-                            hasTVPreferredFocus={ true }
                             size={ ICON_SIZE }
                             icon={{
                                 library: MaterialIcons,
@@ -494,6 +582,7 @@ export default class VideoPlayer extends React.Component {
                     onReadyForDisplay={ (info) => this.onReadyForDisplay(info) }
                     {...this.videoProps}
                 />
+                { this.renderBackdrop() }
             </View>
         );
     }

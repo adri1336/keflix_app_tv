@@ -242,38 +242,9 @@ export default class HeaderMedia extends React.Component {
         }
     }
 
-    render () {
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    overflowY: "hidden"
-                }}
-            >
-                <Animated.View
-                    opacity={ this.state.backOpacity }
-                    style={{
-                        position: "absolute",
-                        top: "-50%",
-                        width: "150%",
-                        height: "300%",
-                        backgroundColor: Definitions.PRIMARY_COLOR,
-                        zIndex: -1
-                    }}
-                />
-                <View
-                    style={{
-                        flex: 45,
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        zIndex: -2
-                    }}
-                >
-                    { this.renderTitle() }
-                    { this.renderInfo() }
-                    { this.renderDescription() }
-                </View>
+    renderBackdrop() {
+        if(this.state.backdrop) {
+            return (
                 <View
                     style={{
                         flex: 55,
@@ -281,7 +252,7 @@ export default class HeaderMedia extends React.Component {
                         marginRight: -Definitions.DEFAULT_MARGIN,
                         marginLeft: -100,
                         marginBottom: -35,
-                        flexDirection: "column",
+                        flexDirection: "column"
                     }}
                 >
                     <LinearGradient
@@ -319,6 +290,57 @@ export default class HeaderMedia extends React.Component {
                         { this.renderBackdropVideo() }
                     </View>
                 </View>
+            );
+        }
+        else {
+            return (
+                <View
+                    style={{
+                        flex: 55,
+                        marginTop: -Definitions.DEFAULT_MARGIN,
+                        marginRight: -Definitions.DEFAULT_MARGIN,
+                        marginLeft: -100,
+                        marginBottom: -35,
+                        flexDirection: "column"
+                    }}
+                />
+            );
+        }
+    }
+
+    render () {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    overflowY: "hidden"
+                }}
+            >
+                <Animated.View
+                    opacity={ this.state.backOpacity }
+                    style={{
+                        position: "absolute",
+                        top: "-50%",
+                        width: "150%",
+                        height: "300%",
+                        backgroundColor: Definitions.PRIMARY_COLOR,
+                        zIndex: -1
+                    }}
+                />
+                <View
+                    style={{
+                        flex: 45,
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        zIndex: -2
+                    }}
+                >
+                    { this.renderTitle() }
+                    { this.renderInfo() }
+                    { this.renderDescription() }
+                </View>
+                { this.renderBackdrop() }
             </View>
         );
     }

@@ -103,14 +103,19 @@ export default class MoviesScreen extends React.Component {
                     firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
                     onScrollStarted={
                         toRowIndex => {
-                            this.headerMedia.fadeBack(true);
+                            if(this.headerMedia) {
+                                this.headerMedia.stopVideo();
+                                this.headerMedia.fadeBack(true);
+                            }
                             this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: toRowIndex == 1 ? true : false });
                         }
                     }
                     onCoverFocused={
                         (movie, rowIndex) => {
                             this.setHeaderInfo(movie);
-                            this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
+                            if(this.props.navigation.isFocused()) {
+                                this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
+                            }
                         }
                     }
                     onCoverSelected={
@@ -123,7 +128,7 @@ export default class MoviesScreen extends React.Component {
                                 this.headerMedia.stopVideo();
                             }
                             this.props.navigation.navigate("MediaNavigator", {
-                                screen: "InfoScreen",
+                                screen: "PlayScreen",
                                 params: {
                                     backRouteName: this.props.route.name,
                                     media: movie
