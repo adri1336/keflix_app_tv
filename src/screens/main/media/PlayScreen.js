@@ -11,7 +11,7 @@ import { AppContext } from "cuervo/src/AppContext";
 import VideoPlayer from "cuervo/src/components/VideoPlayer";
 
 const
-    BACK_FADE_DURATION = 1000;
+    BACK_FADE_DURATION = 2000;
 
 export default class PlayScreen extends React.Component {
     static contextType = AppContext;
@@ -104,7 +104,7 @@ export default class PlayScreen extends React.Component {
             },
             description: overview,
             backdrop: null
-        });
+        }, false);
     }
 
     renderVideoPlayer() {

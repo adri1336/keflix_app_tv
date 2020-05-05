@@ -5,7 +5,6 @@ import Styles from "cuervo/src/utils/Styles";
 import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
 import * as Movie from "cuervo/src/api/Movie";
-import NormalButton from "cuervo/src/components/NormalButton";
 
 //Vars
 export const COVER_ITEM_VALUES = {
