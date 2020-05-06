@@ -33,9 +33,8 @@ export default class MoviesScreen extends React.Component {
             this.setState({ focused: true });
             this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.librarySectionGrid.getCurrentRowIndex() == 1 ? true : false });
             if(this.librarySectionGrid) {
-                this.librarySectionGrid.setFocus(true, false);
+                this.librarySectionGrid.setFocus(true);
             }
-
         });
         this.onBlurEvent = this.props.navigation.addListener("blur", () => {
             this.setState({ focused: false });
@@ -67,10 +66,8 @@ export default class MoviesScreen extends React.Component {
 
     async refreshMovies() {
         const movies = await Movie.discover(this.context);
-        const movies2 = await Movie.discover(this.context);
         const sections = [
-            { title: "Últimas películas añadidas", covers: movies },
-            { title: "Más películas", covers: movies2 }
+            { title: "Últimas películas añadidas", covers: movies }
         ];
         if(this.librarySectionGrid) {
             this.librarySectionGrid.setSections(sections);
@@ -78,7 +75,16 @@ export default class MoviesScreen extends React.Component {
     }
 
     setHeaderInfo(movie) {
-        const { title, release_date, runtime, vote_average, overview } = movie;
+        const { title, release_date, runtime, vote_average, overview, profileInfo } = movie;
+
+        let progress = null;
+        if(profileInfo) {
+            progress = {
+                completed: profileInfo.completed,
+                current_time: profileInfo.current_time,
+                total_time: runtime * 60000 //min to ms
+            }
+        }
 
         this.headerMedia.setInfo({
             title: {
@@ -94,7 +100,8 @@ export default class MoviesScreen extends React.Component {
             backdrop: {
                 image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
                 video: this.props.navigation.isFocused() && movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
-            }
+            },
+            progress: progress
         });
     }
 

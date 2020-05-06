@@ -7,7 +7,8 @@ export default {
     SERVER_IP: "example",
     PASSWORD_MIN_LENGTH: 3,
     PIN_PASSWORD_LENGTH: 4,
-    APPLICATION_WEBPAGE: "https://github.com/adri1samp/"
+    APPLICATION_WEBPAGE: "https://github.com/adri1samp/",
+    APPLICATION_NAME: "Keflix"
 };
 
 export const DEFAULT_SIZES = {
@@ -34,3 +35,9 @@ export const STORAGE_KEYS = {
     ACCESS_TOKEN: "access_token",
     REFRESH_TOKEN: "refresh_token"
 }
+
+export const MEDIA_DEFAULT = {
+    MIN_MILLIS: 60000, //se considera que ha empezado a ver la película cuando lleva más de 1 min
+    REMAINING_MILLIS: 600000, //cuando queden 10 minutos para que acabe la película se considerada terminada
+    PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL: 10000 //actualizar por donde va cada 10s
+};

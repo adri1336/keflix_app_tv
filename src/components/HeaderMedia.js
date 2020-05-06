@@ -4,10 +4,12 @@ import { View, Text, Image, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Video } from "expo-av";
 import Styles from "cuervo/src/utils/Styles";
+import i18n from "i18n-js";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
 import { timeConvert } from "cuervo/src/utils/Functions";
+import ProgressBar from "cuervo/src/components/ProgressBar";
 
 //Vars
 const
@@ -33,6 +35,7 @@ export default class HeaderMedia extends React.Component {
                 image: null,
                 video: null
             },
+            progress: null,
             showVideo: false,
             imageTitleAspestRatio: 1 / 1,
             backOpacity: new Animated.Value(0.8)
@@ -182,8 +185,49 @@ export default class HeaderMedia extends React.Component {
         }
     }
 
-    renderDescription() {
-        if(this.state.description) {
+    renderDescriptionOrProgress() {
+        if(this.state.progress && this.state.progress.current_time > MEDIA_DEFAULT.MIN_MILLIS && !this.state.progress.completed) {
+            const { total_time, current_time } = this.state.progress;
+            const remainingMillis = total_time - current_time;
+            const progress = 100 - ((remainingMillis * 100) / total_time);
+            const { hours, minutes } = timeConvert(remainingMillis / 1000);
+
+            return (
+                <View
+                    style={{
+                        marginTop: Definitions.DEFAULT_MARGIN,
+                        flexDirection: "row",
+                        alignItems: "center"
+                    }}
+                >
+                    <ProgressBar
+                        progress={ progress }
+                        bgColor="#A9A9A9"
+                        style={{
+                            width: 100,
+                            height: 3
+                        }}
+                    />
+                    <Text
+                        numberOfLines={ 1 }
+                        style={[
+                            Styles.bigSubtitleText,
+                            {
+                                color: "rgba(255, 255, 255, 0.6)",
+                                marginLeft: Definitions.DEFAULT_MARGIN
+                            }
+                        ]}
+                    >
+                        {
+                            hours == 0 ?
+                                i18n.t("header_media.remaining_time_minutes", { minutes: minutes }) :
+                                i18n.t("header_media.remaining_time", { hours: hours, minutes: minutes })
+                        }
+                    </Text>
+                </View>
+            );
+        }
+        else if(this.state.description) {
             return (
                 <View>
                     <Text
@@ -349,7 +393,7 @@ export default class HeaderMedia extends React.Component {
                 >
                     { this.renderTitle() }
                     { this.renderInfo() }
-                    { this.renderDescription() }
+                    { this.renderDescriptionOrProgress() }
                 </View>
                 { this.renderBackdrop() }
             </View>

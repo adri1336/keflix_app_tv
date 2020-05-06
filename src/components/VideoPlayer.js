@@ -6,7 +6,7 @@ import IconButton from "cuervo/src/components/IconButton";
 import ProgressBar from "cuervo/src/components/ProgressBar";
 import Definitions from "cuervo/src/utils/Definitions";
 import Styles from "cuervo/src/utils/Styles";
-import { timeConverFormatted } from "cuervo/src/utils/Functions";
+import { timeConvertFormatted } from "cuervo/src/utils/Functions";
 import i18n from "i18n-js";
 
 const
@@ -142,9 +142,12 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
-    playNow() {
+    async playNow(from_start = false) {
         this.cancelPlayInTimer();
         if(this.video) {
+            if(from_start) {
+                await this.video.setStatusAsync({ positionMillis: 0 });
+            }
             this.video.playAsync();
         }
         this.setState({ showBackdrop: false, inBackground: false });
@@ -160,7 +163,7 @@ export default class VideoPlayer extends React.Component {
 
     stopVideo(goToBackground = false) {
         if(this.video) {
-            this.video.stopAsync();
+            this.video.pauseAsync();
         }
         if(goToBackground) {
             if(this.hideControlsTimeout) {
@@ -200,6 +203,9 @@ export default class VideoPlayer extends React.Component {
     async stopSeeking() {
         if(this.video) {
             await this.video.setStatusAsync({ positionMillis: this.seekingPositionMillis });
+            if(this.props.onSeeked) {
+               this.props.onSeeked(this.seekingPositionMillis);
+            }
             if(!this.state.paused) {
                 this.video.playAsync();
             }
@@ -332,6 +338,11 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
+    async getPositionMillis() {
+        const { positionMillis } = await this.video.getStatusAsync();
+        return positionMillis;
+    }
+
     animateControls() {
         Animated.timing(this.state.topControlsPosY, {
             toValue: this.state.controlsFocused ? 0 : - CLOSED_CONTROLLER_Y_POSITION,
@@ -371,9 +382,9 @@ export default class VideoPlayer extends React.Component {
         const progress = 100 - ((remainingMillis * 100) / this.durationMillis);
         
         const bottomControlState = {
-            currentTime: timeConverFormatted(positionMillis / 1000),
+            currentTime: timeConvertFormatted(positionMillis / 1000),
             progress: progress,
-            remainingTime: timeConverFormatted(remainingMillis / 1000)
+            remainingTime: timeConvertFormatted(remainingMillis / 1000)
         };
 
         if(this.state.buffering) this.setState({ seeking: seeking, buffering: false, bottomControlState: bottomControlState });
@@ -506,9 +517,12 @@ export default class VideoPlayer extends React.Component {
                             style={{ margin: Definitions.DEFAULT_MARGIN }}
                             onFocus={ () => this.canSeek = false }
                             onPress={
-                                () => {
-                                    if(this.props.onVideoBackPressed) {
-                                        this.props.onVideoBackPressed();
+                                async () => {
+                                    if(this.video) {
+                                        const positionMillis = await this.getPositionMillis();
+                                        if(this.props.onVideoBackPressed) {
+                                            this.props.onVideoBackPressed(positionMillis);
+                                        }
                                     }
                                 }
                             }
@@ -529,6 +543,9 @@ export default class VideoPlayer extends React.Component {
                             onPress={
                                 () => {
                                     if(this.video) {
+                                        if(this.props.onVideoReplayPressed) {
+                                            this.props.onVideoReplayPressed();
+                                        }
                                         this.video.setStatusAsync({ positionMillis: 0 });
                                     }
                                 }
@@ -582,7 +599,14 @@ export default class VideoPlayer extends React.Component {
                     ref={ component => this.video = component }
                     resizeMode="contain"
                     style={{ width: "100%", height: "100%" }}
-                    onPlaybackStatusUpdate={ (playbackStatus) => this.onPlaybackStatusUpdate(playbackStatus) }
+                    onPlaybackStatusUpdate={
+                        (playbackStatus) => {
+                            if(this.props.onPlaybackStatusUpdate) {
+                                this.props.onPlaybackStatusUpdate(playbackStatus);
+                            }
+                            this.onPlaybackStatusUpdate(playbackStatus);
+                        }
+                    }
                     onReadyForDisplay={ (info) => this.onReadyForDisplay(info) }
                     {...this.videoProps}
                 />

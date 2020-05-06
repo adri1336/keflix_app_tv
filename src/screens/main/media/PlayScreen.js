@@ -2,16 +2,19 @@ import React from "react";
 import { View, BackHandler, Animated, findNodeHandle } from "react-native";
 import HeaderMedia from "cuervo/src/components/HeaderMedia";
 import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
 import NormalButton from "cuervo/src/components/NormalButton";
 import Styles from "cuervo/src/utils/Styles";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Movie from "cuervo/src/api/Movie";
 import { AppContext } from "cuervo/src/AppContext";
 import VideoPlayer from "cuervo/src/components/VideoPlayer";
+import i18n from "i18n-js";
+import ProgressBar from "cuervo/src/components/ProgressBar";
+import * as ProfileLibraryMovie from "cuervo/src/api/ProfileLibraryMovie";
 
 const
-    BACK_FADE_DURATION = 2000;
+    BACK_FADE_DURATION = 500;
 
 export default class PlayScreen extends React.Component {
     static contextType = AppContext;
@@ -19,6 +22,7 @@ export default class PlayScreen extends React.Component {
     constructor(props) {
         super(props);
         this.media = this.props.route.params.media;
+        this.lastProfileUpdate = 0;
         this.state = {
             playing: false,
             infoOpacity: new Animated.Value(1)
@@ -26,10 +30,12 @@ export default class PlayScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+        this.backHandler = BackHandler.addEventListener("hardwareBackPress", async () => {
             if(this.props.navigation.isFocused()) {
                 if(this.state.playing && this.videoPlayer) {
                     if(this.videoPlayer.areControlsEnabled()) {
+                        const positionMillis = await this.videoPlayer.getPositionMillis();
+                        this.updateProfilePositionMillis(positionMillis, true);
                         this.stopPlaying();
                     }
                     else {
@@ -62,12 +68,22 @@ export default class PlayScreen extends React.Component {
     setButtonsNextFocus() {
         this.playButton.setNativeProps({
             nextFocusUp: findNodeHandle(this.playButton),
-            nextFocusDown: findNodeHandle(this.trailerButton),
+            nextFocusDown: this.replayButton ? findNodeHandle(this.replayButton) : findNodeHandle(this.trailerButton),
             nextFocusLeft: findNodeHandle(this.playButton),
             nextFocusRight: findNodeHandle(this.playButton)
         });
+
+        if(this.replayButton) {
+            this.replayButton.setNativeProps({
+                nextFocusUp: findNodeHandle(this.playButton),
+                nextFocusDown: findNodeHandle(this.trailerButton),
+                nextFocusLeft: findNodeHandle(this.replayButton),
+                nextFocusRight: findNodeHandle(this.replayButton)
+            });
+        }
+
         this.trailerButton.setNativeProps({
-            nextFocusUp: findNodeHandle(this.playButton),
+            nextFocusUp:  this.replayButton ? findNodeHandle(this.replayButton) : findNodeHandle(this.playButton),
             nextFocusDown: findNodeHandle(this.myListButton),
             nextFocusLeft: findNodeHandle(this.trailerButton),
             nextFocusRight: findNodeHandle(this.trailerButton)
@@ -107,8 +123,51 @@ export default class PlayScreen extends React.Component {
         }, false);
     }
 
+    onPlaybackStatusUpdate(playbackStatus) {
+        const { positionMillis } = playbackStatus;
+        if(playbackStatus.didJustFinish) {
+            this.updateProfilePositionMillis(positionMillis, true);
+            this.stopPlaying();
+        }
+        else {
+            if(Date.now() - this.lastProfileUpdate > MEDIA_DEFAULT.PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL) {
+                this.updateProfilePositionMillis(positionMillis);
+                this.lastProfileUpdate = Date.now();
+            }
+        }
+    }
+
+    async updateProfilePositionMillis(positionMillis, force_update = false) {
+        let { runtime, libraryMovieId, profileInfo } = this.media;
+        const durationMillis = runtime * 60000;
+        const remainingMillis = durationMillis - positionMillis;
+
+        if(!profileInfo) {
+            profileInfo = ProfileLibraryMovie.defaultObject(this.context, libraryMovieId);
+        }
+        
+        if(remainingMillis < MEDIA_DEFAULT.REMAINING_MILLIS) {
+            profileInfo.completed = true;
+        }
+        else {
+            profileInfo.completed = false;
+        }
+
+        profileInfo.current_time = positionMillis;
+        await ProfileLibraryMovie.upsert(this.context, profileInfo);
+        this.media.profileInfo = profileInfo;
+        if(force_update) {
+            this.forceUpdate();
+        }
+    }
+
     renderVideoPlayer() {
-        const { id, title, mediaInfo } = this.media;
+        const { id, title, mediaInfo, profileInfo } = this.media;
+        let positionMillis = 0;
+        if(profileInfo && profileInfo.current_time > MEDIA_DEFAULT.MIN_MILLIS && !profileInfo.completed) {
+            positionMillis = profileInfo.current_time;
+        }
+
         return (
             <View
                 style={{
@@ -128,7 +187,8 @@ export default class PlayScreen extends React.Component {
                         image: mediaInfo.logo ? Movie.getLogo(this.context, id) : null
                     }}
                     videoProps={{
-                        source: { uri: Movie.getVideo(this.context, id) }
+                        source: { uri: Movie.getVideo(this.context, id) },
+                        positionMillis: positionMillis
                     }}
                     onPlayStarted={
                         () => {
@@ -136,13 +196,196 @@ export default class PlayScreen extends React.Component {
                         }
                     }
                     onVideoBackPressed={
-                        () => {
+                        async (positionMillis) => {
+                            this.updateProfilePositionMillis(positionMillis, true);
                             this.stopPlaying();
                         }
                     }
+                    onVideoReplayPressed={ () => this.updateProfilePositionMillis(0) }
+                    onSeeked={ (positionMillis) => this.updateProfilePositionMillis(positionMillis) }
+                    onPlaybackStatusUpdate={ (playbackStatus) => this.onPlaybackStatusUpdate(playbackStatus) }
                 />
             </View>
         );
+    }
+
+    renderPlayButtons() {
+        const { runtime, profileInfo} = this.media;
+        if(profileInfo && profileInfo.current_time > MEDIA_DEFAULT.MIN_MILLIS && !profileInfo.completed) {
+            const total_time = runtime * 60000; //min to ms
+            const current_time = profileInfo.current_time;
+            const remainingMillis = total_time - current_time;
+            const progress = 100 - ((remainingMillis * 100) / total_time);
+
+            return (
+                <View>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}
+                    >
+                        <NormalButton
+                            touchableRef={ component => this.playButton = component }
+                            hasTVPreferredFocus={ this.state.playing ? false : true }
+                            accessible={ this.state.playing ? false : true }
+                            focusable={ this.state.playing ? false : true }
+                            textStyle={ Styles.bigText }
+                            icon={{
+                                library: MaterialIcons,
+                                name: "play-arrow"
+                            }}
+                            style={{ marginBottom: Definitions.DEFAULT_MARGIN, marginRight: Definitions.DEFAULT_MARGIN }}
+                            onPress={
+                                () => {
+                                    if(this.videoPlayer) {
+                                        this.videoPlayer.playNow();
+                                        this.setState({ playing: true });
+                                    }
+                                }
+                            }
+                            onBlur={
+                                () => {
+                                    if(this.videoPlayer) {
+                                        this.videoPlayer.cancelPlayInTimer();
+                                    }
+                                }
+                            }
+                        >
+                            { i18n.t("play_screen.resume_button") }
+                        </NormalButton>
+                        <ProgressBar
+                            progress={ progress }
+                            bgColor="#A9A9A9"
+                            style={{
+                                width: 100,
+                                height: 3,
+                                marginBottom: 4
+                            }}
+                        />
+                    </View>
+
+                    <NormalButton
+                        touchableRef={ component => this.replayButton = component }
+                        accessible={ this.state.playing ? false : true }
+                        focusable={ this.state.playing ? false : true }
+                        textStyle={ Styles.bigText }
+                        icon={{
+                            library: MaterialIcons,
+                            name: "skip-next"
+                        }}
+                        style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
+                        onPress={
+                            async () => {
+                                if(this.videoPlayer) {
+                                    this.videoPlayer.playNow(true);
+                                    this.setState({ playing: true });
+                                }
+                            }
+                        }
+                        onBlur={
+                            () => {
+                                if(this.videoPlayer) {
+                                    this.videoPlayer.cancelPlayInTimer();
+                                }
+                            }
+                        }
+                    >
+                        { i18n.t("play_screen.replay_button") }
+                    </NormalButton>
+                </View>
+            );
+        }
+        else {
+            return (
+                <NormalButton
+                    touchableRef={ component => this.playButton = component }
+                    hasTVPreferredFocus={ this.state.playing ? false : true }
+                    accessible={ this.state.playing ? false : true }
+                    focusable={ this.state.playing ? false : true }
+                    textStyle={ Styles.bigText }
+                    icon={{
+                        library: MaterialIcons,
+                        name: "play-arrow"
+                    }}
+                    style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
+                    onPress={
+                        () => {
+                            if(this.videoPlayer) {
+                                this.videoPlayer.playNow(true);
+                                this.setState({ playing: true });
+                            }
+                        }
+                    }
+                    onBlur={
+                        () => {
+                            if(this.videoPlayer) {
+                                this.videoPlayer.cancelPlayInTimer();
+                            }
+                        }
+                    }
+                >
+                    { i18n.t("play_screen.play_button") }
+                </NormalButton>
+            );
+        }
+    }
+
+    renderMyListButton() {
+        let { profileInfo, libraryMovieId } = this.media;
+        if(profileInfo && profileInfo.fav) {
+            return (
+                <NormalButton
+                    touchableRef={ component => this.myListButton = component }
+                    accessible={ this.state.playing ? false : true }
+                    focusable={ this.state.playing ? false : true }
+                    textStyle={ Styles.bigText }
+                    icon={{
+                        library: MaterialCommunityIcons,
+                        name: "playlist-remove"
+                    }}
+                    style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
+                    onPress={
+                        async () => {
+                            profileInfo.fav = false;
+                            await ProfileLibraryMovie.upsert(this.context, profileInfo);
+                            this.media.profileInfo = profileInfo;
+                            this.forceUpdate();
+                        }
+                    }
+                >
+                    { i18n.t("play_screen.delete_from_list_button") }
+                </NormalButton>
+            );
+        }
+        else {
+            return (
+                <NormalButton
+                    touchableRef={ component => this.myListButton = component }
+                    accessible={ this.state.playing ? false : true }
+                    focusable={ this.state.playing ? false : true }
+                    textStyle={ Styles.bigText }
+                    icon={{
+                        library: MaterialIcons,
+                        name: "playlist-add"
+                    }}
+                    style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
+                    onPress={
+                        async () => {
+                            if(!profileInfo) {
+                                profileInfo = ProfileLibraryMovie.defaultObject(this.context, libraryMovieId);
+                            }
+                            profileInfo.fav = true;
+                            await ProfileLibraryMovie.upsert(this.context, profileInfo);
+                            this.media.profileInfo = profileInfo;
+                            this.forceUpdate();
+                        }
+                    }
+                >
+                    { i18n.t("play_screen.add_to_my_list_button") }
+                </NormalButton>
+            );
+        }
     }
 
     renderInfo() {
@@ -169,35 +412,7 @@ export default class PlayScreen extends React.Component {
                         marginRight: -Definitions.DEFAULT_MARGIN
                     }}
                 >
-                    <NormalButton
-                        touchableRef={ component => this.playButton = component }
-                        hasTVPreferredFocus={ this.state.playing ? false : true }
-                        accessible={ this.state.playing ? false : true }
-                        focusable={ this.state.playing ? false : true }
-                        textStyle={ Styles.bigText }
-                        icon={{
-                            library: MaterialIcons,
-                            name: "play-arrow"
-                        }}
-                        style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
-                        onPress={
-                            () => {
-                                if(this.videoPlayer) {
-                                    this.videoPlayer.playNow();
-                                    this.setState({ playing: true });
-                                }
-                            }
-                        }
-                        onBlur={
-                            () => {
-                                if(this.videoPlayer) {
-                                    this.videoPlayer.cancelPlayInTimer();
-                                }
-                            }
-                        }
-                    >
-                        Reproducir ahora
-                    </NormalButton>
+                    { this.renderPlayButtons() }
 
                     <NormalButton
                         touchableRef={ component => this.trailerButton = component }
@@ -210,22 +425,10 @@ export default class PlayScreen extends React.Component {
                         }}
                         style={{ marginBottom: 20 }}
                     >
-                        Ver tráiler
+                        { i18n.t("play_screen.play_trailer_button") }
                     </NormalButton>
 
-                    <NormalButton
-                        touchableRef={ component => this.myListButton = component }
-                        accessible={ this.state.playing ? false : true }
-                        focusable={ this.state.playing ? false : true }
-                        textStyle={ Styles.bigText }
-                        icon={{
-                            library: MaterialIcons,
-                            name: "playlist-add"
-                        }}
-                        style={{ marginBottom: Definitions.DEFAULT_MARGIN }}
-                    >
-                        Añadir a mi lista
-                    </NormalButton>
+                    { this.renderMyListButton() }
                 </View>
             </Animated.View>
         );

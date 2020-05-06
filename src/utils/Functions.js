@@ -18,7 +18,8 @@ export function timeConvert(sec) {
     };
 }
 
-export function timeConverFormatted(sec) {
+export function timeConvertFormatted(sec) {
     const { hours, minutes, seconds } = timeConvert(sec);
     return (hours ? (hours + ":") : "") + minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
 }
+

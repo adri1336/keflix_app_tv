@@ -29,7 +29,7 @@ export default class WelcomeScreen extends React.Component {
                         flexDirection: "column",
                         justifyContent: "center"
                     }}>
-                        <Text style={[Styles.bigTitleText, { color: Definitions.SECONDARY_COLOR }]}>{ name }</Text>
+                        <Text style={[Styles.bigTitleText, { color: Definitions.SECONDARY_COLOR }]}>{ Definitions.APPLICATION_NAME }</Text>
                         <Text style={Styles.titleText}>{ i18n.t("auth.welcome.slogan_text") }</Text>
                     </View>
                     <View style={{
@@ -51,7 +51,7 @@ export default class WelcomeScreen extends React.Component {
                     </View>
                 </View>
                 <View style={{ flex: 10, padding: 2, alignItems: "flex-end" }}>
-                    <Text style={Styles.smallSlimText}>{ version }</Text>
+                    <Text style={Styles.smallSlimText}>{ name + "-" + version }</Text>
                 </View>
             </View>
         );

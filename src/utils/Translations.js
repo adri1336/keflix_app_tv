@@ -143,6 +143,18 @@ i18n.translations = {
 		video_player: {
 			exit_button: "Salir",
 			replay_button: "Reproducir desde el principio"
+		},
+		header_media: {
+			remaining_time: "Tiempo restante: {{hours}} hora(s) y {{minutes}} minuto(s)",
+			remaining_time_minutes: "Tiempo restante: {{minutes}} minuto(s)"
+		},
+		play_screen: {
+			play_button: "Reproducir ahora",
+			resume_button: "Renaudar",
+			replay_button: "Reproducir desde el principio",
+			play_trailer_button: "Ver tráiler",
+			add_to_my_list_button: "Añadir a mi lista",
+			delete_from_list_button: "Eliminar de mi lista",
 		}
 	}
 };

@@ -2,7 +2,7 @@ import { apiFetch } from "./ApiClient";
 import { SERVER_API_IP } from "cuervo/src/utils/HttpClient";
 
 export const discover = async (context) => {
-    const [response, data, error] = await apiFetch(context, "/movie/discover", "POST", { include_no_published: true });
+    const [response, data, error] = await apiFetch(context, "/movie/discover", "POST", { profile_id: context.state.profile.id });
     if(!error && response.status == 200) {
         return data;
     }
