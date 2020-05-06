@@ -6,19 +6,6 @@
 import React from "react";
 import { TouchableOpacity, TVEventHandler } from "react-native";
 
-var buttons = [];
-export function enableAllButtons() {
-    buttons.map((button) => {
-        button.enableButton();       
-    });
-}
-
-export function disableAllButtons() {
-    buttons.map((button) => {
-        button.disableButton();       
-    });
-}
-
 //Code
 export default class TouchableOpacityFix extends React.Component {
     constructor(props) {
@@ -64,38 +51,11 @@ export default class TouchableOpacityFix extends React.Component {
     }
 
     componentDidMount() {
-        buttons.push(this);
         this.enableTVEventHandler();
     }
 
     componentWillUnmount() {
-        const index = buttons.indexOf(this);
-        if(index !== -1) {
-            buttons.splice(index, 1);
-        }
         this.disableTVEventHandler();
-    }
-
-    enableButton() {
-        if(this.props?.hasTVPreferredFocus) {
-            if(this.props?.onFocus) {
-                this.props.onFocus();
-            }
-            this.focused = true;
-        }
-        this.setState({ enabled: true });
-    }
-
-    disableButton() {
-        if(!this.props?.alwaysAccessible) {
-            if(this.focused) {
-                if(this.props?.onBlur) {
-                    this.props.onBlur();
-                }
-                this.focused = false;
-            }
-            this.setState({ enabled: false });
-        }
     }
 
     render () {
@@ -104,8 +64,6 @@ export default class TouchableOpacityFix extends React.Component {
             <TouchableOpacity
                 { ...rest }
                 ref={ this.props.touchableRef }
-                focusable={ this.props.focusable || true }
-                accessible={ this.props?.alwaysAccessible ? true : (this.props.accessible || this.state.enabled) }
                 onPress={
                     () => {
                         if(this.state.enabled && this.props.nativeOnPress && this.props.onPress) {

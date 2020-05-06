@@ -8,7 +8,6 @@ import { LinearGradient } from "expo-linear-gradient";
 //Components Imports
 import NormalButton from "cuervo/src/components/NormalButton";
 import LoadingView from "cuervo/src/components/LoadingView";
-import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
@@ -141,12 +140,10 @@ export default class TVDrawer extends React.Component {
                     });
                 }
 
-                disableAllButtons();
                 this.props.currentOptions.isDrawerOpen = true;
                 this.props.navigation.emit({ type: "onDrawerOpened" });
             }
             else {
-                enableAllButtons();
                 this.props.currentOptions.isDrawerOpen = false;
                 this.props.navigation.emit({ type: "onDrawerClosed" });
             }
@@ -312,7 +309,6 @@ export default class TVDrawer extends React.Component {
             >
                 <NormalButton
                     touchableRef={ component => this.screen_buttons[index] = component }
-                    alwaysAccessible={ true }
                     hasTVPreferredFocus={ this.state.isDrawerOpen && route == this.props.currentRouteName ? true : false }
                     textStyle={ Styles.bigText }
                     onPress={
@@ -393,7 +389,6 @@ export default class TVDrawer extends React.Component {
                             </Text>
                             <NormalButton
                                 touchableRef={ component => this.change_profile_button = component }
-                                alwaysAccessible={ true }
                                 onPress={
                                     () => {
                                         this.setState({ loading: true });
@@ -431,7 +426,6 @@ export default class TVDrawer extends React.Component {
                 >
                     <NormalButton
                         touchableRef={ component => this.settings_button = component }
-                        alwaysAccessible={ true }
                         onPress={
                             () => {
                                 this.setState({ isDrawerOpen: false }, function() {
@@ -453,7 +447,6 @@ export default class TVDrawer extends React.Component {
                     </NormalButton>
                     <NormalButton
                         touchableRef={ component => this.exit_app_button = component }
-                        alwaysAccessible={ true }
                         onPress={
                             () => {
                                 BackHandler.exitApp();
