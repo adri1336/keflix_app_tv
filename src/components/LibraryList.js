@@ -172,6 +172,7 @@ export default class LibraryList extends React.Component {
                             <Image
                                 style={{ flex: 1, backgroundColor: "rgba(128, 128, 128, 0.2)" }}
                                 source={{ uri: Movie.getPoster(this.context, cover.id) }}
+                                resizeMethod="resize"
                             />
                         :
                             <View style={{ flex: 1, backgroundColor: "rgba(128, 128, 128, 0.2)" }}/>

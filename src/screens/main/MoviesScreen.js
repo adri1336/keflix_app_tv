@@ -55,8 +55,10 @@ export default class MoviesScreen extends React.Component {
 
     async refreshMovies() {
         const movies = await Movie.discover(this.context);
+        const movies2 = await Movie.discover(this.context);
         const sections = [
-            { title: "Últimas películas añadidas", covers: movies }
+            { title: "Últimas películas añadidas", covers: movies },
+            { title: "Más películas", covers: movies2 }
         ];
         if(this.librarySectionGrid) {
             this.librarySectionGrid.setSections(sections);

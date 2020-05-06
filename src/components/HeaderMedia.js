@@ -145,6 +145,7 @@ export default class HeaderMedia extends React.Component {
                                 aspectRatio: this.state.imageTitleAspestRatio
                             }}
                             resizeMode="contain"
+                            resizeMethod="resize"
                             source={{ uri: this.state.title.image }}
                         />
                     </View>
