@@ -155,7 +155,7 @@ export default class VideoPlayer extends React.Component {
     }
 
     toggleControls(toggle) {
-        this.setState({ controlsFocused: toggle });
+        this.setState({ controlsFocused: toggle, showTitle: false, showBackdrop: false });
     }
 
     stopVideo(goToBackground = false) {
