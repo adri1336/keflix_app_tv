@@ -17,17 +17,28 @@ import * as Movie from "cuervo/src/api/Movie";
 export default class MoviesScreen extends React.Component {
     static contextType = AppContext;
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            focused: true
+        };
+    }
+    
     componentDidMount() {
         this.account = this.context.state.account;
         this.profile = this.context.state.profile;
         this.refreshMovies();
-
+        
         this.onFocusEvent = this.props.navigation.addListener("focus", () => {
+            this.setState({ focused: true });
             this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.librarySectionGrid.getCurrentRowIndex() == 1 ? true : false });
             if(this.librarySectionGrid) {
                 this.librarySectionGrid.setFocus(true, false);
             }
 
+        });
+        this.onBlurEvent = this.props.navigation.addListener("blur", () => {
+            this.setState({ focused: false });
         });
         this.onDrawerOpenedEvent = this.props.navigation.dangerouslyGetParent().addListener("onDrawerOpened", () => {
             if(this.librarySectionGrid) {
@@ -49,6 +60,7 @@ export default class MoviesScreen extends React.Component {
 
     componentWillUnmount() {
         this.onFocusEvent();
+        this.onBlurEvent();
         this.onDrawerOpenedEvent();
         this.onDrawerClosedEvent();
     }
@@ -99,7 +111,11 @@ export default class MoviesScreen extends React.Component {
                 <HeaderMedia
                     ref={ component => this.headerMedia = component }
                 />
-                <NormalButton hasTVPreferredFocus={ true }/>
+                <NormalButton
+                    hasTVPreferredFocus={ this.state.focused ? true: false }
+                    accessible={ this.state.focused ? true: false }
+                    focusable={ this.state.focused ? true: false }
+                />
                 <LibrarySectionGrid
                     ref={ component => this.librarySectionGrid = component }
                     firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
