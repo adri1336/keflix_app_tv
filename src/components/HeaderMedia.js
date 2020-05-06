@@ -310,6 +310,24 @@ export default class HeaderMedia extends React.Component {
         }
     }
 
+    renderBackFade() {
+        if(this.state.backdrop) {
+            return (
+                <Animated.View
+                    opacity={ this.state.backOpacity }
+                    style={{
+                        position: "absolute",
+                        top: "-50%",
+                        width: "150%",
+                        height: "300%",
+                        backgroundColor: Definitions.PRIMARY_COLOR,
+                        zIndex: -1
+                    }}
+                />
+            );
+        }
+    }
+
     render () {
         return (
             <View
@@ -319,20 +337,7 @@ export default class HeaderMedia extends React.Component {
                     overflowY: "hidden"
                 }}
             >
-                {
-                    this.props.backdrop &&
-                    <Animated.View
-                        opacity={ this.state.backOpacity }
-                        style={{
-                            position: "absolute",
-                            top: "-50%",
-                            width: "150%",
-                            height: "300%",
-                            backgroundColor: Definitions.PRIMARY_COLOR,
-                            zIndex: -1
-                        }}
-                    />
-                }
+                { this.renderBackFade() }
                 <View
                     style={{
                         flex: 45,
