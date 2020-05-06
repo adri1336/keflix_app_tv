@@ -25,6 +25,7 @@ export default class PlayScreen extends React.Component {
         this.lastProfileUpdate = 0;
         this.state = {
             playing: false,
+            trailer: false,
             infoOpacity: new Animated.Value(1)
         };
     }
@@ -61,8 +62,11 @@ export default class PlayScreen extends React.Component {
     stopPlaying() {
         if(this.videoPlayer){
             this.videoPlayer.stopVideo(true);
+            if(this.state.trailer) {
+                this.videoPlayer.setUri(Movie.getVideo(this.context, this.media.id));
+            }
         }
-        this.setState({ playing: false });
+        this.setState({ playing: false, trailer: false });
     }
 
     setButtonsNextFocus() {
@@ -104,6 +108,16 @@ export default class PlayScreen extends React.Component {
                 useNativeDriver: true
             }).start();
         }
+        if(this.state.trailer != prevState.trailer) {
+            if(this.state.trailer) {
+                if(this.videoPlayer) {
+                    this.videoPlayer.playNow(0, Movie.getTrailer(this.context, this.media.id));
+                }
+                else {
+                    this.setState({ trailer: false, playing: false });
+                }
+            }
+        }
     }
 
     setHeaderInfo() {
@@ -138,26 +152,28 @@ export default class PlayScreen extends React.Component {
     }
 
     async updateProfilePositionMillis(positionMillis, force_update = false) {
-        let { runtime, libraryMovieId, profileInfo } = this.media;
-        const durationMillis = runtime * 60000;
-        const remainingMillis = durationMillis - positionMillis;
+        if(!this.state.trailer) {
+            let { runtime, libraryMovieId, profileInfo } = this.media;
+            const durationMillis = runtime * 60000;
+            const remainingMillis = durationMillis - positionMillis;
 
-        if(!profileInfo) {
-            profileInfo = ProfileLibraryMovie.defaultObject(this.context, libraryMovieId);
-        }
-        
-        if(remainingMillis < MEDIA_DEFAULT.REMAINING_MILLIS) {
-            profileInfo.completed = true;
-        }
-        else {
-            profileInfo.completed = false;
-        }
+            if(!profileInfo) {
+                profileInfo = ProfileLibraryMovie.defaultObject(this.context, libraryMovieId);
+            }
+            
+            if(remainingMillis < MEDIA_DEFAULT.REMAINING_MILLIS) {
+                profileInfo.completed = true;
+            }
+            else {
+                profileInfo.completed = false;
+            }
 
-        profileInfo.current_time = positionMillis;
-        await ProfileLibraryMovie.upsert(this.context, profileInfo);
-        this.media.profileInfo = profileInfo;
-        if(force_update) {
-            this.forceUpdate();
+            profileInfo.current_time = positionMillis;
+            await ProfileLibraryMovie.upsert(this.context, profileInfo);
+            this.media.profileInfo = profileInfo;
+            if(force_update) {
+                this.forceUpdate();
+            }
         }
     }
 
@@ -239,7 +255,7 @@ export default class PlayScreen extends React.Component {
                             onPress={
                                 () => {
                                     if(this.videoPlayer) {
-                                        this.videoPlayer.playNow();
+                                        this.videoPlayer.playNow(current_time);
                                         this.setState({ playing: true });
                                     }
                                 }
@@ -278,7 +294,7 @@ export default class PlayScreen extends React.Component {
                         onPress={
                             async () => {
                                 if(this.videoPlayer) {
-                                    this.videoPlayer.playNow(true);
+                                    this.videoPlayer.playNow(0);
                                     this.setState({ playing: true });
                                 }
                             }
@@ -424,6 +440,11 @@ export default class PlayScreen extends React.Component {
                             name: "local-play"
                         }}
                         style={{ marginBottom: 20 }}
+                        onPress={
+                            () => {
+                                this.setState({ trailer: true, playing: true });
+                            }
+                        }
                     >
                         { i18n.t("play_screen.play_trailer_button") }
                     </NormalButton>

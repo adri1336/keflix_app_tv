@@ -142,15 +142,24 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
-    async playNow(from_start = false) {
+    async playNow(positionMillis = 0, newUri = null) {
         this.cancelPlayInTimer();
         if(this.video) {
-            if(from_start) {
-                await this.video.setStatusAsync({ positionMillis: 0 });
+            if(newUri) {
+                this.setUri(newUri, true);
             }
-            this.video.playAsync();
+            else {
+                await this.video.setStatusAsync({ positionMillis: positionMillis });
+                this.video.playAsync();
+            }
         }
         this.setState({ showBackdrop: false, inBackground: false });
+    }
+
+    setUri(uri, shouldPlay = false) {
+        if(this.video) {
+            this.video.loadAsync({ uri: uri }, { shouldPlay: shouldPlay });
+        }
     }
 
     areControlsEnabled() {
