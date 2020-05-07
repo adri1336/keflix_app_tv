@@ -15,6 +15,7 @@ import Styles from "cuervo/src/utils/Styles";
 import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
 import * as Profile from "cuervo/src/api/Profile";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class SelectProfileScreen extends React.Component {
@@ -29,6 +30,7 @@ export default class SelectProfileScreen extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         const { account } = this.context.state;
         this.account = account;
         (
@@ -42,12 +44,16 @@ export default class SelectProfileScreen extends React.Component {
                     name: i18n.t("profile.select_profile.create_profile_text"),
                     color: "gray"
                 });
-                this.setState({ loading: false });
+                setStateIfMounted(this, { loading: false });
 
             }
         )();
     }
 
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+    
     componentDidUpdate() {
         if(this.props.route.params?.profile) {
             this.addProfile(this.props.route.params.profile);
@@ -144,7 +150,7 @@ export default class SelectProfileScreen extends React.Component {
                                     style={{ flex: 1 }}
                                     onPress={
                                         () => {
-                                            this.setState({ loading: true });
+                                            setStateIfMounted(this, { loading: true });
                                             this.context.funcs.logout();
                                         }
                                     }

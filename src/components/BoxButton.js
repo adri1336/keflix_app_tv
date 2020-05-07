@@ -11,6 +11,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { DEFAULT_SIZES } from "cuervo/src/utils/Definitions";
 import * as Dimensions from "cuervo/src/utils/Dimensions.js";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class BoxButton extends React.Component {
@@ -24,8 +25,16 @@ export default class BoxButton extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     setFocused(toggle) {
-        this.setState({ focused: toggle });
+        setStateIfMounted(this, { focused: toggle });
     }
 
     renderImageOrIcon() {
@@ -67,7 +76,7 @@ export default class BoxButton extends React.Component {
                         if(this.props?.onFocus) {
                             this.props.onFocus();
                         }
-                        this.setState({ focused: true });
+                        setStateIfMounted(this, { focused: true });
                     }
                 }
                 onBlur={
@@ -75,7 +84,7 @@ export default class BoxButton extends React.Component {
                         if(this.props?.onBlur) {
                             this.props.onBlur();
                         }
-                        this.setState({ focused: false });
+                        setStateIfMounted(this, { focused: false });
                     }
                 }
             >

@@ -4,6 +4,7 @@ import { View, Text, FlatList, Dimensions, TVEventHandler } from "react-native";
 import Styles from "cuervo/src/utils/Styles";
 import Definitions from "cuervo/src/utils/Definitions";
 import LibraryList, { COVER_ITEM_VALUES } from "cuervo/src/components/LibraryList";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Vars
 const MAX_SECTIONS_IN_SCREEN = 3;
@@ -56,10 +57,12 @@ export default class LibrarySectionGrid extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.enableTVEventHandler();
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.disableTVEventHandler();
     }
 
@@ -79,7 +82,7 @@ export default class LibrarySectionGrid extends React.Component {
 
     setSections(sections) {
         sections.push("endMargin");
-        this.setState({ sections: sections });
+        setStateIfMounted(this, { sections: sections });
     }
 
     renderSection(section, index) {

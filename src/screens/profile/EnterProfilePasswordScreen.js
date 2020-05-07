@@ -29,7 +29,12 @@ export default class EnterProfilePasswordScreen extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.keyboard.setTextInput(this.textInputPassword);
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     async onKeyboardButtonPressed(textInput, buttonType) {

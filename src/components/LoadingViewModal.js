@@ -4,6 +4,7 @@ import { Modal, View, ActivityIndicator } from "react-native";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class LoadingViewModal extends React.Component {
@@ -14,14 +15,19 @@ export default class LoadingViewModal extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
     componentWillUnmount() {
+        this._isMounted = false;
         if(this.state.visible) {
             this.setVisible(false);
         }
     }
 
     setVisible(toggle) {
-        this.setState({ visible: toggle });
+        setStateIfMounted(this, { visible: toggle });
     }
 
     render() {

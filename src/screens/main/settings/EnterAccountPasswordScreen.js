@@ -26,6 +26,14 @@ export default class EnterAccountPasswordScreen extends React.Component {
         this.profile = this.props.route.params.profile;
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+    
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     render() {
         return (
             <View style={{

@@ -15,6 +15,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class GeneralScreen extends React.Component {
@@ -30,6 +31,7 @@ export default class GeneralScreen extends React.Component {
     }
     
     componentDidMount() {
+        this._isMounted = true;
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             if(this.props.navigation.isFocused()) {
                 if(this.props.route.params.backNavigator) {
@@ -45,6 +47,7 @@ export default class GeneralScreen extends React.Component {
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.backHandler.remove();
     }
 
@@ -148,7 +151,7 @@ export default class GeneralScreen extends React.Component {
                                     onPress={
                                         () => {
                                             if(this.context) {
-                                                this.setState({ loading: true });
+                                                setStateIfMounted(this, { loading: true });
                                                 this.context.funcs.profileLogout();
                                             }
                                         }
@@ -161,7 +164,7 @@ export default class GeneralScreen extends React.Component {
                                     onPress={
                                         () => {
                                             if(this.context) {
-                                                this.setState({ loading: true });
+                                                setStateIfMounted(this, { loading: true });
                                                 this.context.funcs.logout();
                                             }
                                         }

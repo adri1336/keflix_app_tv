@@ -7,6 +7,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class BoxTextInput extends React.Component {
@@ -18,9 +19,17 @@ export default class BoxTextInput extends React.Component {
             errorText: null
         };
     }
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
     
     setFocus(focus) {
-        this.setState({ focused: focus });
+        setStateIfMounted(this, { focused: focus });
     }
 
     setText(value) {
@@ -30,7 +39,7 @@ export default class BoxTextInput extends React.Component {
                 finalText = value.substring(0, this.props.maxLength);
             }
         }
-        this.setState({
+        setStateIfMounted(this, {
             text: finalText,
             errorText: null
         });
@@ -40,7 +49,7 @@ export default class BoxTextInput extends React.Component {
     }
 
     setError(value) {
-        this.setState({ errorText: value });
+        setStateIfMounted(this, { errorText: value });
     }
 
     renderErrorMessage() {

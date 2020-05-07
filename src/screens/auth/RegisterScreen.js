@@ -24,9 +24,14 @@ export default class RegisterScreen extends React.Component {
     static contextType = AppContext;
 
     componentDidMount() {
+        this._isMounted = true;
         this.keyboard.setTextInput(this.textInputEmail);
     }
 
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+    
     async onKeyboardButtonPressed(textInput, buttonType) {
         switch(textInput) {
             case this.textInputEmail: {

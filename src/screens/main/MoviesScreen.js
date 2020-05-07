@@ -12,6 +12,7 @@ import Definitions from "cuervo/src/utils/Definitions";
 import { AppContext } from "cuervo/src/AppContext";
 import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
 import * as Movie from "cuervo/src/api/Movie";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class MoviesScreen extends React.Component {
@@ -19,27 +20,30 @@ export default class MoviesScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        this.isDrawerOpened = false;
         this.state = {
             focused: true
         };
     }
     
     componentDidMount() {
+        this._isMounted = true;
         this.account = this.context.state.account;
         this.profile = this.context.state.profile;
         this.refreshMovies();
         
         this.onFocusEvent = this.props.navigation.addListener("focus", () => {
-            this.setState({ focused: true });
+            setStateIfMounted(this, { focused: true });
             this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.librarySectionGrid.getCurrentRowIndex() == 1 ? true : false });
             if(this.librarySectionGrid) {
                 this.librarySectionGrid.setFocus(true);
             }
         });
         this.onBlurEvent = this.props.navigation.addListener("blur", () => {
-            this.setState({ focused: false });
+            setStateIfMounted(this, { focused: false });
         });
         this.onDrawerOpenedEvent = this.props.navigation.dangerouslyGetParent().addListener("onDrawerOpened", () => {
+            this.isDrawerOpened = true;
             if(this.librarySectionGrid) {
                 this.librarySectionGrid.setFocus(false);
             }
@@ -48,6 +52,7 @@ export default class MoviesScreen extends React.Component {
             }
         });
         this.onDrawerClosedEvent = this.props.navigation.dangerouslyGetParent().addListener("onDrawerClosed", () => {
+            this.isDrawerOpened = false;
             if(this.librarySectionGrid) {
                 this.librarySectionGrid.setFocus(true, false);
             }
@@ -58,6 +63,7 @@ export default class MoviesScreen extends React.Component {
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.onFocusEvent();
         this.onBlurEvent();
         this.onDrawerOpenedEvent();
@@ -99,7 +105,7 @@ export default class MoviesScreen extends React.Component {
             description: overview,
             backdrop: {
                 image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
-                video: this.props.navigation.isFocused() && movie.mediaInfo.trailer ? Movie.getTrailer(this.context, movie.id) : null
+                video: (this.props.navigation.isFocused() && movie.mediaInfo.trailer && !this.isDrawerOpened) ? Movie.getTrailer(this.context, movie.id) : null
             },
             progress: progress
         });

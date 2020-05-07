@@ -12,6 +12,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Vars
 export const KeyboardTypes = {
@@ -130,13 +131,18 @@ export default class Keyboard extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         if(this.textInput) {
             this.textInput.setFocus(true);
         }
     }
 
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     setKeyboardType(type) {
-        this.setState({ keboardType: type });
+        setStateIfMounted(this, { keboardType: type });
     }
     
     renderKeyboard() {
@@ -253,24 +259,24 @@ export default class Keyboard extends React.Component {
         this.textInput = textInput;
         this.textInput.setFocus(true);
         if(this.textInput.props?.placeholder && this.textInput.props.placeholder != "") {
-            this.setState({ title: this.textInput.props.placeholder });
+            setStateIfMounted(this, { title: this.textInput.props.placeholder });
         }
     }
 
     onKeyPressed(letter) {
         switch(letter) {
             case "!#$": {
-                this.setState({ specialChars: true });
+                setStateIfMounted(this, { specialChars: true });
                 break;
             }
             case "abc":
             case "ABC": {
-                this.setState({ specialChars: false });
+                setStateIfMounted(this, { specialChars: false });
                 break;
             }
             case "shift":
             case "SHIFT": {
-                this.setState({ capitalLetters: !this.state.capitalLetters });
+                setStateIfMounted(this, { capitalLetters: !this.state.capitalLetters });
                 break;
             }
             case "space":
@@ -313,7 +319,7 @@ export default class Keyboard extends React.Component {
     }
 
     setButtons(buttons) {
-        this.setState({ buttonsType: buttons });
+        setStateIfMounted(this, { buttonsType: buttons });
     }
 
     renderButtons() {

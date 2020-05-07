@@ -51,10 +51,12 @@ export default class TouchableOpacityFix extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.enableTVEventHandler();
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.disableTVEventHandler();
     }
 

@@ -11,6 +11,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class NormalAlert extends React.Component {
@@ -23,14 +24,19 @@ export default class NormalAlert extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
     componentWillUnmount() {
+        this._isMounted = false;
         if(this.state.alertVisible) {
             this.setAlertVisible(false);
         }
     }
 
     setAlertVisible(visible, title = null, message = null) {
-        this.setState({
+        setStateIfMounted(this, {
             alertVisible: visible,
             title: title,
             message: message

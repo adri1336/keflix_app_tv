@@ -15,6 +15,14 @@ import { name, version } from "cuervo/package.json";
 
 //Code
 export default class WelcomeScreen extends React.Component {
+    componentDidMount() {
+        this._isMounted = true;
+    }
+    
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     render() {
         return (
             <View style={{

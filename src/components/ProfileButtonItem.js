@@ -11,6 +11,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class ProfileButtonItem extends React.Component {
@@ -21,6 +22,14 @@ export default class ProfileButtonItem extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+    
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+    
     render() {
         return (
             <View style={{ justifyContent: "center", alignItems: "center", margin: Definitions.DEFAULT_MARGIN }}>
@@ -50,12 +59,12 @@ export default class ProfileButtonItem extends React.Component {
                     }
                     onFocus={
                         () => {
-                            this.setState({ focused: true });
+                            setStateIfMounted(this, { focused: true });
                         }
                     }
                     onBlur={
                         () => {
-                            this.setState({ focused: false });
+                            setStateIfMounted(this, { focused: false });
                         }
                     }
                 >

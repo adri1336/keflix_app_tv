@@ -6,7 +6,7 @@ import IconButton from "cuervo/src/components/IconButton";
 import ProgressBar from "cuervo/src/components/ProgressBar";
 import Definitions from "cuervo/src/utils/Definitions";
 import Styles from "cuervo/src/utils/Styles";
-import { timeConvertFormatted } from "cuervo/src/utils/Functions";
+import { timeConvertFormatted, setStateIfMounted } from "cuervo/src/utils/Functions";
 import i18n from "i18n-js";
 
 const
@@ -78,7 +78,7 @@ export default class VideoPlayer extends React.Component {
                         else {
                             if(!this.state.controlsFocused) {
                                 if(evt.eventKeyAction == 1) {
-                                    this.setState({ controlsFocused: true, showTitle: false });
+                                    setStateIfMounted(this, { controlsFocused: true, showTitle: false });
                                 }
                             }
                             else {
@@ -106,10 +106,11 @@ export default class VideoPlayer extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.enableTVEventHandler();
         this.setButtonsNextFocus();
         if(!this.state.inBackground) {
-            this.setState({ controlsFocused: true });
+            setStateIfMounted(this, { controlsFocused: true });
         }
         this.playInTimer();
     }
@@ -135,7 +136,7 @@ export default class VideoPlayer extends React.Component {
                     }
                     if(this.video) {
                         this.video.playAsync();
-                        this.setState({ showBackdrop: false, inBackground: false });
+                        setStateIfMounted(this, { showBackdrop: false, inBackground: false });
                     }
                 }
             }, this.props.playIn * 1000);
@@ -153,7 +154,7 @@ export default class VideoPlayer extends React.Component {
                 this.video.playAsync();
             }
         }
-        this.setState({ showBackdrop: false, inBackground: false });
+        setStateIfMounted(this, { showBackdrop: false, inBackground: false });
     }
 
     setUri(uri, shouldPlay = false) {
@@ -167,7 +168,7 @@ export default class VideoPlayer extends React.Component {
     }
 
     toggleControls(toggle) {
-        this.setState({ controlsFocused: toggle, showTitle: false, showBackdrop: false });
+        setStateIfMounted(this, { controlsFocused: toggle, showTitle: false, showBackdrop: false });
     }
 
     stopVideo(goToBackground = false) {
@@ -179,11 +180,12 @@ export default class VideoPlayer extends React.Component {
                 clearTimeout(this.hideControlsTimeout);
                 this.hideControlsTimeout = null;
             }
-            this.setState({ inBackground: true, controlsFocused: false, buffering: false, showBackdrop: true });
+            setStateIfMounted(this, { inBackground: true, controlsFocused: false, buffering: false, showBackdrop: true });
         }
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.disableTVEventHandler();
         if(this.hideControlsTimeout) {
             clearTimeout(this.hideControlsTimeout);
@@ -219,7 +221,7 @@ export default class VideoPlayer extends React.Component {
                 this.video.playAsync();
             }
             this.seekingAccel = 0;
-            this.setState({ seeking: false });
+            setStateIfMounted(this, { seeking: false });
             this.hideControlsTimer();
         }
     }
@@ -328,7 +330,7 @@ export default class VideoPlayer extends React.Component {
             this.hideControlsTimeout = setTimeout(async () => {
                 if(!this.state.seeking) {
                     this.hideControlsTimeout = null;
-                    this.setState({ controlsFocused: false, showTitle: this.state.paused && !this.state.inBackground ? true : false });
+                    setStateIfMounted(this, { controlsFocused: false, showTitle: this.state.paused && !this.state.inBackground ? true : false });
                 }
             }, this.state.paused ? HIDE_CONTROLS_PAUSED_TIME : HIDE_CONTROLS_TIME);
         }
@@ -338,11 +340,11 @@ export default class VideoPlayer extends React.Component {
         if(this.video && !this.state.inBackground) {
             if(this.state.paused) {
                 this.video.playAsync();
-                this.setState({ paused: false, showTitle: false });
+                setStateIfMounted(this, { paused: false, showTitle: false });
             }
             else {
                 this.video.pauseAsync();
-                this.setState({ paused: true });
+                setStateIfMounted(this, { paused: true });
             }
         }
     }
@@ -374,10 +376,10 @@ export default class VideoPlayer extends React.Component {
             }
             else if(playbackStatus.isBuffering) {
                 if(!this.state.paused && !this.state.buffering) {
-                    this.setState({ buffering: true });
+                    setStateIfMounted(this, { buffering: true });
                 }
                 else if(this.state.paused && this.state.buffering) {
-                    this.setState({ buffering: false });
+                    setStateIfMounted(this, { buffering: false });
                 }
             }
         }
@@ -396,8 +398,8 @@ export default class VideoPlayer extends React.Component {
             remainingTime: timeConvertFormatted(remainingMillis / 1000)
         };
 
-        if(this.state.buffering) this.setState({ seeking: seeking, buffering: false, bottomControlState: bottomControlState });
-        else this.setState({ seeking: seeking, bottomControlState: bottomControlState });
+        if(this.state.buffering) setStateIfMounted(this, { seeking: seeking, buffering: false, bottomControlState: bottomControlState });
+        else setStateIfMounted(this, { seeking: seeking, bottomControlState: bottomControlState });
     }
 
     onReadyForDisplay(info) {

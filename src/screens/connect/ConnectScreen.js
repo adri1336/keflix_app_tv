@@ -14,6 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 import { AppContext } from "cuervo/src/AppContext";
 import Definitions from "cuervo/src/utils/Definitions";
 import * as Auth from "cuervo/src/api/Auth";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class ConnectScreen extends React.Component {
@@ -27,9 +28,14 @@ export default class ConnectScreen extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         if(this.state.connecting) {
             this.tryConnection();
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     async tryConnection() {
@@ -37,7 +43,7 @@ export default class ConnectScreen extends React.Component {
             this.context.funcs.connect();
         }
         else {
-            this.setState({ connecting: false });
+            setStateIfMounted(this, { connecting: false });
         }
     }
 
@@ -58,7 +64,7 @@ export default class ConnectScreen extends React.Component {
                         hasTVPreferredFocus={ true }
                         onPress={
                             () => {
-                                this.setState({ connecting: true });
+                                setStateIfMounted(this, { connecting: true });
                                 this.tryConnection();
                             }
                         }

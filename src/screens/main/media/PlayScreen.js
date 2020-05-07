@@ -12,6 +12,7 @@ import VideoPlayer from "cuervo/src/components/VideoPlayer";
 import i18n from "i18n-js";
 import ProgressBar from "cuervo/src/components/ProgressBar";
 import * as ProfileLibraryMovie from "cuervo/src/api/ProfileLibraryMovie";
+import { setStateIfMounted, forceUpdateIfMounted } from "cuervo/src/utils/Functions";
 
 const
     BACK_FADE_DURATION = 500;
@@ -31,6 +32,7 @@ export default class PlayScreen extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", async () => {
             if(this.props.navigation.isFocused()) {
                 if(this.state.playing && this.videoPlayer) {
@@ -56,6 +58,7 @@ export default class PlayScreen extends React.Component {
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.backHandler.remove();
     }
 
@@ -66,7 +69,7 @@ export default class PlayScreen extends React.Component {
                 this.videoPlayer.setUri(Movie.getVideo(this.context, this.media.id));
             }
         }
-        this.setState({ playing: false, trailer: false });
+        setStateIfMounted(this, { playing: false, trailer: false });
     }
 
     setButtonsNextFocus() {
@@ -114,7 +117,7 @@ export default class PlayScreen extends React.Component {
                     this.videoPlayer.playNow(0, Movie.getTrailer(this.context, this.media.id));
                 }
                 else {
-                    this.setState({ trailer: false, playing: false });
+                    setStateIfMounted(this, { trailer: false, playing: false });
                 }
             }
         }
@@ -172,7 +175,7 @@ export default class PlayScreen extends React.Component {
             await ProfileLibraryMovie.upsert(this.context, profileInfo);
             this.media.profileInfo = profileInfo;
             if(force_update) {
-                this.forceUpdate();
+                forceUpdateIfMounted(this);
             }
         }
     }
@@ -208,7 +211,7 @@ export default class PlayScreen extends React.Component {
                     }}
                     onPlayStarted={
                         () => {
-                            this.setState({ playing: true });
+                            setStateIfMounted(this, { playing: true });
                         }
                     }
                     onVideoBackPressed={
@@ -256,7 +259,7 @@ export default class PlayScreen extends React.Component {
                                 () => {
                                     if(this.videoPlayer) {
                                         this.videoPlayer.playNow(current_time);
-                                        this.setState({ playing: true });
+                                        setStateIfMounted(this, { playing: true });
                                     }
                                 }
                             }
@@ -295,7 +298,7 @@ export default class PlayScreen extends React.Component {
                             async () => {
                                 if(this.videoPlayer) {
                                     this.videoPlayer.playNow(0);
-                                    this.setState({ playing: true });
+                                    setStateIfMounted(this, { playing: true });
                                 }
                             }
                         }
@@ -329,7 +332,7 @@ export default class PlayScreen extends React.Component {
                         () => {
                             if(this.videoPlayer) {
                                 this.videoPlayer.playNow(true);
-                                this.setState({ playing: true });
+                                setStateIfMounted(this, { playing: true });
                             }
                         }
                     }
@@ -366,7 +369,7 @@ export default class PlayScreen extends React.Component {
                             profileInfo.fav = false;
                             await ProfileLibraryMovie.upsert(this.context, profileInfo);
                             this.media.profileInfo = profileInfo;
-                            this.forceUpdate();
+                            forceUpdateIfMounted(this);
                         }
                     }
                 >
@@ -394,7 +397,7 @@ export default class PlayScreen extends React.Component {
                             profileInfo.fav = true;
                             await ProfileLibraryMovie.upsert(this.context, profileInfo);
                             this.media.profileInfo = profileInfo;
-                            this.forceUpdate();
+                            forceUpdateIfMounted(this);
                         }
                     }
                 >
@@ -442,7 +445,7 @@ export default class PlayScreen extends React.Component {
                         style={{ marginBottom: 20 }}
                         onPress={
                             () => {
-                                this.setState({ trailer: true, playing: true });
+                                setStateIfMounted(this, { trailer: true, playing: true });
                             }
                         }
                     >

@@ -24,7 +24,12 @@ export default class LoginScreen extends React.Component {
     static contextType = AppContext;
 
     componentDidMount() {
+        this._isMounted = true;
         this.keyboard.setTextInput(this.textInputEmail);
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     async onKeyboardButtonPressed(textInput, buttonType) {

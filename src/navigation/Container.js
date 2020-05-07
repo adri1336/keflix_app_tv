@@ -48,15 +48,19 @@ const initialState = {
 
 const reducer = (prevState, action) => {
 	switch (action.type) {
-		case "CONNECTED":
-		{
+		case "TIMED_OUT": {
+			return {
+				...prevState,
+				navigator: NAVIGATORS.CONNECT
+			};
+		}
+		case "CONNECTED": {
 			return {
 				...prevState,
 				navigator: NAVIGATORS.AUTH
 			};
 		}
-		case "NEW_TOKENS":
-		{
+		case "NEW_TOKENS": {
 			return {
 				...prevState,
 				accessToken: action.accessToken,
@@ -106,6 +110,9 @@ export default () => {
 	const [state, dispatch] = React.useReducer(reducer, initialState);
 	const funcs = React.useMemo(() => {
 		return {
+			timedOut: () => {
+				dispatch({ type: "TIMED_OUT" });
+			},
 			connect: async () => {
 				let accessToken, refreshToken;
 				try {

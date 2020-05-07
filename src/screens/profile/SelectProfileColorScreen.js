@@ -31,6 +31,14 @@ export default class SelectProfileColorScreen extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+    
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+    
     async onColorSelected(color) {
         this.profile.color = color;
         this.loadingViewModal.setVisible(true);

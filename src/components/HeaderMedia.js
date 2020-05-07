@@ -8,7 +8,7 @@ import i18n from "i18n-js";
 
 //Other Imports
 import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
-import { timeConvert } from "cuervo/src/utils/Functions";
+import { timeConvert, setStateIfMounted } from "cuervo/src/utils/Functions";
 import ProgressBar from "cuervo/src/components/ProgressBar";
 
 //Vars
@@ -44,7 +44,12 @@ export default class HeaderMedia extends React.Component {
         this.videoPaused = false;
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
     componentWillUnmount() {
+        this._isMounted = false;
         if(this.delayVideoTimeout) {
             clearTimeout(this.delayVideoTimeout);
             this.delayVideoTimeout = null;
@@ -54,7 +59,7 @@ export default class HeaderMedia extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if(this.state.title && this.state.title.image && (this.state.title.image != prevState.title.image)) {
             Image.getSize(this.state.title.image, (width, height) => {
-                this.setState({
+                setStateIfMounted(this, {
                     ...this.state,
                     imageTitleAspestRatio: width / height
                 });
@@ -74,7 +79,7 @@ export default class HeaderMedia extends React.Component {
                             const playbackStatus = await this.videoPlayer.loadAsync({ uri: this.state.backdrop.video });
                             if(playbackStatus.isLoaded) {
                                 this.videoPlayer.playAsync();
-                                this.setState({ showVideo: true });
+                                setStateIfMounted(this, { showVideo: true });
                             }
                         }
                     }
@@ -94,7 +99,7 @@ export default class HeaderMedia extends React.Component {
         if(fadeBack) {
             this.fadeBack(false);
         }
-        this.setState({ ...info, showVideo: false });
+        setStateIfMounted(this, { ...info, showVideo: false });
     }
 
     fadeBack(fade_in) {
@@ -126,7 +131,7 @@ export default class HeaderMedia extends React.Component {
             }
             this.videoPaused = true;
             this.videoPlayer.stopAsync();
-            this.setState({ showVideo: false });
+            setStateIfMounted(this, { showVideo: false });
         }
     }
 
@@ -144,6 +149,7 @@ export default class HeaderMedia extends React.Component {
                     <View style={{ marginTop: Definitions.DEFAULT_MARGIN, marginBottom: Definitions.DEFAULT_MARGIN }}>
                         <Image
                             style={{
+                                maxWidth: 300,
                                 height: 100,
                                 aspectRatio: this.state.imageTitleAspestRatio
                             }}
@@ -274,7 +280,7 @@ export default class HeaderMedia extends React.Component {
                     onPlaybackStatusUpdate={
                         playbackStatus => {
                             if(playbackStatus.didJustFinish) {
-                                this.setState({ showVideo: false });
+                                setStateIfMounted(this, { showVideo: false });
                             }
                         }
                     }

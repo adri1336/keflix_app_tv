@@ -15,6 +15,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions, { DEFAULT_SIZES } from "cuervo/src/utils/Definitions";
 import * as Dimensions from "cuervo/src/utils/Dimensions.js";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Vars
 export const DRAWER_VALUES = {
@@ -50,10 +51,10 @@ export default class TVDrawer extends React.Component {
             this.tvEventHandler.enable(this, (cmp, evt) => {
                 if(evt && evt.eventKeyAction > 0) {
                     if(evt.eventType == "left" && this.state.drawerCanOpen && !this.state.isDrawerOpen) {
-                        this.setState({ isDrawerOpen: true });
+                        setStateIfMounted(this, { isDrawerOpen: true });
                     }
                     else if(evt.eventType == "right" && this.state.isDrawerOpen) {
-                        this.setState({ isDrawerOpen: false });
+                        setStateIfMounted(this, { isDrawerOpen: false });
                     }
                 }
             });
@@ -67,9 +68,10 @@ export default class TVDrawer extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             if(this.props.currentOptions.drawer) {
-                this.setState({ isDrawerOpen: !this.state.isDrawerOpen });
+                setStateIfMounted(this, { isDrawerOpen: !this.state.isDrawerOpen });
                 return true;
             }
             return false;
@@ -78,6 +80,7 @@ export default class TVDrawer extends React.Component {
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.backHandler.remove();
         this.disableTVEventHandler();
     }
@@ -151,7 +154,7 @@ export default class TVDrawer extends React.Component {
         }
 
         if(this.props.currentOptions.drawerCanOpen != prevState.drawerCanOpen) {
-            this.setState({ drawerCanOpen: this.props.currentOptions.drawerCanOpen });
+            setStateIfMounted(this, { drawerCanOpen: this.props.currentOptions.drawerCanOpen });
         }
     }
 
@@ -313,7 +316,7 @@ export default class TVDrawer extends React.Component {
                     textStyle={ Styles.bigText }
                     onPress={
                         () => {
-                            this.setState({ isDrawerOpen: false }, function() {
+                            setStateIfMounted(this, { isDrawerOpen: false }, function() {
                                 if(this.props.currentRouteName != route) {
                                     if(navigator) {
                                         this.props.navigation.navigate(navigator, { screen: route });
@@ -391,7 +394,7 @@ export default class TVDrawer extends React.Component {
                                 touchableRef={ component => this.change_profile_button = component }
                                 onPress={
                                     () => {
-                                        this.setState({ loading: true });
+                                        setStateIfMounted(this, { loading: true });
                                         this.props.appContext.funcs.profileLogout();
                                     }
                                 }
@@ -428,7 +431,7 @@ export default class TVDrawer extends React.Component {
                         touchableRef={ component => this.settings_button = component }
                         onPress={
                             () => {
-                                this.setState({ isDrawerOpen: false }, function() {
+                                setStateIfMounted(this, { isDrawerOpen: false }, function() {
                                     this.props.navigation.navigate("SettingsNavigator", {
                                         screen: "GeneralScreen",
                                         params: {

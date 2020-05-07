@@ -14,6 +14,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class CreateProfileScreen extends React.Component {
@@ -38,7 +39,12 @@ export default class CreateProfileScreen extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.keyboard.setTextInput(this.textInputName);
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     onKeyboardButtonPressed(textInput, buttonType) {
@@ -145,11 +151,11 @@ export default class CreateProfileScreen extends React.Component {
 
     onPasswordTextChanged(text) {
         if(this.state.repeatPasswordEnabled && text.length <= 0) {
-            this.setState({ repeatPasswordEnabled: false });
+            setStateIfMounted(this, { repeatPasswordEnabled: false });
             this.keyboard.setButtons([KeyboardButtonsTypes.BACK, [KeyboardButtonsTypes.CONTINUE, 2]]);
         }
         else if(!this.state.repeatPasswordEnabled && text.length > 0) {
-            this.setState({ repeatPasswordEnabled: true });
+            setStateIfMounted(this, { repeatPasswordEnabled: true });
             this.keyboard.setButtons([KeyboardButtonsTypes.BACK, [KeyboardButtonsTypes.NEXT, 2]]);
         }
     }

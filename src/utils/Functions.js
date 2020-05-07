@@ -23,3 +23,14 @@ export function timeConvertFormatted(sec) {
     return (hours ? (hours + ":") : "") + minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
 }
 
+export function setStateIfMounted(context, state, callback = null) {
+    if(context._isMounted) {
+        context.setState(state, callback);
+    }
+}
+
+export function forceUpdateIfMounted(context) {
+    if(context._isMounted) {
+        context.forceUpdate();
+    }
+}

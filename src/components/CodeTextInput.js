@@ -7,6 +7,7 @@ import Styles from "cuervo/src/utils/Styles";
 
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class CodeTextInput extends React.Component {
@@ -26,8 +27,16 @@ export default class CodeTextInput extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     setFocus(focus) {
-        this.setState({ focused: focus });
+        setStateIfMounted(this, { focused: focus });
     }
     
     setText(value) {
@@ -50,7 +59,7 @@ export default class CodeTextInput extends React.Component {
                 newIndex = currentIndex + 1;
             }
         }
-        this.setState({ currentCodeIndex: newIndex });
+        setStateIfMounted(this, { currentCodeIndex: newIndex });
     }
 
     getCode() {

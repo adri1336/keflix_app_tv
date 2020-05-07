@@ -12,6 +12,7 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 import * as Dimensions from "cuervo/src/utils/Dimensions.js";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class Checkbox extends React.Component {
@@ -23,6 +24,14 @@ export default class Checkbox extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+    
     renderChecked() {
         if(this.state.checked) {
             return (
@@ -54,17 +63,17 @@ export default class Checkbox extends React.Component {
                     activeOpacity={ 1.0 }
                     onPress={
                         () => {
-                            this.setState({ checked: !this.state.checked });
+                            setStateIfMounted(this, { checked: !this.state.checked });
                         }
                     }
                     onFocus={
                         () => {
-                            this.setState({ focused: true });
+                            setStateIfMounted(this, { focused: true });
                         }
                     }
                     onBlur={
                         () => {
-                            this.setState({ focused: false });
+                            setStateIfMounted(this, { focused: false });
                         }
                     }
                 >

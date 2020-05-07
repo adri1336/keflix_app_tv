@@ -4,6 +4,7 @@ import { View, FlatList, Dimensions } from "react-native";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class ColorPicker extends React.Component {
@@ -34,6 +35,14 @@ export default class ColorPicker extends React.Component {
             "#93a8bdff",
             "#616e77ff"
         ];
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
     
     formatData(data, numColumns) {
@@ -106,6 +115,14 @@ class ColorPickerButton extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     render() {
         const { style, ...rest } = this.props;
         return (
@@ -120,12 +137,12 @@ class ColorPickerButton extends React.Component {
                 ]}
                 onFocus={
                     () => {
-                        this.setState({ focused: true });
+                        setStateIfMounted(this, { focused: true });
                     }
                 }
                 onBlur={
                     () => {
-                        this.setState({ focused: false });
+                        setStateIfMounted(this, { focused: false });
                     }
                 }
             />

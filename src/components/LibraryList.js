@@ -46,6 +46,7 @@ export default class LibraryList extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.enableTVEventHandler();
         if(this.focused) {
             this.onCoverFocus(1);
@@ -53,6 +54,7 @@ export default class LibraryList extends React.Component {
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         this.disableTVEventHandler();
     }
 
