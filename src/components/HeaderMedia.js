@@ -4,11 +4,10 @@ import { View, Text, Image, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Video } from "expo-av";
 import Styles from "cuervo/src/utils/Styles";
-import i18n from "i18n-js";
 
 //Other Imports
 import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
-import { timeConvert, setStateIfMounted } from "cuervo/src/utils/Functions";
+import { timeConvert, hoursMinutesFormat, setStateIfMounted } from "cuervo/src/utils/Functions";
 import ProgressBar from "cuervo/src/components/ProgressBar";
 
 //Vars
@@ -196,7 +195,7 @@ export default class HeaderMedia extends React.Component {
             const { total_time, current_time } = this.state.progress;
             const remainingMillis = total_time - current_time;
             const progress = 100 - ((remainingMillis * 100) / total_time);
-            const { hours, minutes } = timeConvert(remainingMillis / 1000);
+            const remaining = hoursMinutesFormat(remainingMillis / 1000);
 
             return (
                 <View
@@ -224,11 +223,7 @@ export default class HeaderMedia extends React.Component {
                             }
                         ]}
                     >
-                        {
-                            hours == 0 ?
-                                i18n.t("header_media.remaining_time_minutes", { minutes: minutes }) :
-                                i18n.t("header_media.remaining_time", { hours: hours, minutes: minutes })
-                        }
+                        { remaining }
                     </Text>
                 </View>
             );

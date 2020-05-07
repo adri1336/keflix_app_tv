@@ -144,10 +144,6 @@ i18n.translations = {
 			exit_button: "Salir",
 			replay_button: "Reproducir desde el principio"
 		},
-		header_media: {
-			remaining_time: "Tiempo restante: {{hours}} hora(s) y {{minutes}} minuto(s)",
-			remaining_time_minutes: "Tiempo restante: {{minutes}} minuto(s)"
-		},
 		play_screen: {
 			play_button: "Reproducir ahora",
 			resume_button: "Renaudar",
@@ -155,6 +151,21 @@ i18n.translations = {
 			play_trailer_button: "Ver tráiler",
 			add_to_my_list_button: "Añadir a mi lista",
 			delete_from_list_button: "Eliminar de mi lista",
+			invalid_video_title: "Este contenido no está disponible en este momento",
+			back_button: "Volver"
+		},
+		functions: {
+			hour_minutes_format: {
+				hour: "{{hours}} hora",
+				hours: "{{hours}} horas",
+				minute: "{{minutes}} minuto",
+				minutes: "{{minutes}} minutos",
+				hour_minute: "{{hours}} hora y {{minutes}} minuto",
+				hour_minutes: "{{hours}} hora y {{minutes}} minutos",
+				hours_minute: "{{hours}} horas y {{minutes}} minuto",
+				hours_minutes: "{{hours}} horas y {{minutes}} minutos",
+				nothing: "nada"
+			}
 		}
 	}
 };

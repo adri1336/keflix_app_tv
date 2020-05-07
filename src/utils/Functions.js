@@ -1,3 +1,5 @@
+import i18n from "i18n-js";
+
 //Code
 export function isValidEmail(email) {
     if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -33,4 +35,18 @@ export function forceUpdateIfMounted(context) {
     if(context._isMounted) {
         context.forceUpdate();
     }
+}
+
+export function hoursMinutesFormat(sec) {
+    const { hours, minutes } = timeConvert(sec);
+    
+    if(hours > 1 && minutes > 1) return i18n.t("functions.hour_minutes_format.hours_minutes", { hours: hours, minutes: minutes });
+    else if(hours > 1 && minutes == 1) return i18n.t("functions.hour_minutes_format.hours_minute", { hours: hours, minutes: minutes });
+    else if(hours == 1 && minutes > 1) return i18n.t("functions.hour_minutes_format.hour_minutes", { hours: hours, minutes: minutes });
+    else if(hours == 1 && minutes == 1) return i18n.t("functions.hour_minutes_format.hour_minute", { hours: hours, minutes: minutes });
+    else if(hours == 0 && minutes > 1) return i18n.t("functions.hour_minutes_format.minutes", { minutes: minutes });
+    else if(hours == 0 && minutes == 1) return i18n.t("functions.hour_minutes_format.minute", { minutes: minutes });
+    else if(hours > 1 && minutes == 0) return i18n.t("functions.hour_minutes_format.hours", { hours: hours });
+    else if(hours == 1 && minutes == 0) return i18n.t("functions.hour_minutes_format.hour", { hours: hours });
+    return i18n.t("functions.hour_minutes_format.nothing");
 }

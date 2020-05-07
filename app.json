@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Cuervo",
-    "description": "Cuervo App",
+    "name": "Keflix",
+    "description": "VOD App",
     "slug": "Cuervo",
     "platforms": [
       "ios",

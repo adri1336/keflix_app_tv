@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, AppState } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
 //Navigator Imports
@@ -11,7 +11,7 @@ import MainNavigator from "./navigators/MainNavigator";
 
 //Other Imports
 import { AppContext } from "cuervo/src/AppContext";
-import { NAVIGATORS, STORAGE_KEYS } from "cuervo/src/utils/Definitions";
+import { NAVIGATORS, STORAGE_KEYS, CONFIG } from "cuervo/src/utils/Definitions";
 import * as Auth from "cuervo/src/api/Auth";
 import * as Account from "cuervo/src/api/Account";
 
@@ -106,6 +106,8 @@ const reducer = (prevState, action) => {
 	}
 };
 
+let appGoBackgroundTime = 0;
+
 export default () => {
 	const [state, dispatch] = React.useReducer(reducer, initialState);
 	const funcs = React.useMemo(() => {
@@ -179,6 +181,24 @@ export default () => {
 		}
 	}, []);
 	
+	React.useEffect(() => {
+		AppState.addEventListener("change", _handleAppStateChange);
+		return () => {
+			AppState.removeEventListener("change", _handleAppStateChange);
+		};
+	}, []);
+
+	const _handleAppStateChange = nextAppState => {
+		if(nextAppState == "active") {
+			if(Date.now() - appGoBackgroundTime > CONFIG.MAX_BACKGROUND_TIME) {
+				funcs.timedOut();
+			}
+		}
+		else {
+			appGoBackgroundTime = Date.now();
+		}
+	};
+
 	return (
 		<AppContext.Provider value={{ funcs: funcs, state: state }}>
 			<NavigationContainer>
