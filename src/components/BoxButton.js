@@ -33,6 +33,13 @@ export default class BoxButton extends React.Component {
         this._isMounted = false;
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     setFocused(toggle) {
         setStateIfMounted(this, { focused: toggle });
     }

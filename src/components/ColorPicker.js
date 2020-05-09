@@ -44,6 +44,13 @@ export default class ColorPicker extends React.Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
     
     formatData(data, numColumns) {
         const numberOfFullRows = Math.floor(data.length / numColumns);
@@ -123,6 +130,13 @@ class ColorPickerButton extends React.Component {
         this._isMounted = false;
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+    
     render() {
         const { style, ...rest } = this.props;
         return (

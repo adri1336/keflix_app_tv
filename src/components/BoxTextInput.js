@@ -27,6 +27,13 @@ export default class BoxTextInput extends React.Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
     
     setFocus(focus) {
         setStateIfMounted(this, { focused: focus });

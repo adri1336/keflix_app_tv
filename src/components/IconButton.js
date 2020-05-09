@@ -30,6 +30,13 @@ export default class NormalButton extends React.Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
     
     renderIcon() {
         if(this.props.icon) {

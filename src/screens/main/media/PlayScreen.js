@@ -13,6 +13,7 @@ import i18n from "i18n-js";
 import ProgressBar from "cuervo/src/components/ProgressBar";
 import * as ProfileLibraryMovie from "cuervo/src/api/ProfileLibraryMovie";
 import { setStateIfMounted, forceUpdateIfMounted } from "cuervo/src/utils/Functions";
+import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 
 const
     BACK_FADE_DURATION = 500;
@@ -34,6 +35,7 @@ export default class PlayScreen extends React.Component {
 
     componentDidMount() {
         this._isMounted = true;
+        activateKeepAwake();
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", async () => {
             if(!this.videoIsValid) {
                 this.props.navigation.navigate(this.props.route.params.backRouteName);
@@ -67,7 +69,15 @@ export default class PlayScreen extends React.Component {
 
     componentWillUnmount() {
         this._isMounted = false;
+        deactivateKeepAwake();
         this.backHandler.remove();
+    }
+
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
     }
 
     stopPlaying() {

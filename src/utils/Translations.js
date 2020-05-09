@@ -166,6 +166,9 @@ i18n.translations = {
 				hours_minutes: "{{hours}} horas y {{minutes}} minutos",
 				nothing: "nada"
 			}
+		},
+		header_media: {
+			remaining_time: "Tiempo restante: {{remaining}}"
 		}
 	}
 };

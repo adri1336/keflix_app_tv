@@ -85,6 +85,13 @@ export default class TVDrawer extends React.Component {
         this.disableTVEventHandler();
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if(this.state.isDrawerOpen != prevState.isDrawerOpen) {
             if(this.state.isDrawerOpen) {

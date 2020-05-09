@@ -26,6 +26,13 @@ export default class LoadingViewModal extends React.Component {
         }
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     setVisible(toggle) {
         setStateIfMounted(this, { visible: toggle });
     }

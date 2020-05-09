@@ -34,6 +34,13 @@ export default class EnterAccountPasswordScreen extends React.Component {
         this._isMounted = false;
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     render() {
         return (
             <View style={{

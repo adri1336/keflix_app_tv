@@ -31,6 +31,13 @@ export default class Checkbox extends React.Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
     
     renderChecked() {
         if(this.state.checked) {

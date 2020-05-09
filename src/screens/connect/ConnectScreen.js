@@ -38,6 +38,13 @@ export default class ConnectScreen extends React.Component {
         this._isMounted = false;
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+    
     async tryConnection() {
         if(await Auth.connection()) {
             this.context.funcs.connect();

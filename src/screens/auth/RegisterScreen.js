@@ -32,6 +32,13 @@ export default class RegisterScreen extends React.Component {
         this._isMounted = false;
     }
     
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+    
     async onKeyboardButtonPressed(textInput, buttonType) {
         switch(textInput) {
             case this.textInputEmail: {

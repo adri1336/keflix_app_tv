@@ -47,6 +47,13 @@ export default class CreateProfileScreen extends React.Component {
         this._isMounted = false;
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     onKeyboardButtonPressed(textInput, buttonType) {
         switch(textInput) {
             case this.textInputName: {

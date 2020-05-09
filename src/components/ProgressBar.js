@@ -24,6 +24,13 @@ export default class ProgressBar extends React.Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
     
     componentDidUpdate(prevProps) {
         if(prevProps.progress != this.props.progress) {

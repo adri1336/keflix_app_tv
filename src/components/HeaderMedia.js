@@ -4,6 +4,7 @@ import { View, Text, Image, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Video } from "expo-av";
 import Styles from "cuervo/src/utils/Styles";
+import i18n from "i18n-js";
 
 //Other Imports
 import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
@@ -55,6 +56,13 @@ export default class HeaderMedia extends React.Component {
         }
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if(this.state.title && this.state.title.image && (this.state.title.image != prevState.title.image)) {
             Image.getSize(this.state.title.image, (width, height) => {
@@ -101,9 +109,12 @@ export default class HeaderMedia extends React.Component {
         setStateIfMounted(this, { ...info, showVideo: false });
     }
 
-    fadeBack(fade_in) {
+    async fadeBack(fade_in) {
         if(fade_in && this.videoPlayer) {
-            this.videoPlayer.pauseAsync();
+            const playbackStatus = await this.videoPlayer.getStatusAsync();
+            if(playbackStatus.isLoaded) {
+                this.videoPlayer.pauseAsync();
+            }
         }
         Animated.timing(this.state.backOpacity, {
             toValue: fade_in ? 0.8 : 0.0,
@@ -114,9 +125,9 @@ export default class HeaderMedia extends React.Component {
 
     async pauseVideo() {
         if(this.videoPlayer) {
+            this.videoPaused = true;
             const playbackStatus = await this.videoPlayer.getStatusAsync();
             if(playbackStatus.isLoaded) {
-                this.videoPaused = true;
                 this.videoPlayer.pauseAsync();
             }
         }
@@ -223,7 +234,7 @@ export default class HeaderMedia extends React.Component {
                             }
                         ]}
                     >
-                        { remaining }
+                        { i18n.t("header_media.remaining_time", { remaining: remaining }) }
                     </Text>
                 </View>
             );
@@ -274,6 +285,9 @@ export default class HeaderMedia extends React.Component {
                     opacity={ this.state.showVideo ? 1.0 : 0.0 }
                     onPlaybackStatusUpdate={
                         playbackStatus => {
+                            if(this.videoPaused && playbackStatus.isLoaded) {
+                                this.videoPlayer.pauseAsync();
+                            }
                             if(playbackStatus.didJustFinish) {
                                 setStateIfMounted(this, { showVideo: false });
                             }

@@ -53,6 +53,13 @@ export default class SelectProfileScreen extends React.Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
     
     componentDidUpdate() {
         if(this.props.route.params?.profile) {

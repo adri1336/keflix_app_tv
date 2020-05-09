@@ -30,6 +30,13 @@ export default class AccountPasswordChecker extends React.Component {
         this._isMounted = false;
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     async onKeyboardButtonPressed(textInput, buttonType) {
         if(textInput == this.textInputPassword) {
             switch(buttonType) {

@@ -35,6 +35,13 @@ export default class NormalAlert extends React.Component {
         }
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     setAlertVisible(visible, title = null, message = null) {
         setStateIfMounted(this, {
             alertVisible: visible,

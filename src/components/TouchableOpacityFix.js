@@ -60,6 +60,13 @@ export default class TouchableOpacityFix extends React.Component {
         this.disableTVEventHandler();
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     render () {
         const { children, ...rest } = this.props;
         return (

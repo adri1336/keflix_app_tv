@@ -51,6 +51,13 @@ export default class GeneralScreen extends React.Component {
         this.backHandler.remove();
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     render() {
         if(this.state.loading) {
             return <LoadingView/>;

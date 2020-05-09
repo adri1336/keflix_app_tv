@@ -70,6 +70,13 @@ export default class MoviesScreen extends React.Component {
         this.onDrawerClosedEvent();
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+    
     async refreshMovies() {
         const movies = await Movie.discover(this.context);
         const sections = [

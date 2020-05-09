@@ -141,6 +141,13 @@ export default class Keyboard extends React.Component {
         this._isMounted = false;
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+    
     setKeyboardType(type) {
         setStateIfMounted(this, { keboardType: type });
     }

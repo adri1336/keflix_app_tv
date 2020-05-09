@@ -194,6 +194,13 @@ export default class VideoPlayer extends React.Component {
         this.cancelPlayInTimer();
     }
 
+    shouldComponentUpdate() {
+        if(!this._isMounted) {
+            return false;
+        }
+        return true;
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if(this.state.controlsFocused != prevState.controlsFocused) {
             this.animateControls();
