@@ -10,14 +10,25 @@ i18n.translations = {
 		connect: {
 			connect: {
 				connect_error_text: "No se ha podido conectar",
-				retry_connect_button: "Reintentar"
+				retry_connect_button: "Reintentar",
+				change_server_button: "Cambiar servidor"
+			}
+		},
+		select_server: {
+			select_server: {
+				title: "Conectarse a un servidor",
+				placeholder: "Introduce la dirección del servidor",
+				remember_checkbox: "Recordar servidor",
+				error_alert_title: "Error",
+				empty_field_alert_message: "Introduce una dirección."
 			}
 		},
 		auth: {
 			welcome: {
 				slogan_text: "Películas para ver en tu televisión.",
 				register_button: "Registrarse ahora",
-				login_button: "Iniciar sesión"
+				login_button: "Iniciar sesión",
+				change_server: "Cambiar servidor"
 			},
 			register: {
 				register_text: "Registrarse",

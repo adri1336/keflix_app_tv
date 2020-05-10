@@ -21,13 +21,15 @@ export const DEFAULT_SIZES = {
 };
 
 export const NAVIGATORS = {
-	CONNECT: 0,
-    AUTH: 1,
-    PROFILE: 2,
-    MAIN: 3
+    SELECT_SERVER: 0,
+	CONNECT: 1,
+    AUTH: 2,
+    PROFILE: 3,
+    MAIN: 4
 };
 
 export const STORAGE_KEYS = {
+    SERVER: "server",
     EMAIL: "email",
     PASSWORD: "password",
 

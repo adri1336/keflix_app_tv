@@ -1,6 +1,5 @@
 //Vars
 export const REQUEST_TIMEOUT_ERROR_CODE = 504;
-export const SERVER_API_IP = "http://192.168.1.41:3000";
 const FETCH_TIMEOUT = 10000;
 
 //Code
@@ -15,12 +14,12 @@ const timeout = (time, promise) => {
     });
 }
 
-export const _fetch = async (path, method = "GET", token = null, body = null) => {
+export const _fetch = async (server, path, method = "GET", token = null, body = null) => {
     const controller = new AbortController();
     const signal = controller.signal;
 
     try {
-        const response = await timeout(FETCH_TIMEOUT, fetch(SERVER_API_IP + "/api" + path, {
+        const response = await timeout(FETCH_TIMEOUT, fetch(server + "/api" + path, {
             method: method,
             signal: signal,
             headers: {

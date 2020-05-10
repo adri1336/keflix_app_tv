@@ -103,7 +103,7 @@ export default class RegisterScreen extends React.Component {
 
                                 if(validated) {
                                     this.loadingViewModal.setVisible(true);
-                                    const data = await Auth.register(account);
+                                    const data = await Auth.register(this.context.state.server, account);
                                     if(data) {
                                         this.context.funcs.login(data, this.checkbox.state.checked);
                                     }

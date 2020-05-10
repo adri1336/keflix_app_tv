@@ -46,7 +46,7 @@ export default class ConnectScreen extends React.Component {
     }
     
     async tryConnection() {
-        if(await Auth.connection()) {
+        if(await Auth.connection(this.context.state.server)) {
             this.context.funcs.connect();
         }
         else {
@@ -76,6 +76,22 @@ export default class ConnectScreen extends React.Component {
                             }
                         }
                     >{ (i18n.t("connect.connect.retry_connect_button")).toUpperCase() }</NormalButton>
+                    <View
+                        style={{
+                            position: "absolute",
+                            bottom: 100
+                        }}
+                    >
+                        <NormalButton
+                            onPress={
+                                () => {
+                                    setStateIfMounted(this, { connecting: true }, () => this.context.funcs.selectNewServer());
+                                }
+                            }
+                        >
+                            { (i18n.t("connect.connect.change_server_button")).toUpperCase() }
+                        </NormalButton>
+                    </View>
                 </View>
             )
         );

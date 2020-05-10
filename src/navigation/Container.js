@@ -4,6 +4,7 @@ import { AsyncStorage, AppState } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
 //Navigator Imports
+import SelectServerNavigator from "./navigators/SelectServerNavigator";
 import ConnectNavigator from "./navigators/ConnectNavigator";
 import AuthNavigator from "./navigators/AuthNavigator";
 import ProfileNavigator from "./navigators/ProfileNavigator";
@@ -18,6 +19,9 @@ import * as Account from "cuervo/src/api/Account";
 //Code
 function getNavigator(navigator) {
 	switch(navigator) {
+		case NAVIGATORS.SELECT_SERVER: {
+			return <SelectServerNavigator/>;
+		}
 		case NAVIGATORS.CONNECT: {
 			return <ConnectNavigator/>;
 		}
@@ -43,11 +47,25 @@ const initialState = {
 	account: null,
 	profile: null,
 	remember: false,
-	navigator: NAVIGATORS.CONNECT
+	navigator: NAVIGATORS.SELECT_SERVER,
+	server: null
 };
 
 const reducer = (prevState, action) => {
 	switch (action.type) {
+		case "TRY_CONNECTION": {
+			return {
+				...prevState,
+				server: action.server,
+				navigator: NAVIGATORS.CONNECT
+			};
+		}
+		case "NEW_SERVER": {
+			return {
+				...prevState,
+				navigator: NAVIGATORS.SELECT_SERVER
+			};
+		}
 		case "TIMED_OUT": {
 			return {
 				...prevState,
@@ -106,12 +124,24 @@ const reducer = (prevState, action) => {
 	}
 };
 
-let appGoBackgroundTime = 0;
+let appGoBackgroundTime = 0
+	api_server = "";
 
 export default () => {
 	const [state, dispatch] = React.useReducer(reducer, initialState);
 	const funcs = React.useMemo(() => {
 		return {
+			selectNewServer: async () => {
+				await AsyncStorage.clear();
+				dispatch({ type: "NEW_SERVER" });
+			},
+			tryConnection: async (server, remember = false) => {
+				api_server = server;
+				if(remember) {
+					await AsyncStorage.setItem(STORAGE_KEYS.SERVER, server);
+				}
+				dispatch({ type: "TRY_CONNECTION", server: server });
+			},
 			timedOut: () => {
 				dispatch({ type: "TIMED_OUT" });
 			},
@@ -120,22 +150,22 @@ export default () => {
 				try {
 					accessToken = await AsyncStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 					refreshToken = await AsyncStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-
+					
 					if(accessToken && refreshToken) {
-						const data = await Account.getPassToken(accessToken);
+						const data = await Account.getPassToken(api_server, accessToken);
 						if(data) {
 							dispatch({ type: "LOGIN", accessToken: accessToken, refreshToken: refreshToken, account: data, remember: true });
 						}
 						else {
 							//try refresh_token
-							const data = await Auth.token(refreshToken);
+							const data = await Auth.token(api_server, refreshToken);
 							if(data) {
 								const { account, access_token, refresh_token } = data;
 								await storeTokens(access_token, refresh_token);
 								dispatch({ type: "LOGIN", accessToken: access_token, refreshToken: refresh_token, account: account, remember: true });
 							}
 							else {
-								await AsyncStorage.clear();
+								await AsyncStorage.multiRemove([STORAGE_KEYS.ACCESS_TOKEN, STORAGE_KEYS.REFRESH_TOKEN]);
 								dispatch({ type: "CONNECTED" });
 							}
 						}
@@ -163,7 +193,7 @@ export default () => {
 			},
 			logout: async () => {
 				try {
-					await AsyncStorage.clear();
+					await AsyncStorage.multiRemove([STORAGE_KEYS.ACCESS_TOKEN, STORAGE_KEYS.REFRESH_TOKEN]);
 				}
 				catch(error) {
 					console.log(error);

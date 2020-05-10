@@ -9,7 +9,7 @@ export const apiFetch = async (context, path, method = "GET", body = null) => {
             throw "no tokens provided";
         }
 
-        const [response, data, error] = await _fetch(path, method, accessToken, body);
+        const [response, data, error] = await _fetch(context.state.server, path, method, accessToken, body);
         if(error) {
             if(error.code == REQUEST_TIMEOUT_ERROR_CODE) {
                 context.funcs.timedOut();
@@ -18,11 +18,11 @@ export const apiFetch = async (context, path, method = "GET", body = null) => {
         }
         else if(response.status == 403) {
             //request new token
-            const data = await Auth.token(refreshToken);
+            const data = await Auth.token(context.state.server, refreshToken);
             if(data) {
                 const { access_token, refresh_token } = data;
                 context.funcs.setNewTokens(access_token, refresh_token);
-                const [newResponse, newData, newError] = await _fetch(path, method, access_token, body);
+                const [newResponse, newData, newError] = await _fetch(context.state.server, path, method, access_token, body);
                 return [newResponse, newData, newError];
             }
             else {

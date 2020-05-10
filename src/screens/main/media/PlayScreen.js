@@ -168,7 +168,7 @@ export default class PlayScreen extends React.Component {
             this.stopPlaying();
         }
         else {
-            if(Date.now() - this.lastProfileUpdate > MEDIA_DEFAULT.PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL) {
+            if(Date.now() - this.lastProfileUpdate > MEDIA_DEFAULT.PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL && positionMillis > MEDIA_DEFAULT.MIN_MILLIS) {
                 this.updateProfilePositionMillis(positionMillis);
                 this.lastProfileUpdate = Date.now();
             }

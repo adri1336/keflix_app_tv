@@ -5,6 +5,8 @@ import i18n from "i18n-js";
 
 //Components Imports
 import BoxButton from "cuervo/src/components/BoxButton";
+import NormalButton from "cuervo/src/components/NormalButton";
+import LoadingView from "cuervo/src/components/LoadingView";
 
 //Styles Imports
 import Styles from "cuervo/src/utils/Styles";
@@ -12,9 +14,20 @@ import Styles from "cuervo/src/utils/Styles";
 //Other Imports
 import Definitions from "cuervo/src/utils/Definitions";
 import { name, version } from "cuervo/package.json";
+import { AppContext } from "cuervo/src/AppContext";
+import { setStateIfMounted } from "cuervo/src/utils/Functions";
 
 //Code
 export default class WelcomeScreen extends React.Component {
+    static contextType = AppContext;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: false
+        };
+    }
+
     componentDidMount() {
         this._isMounted = true;
     }
@@ -31,6 +44,10 @@ export default class WelcomeScreen extends React.Component {
     }
     
     render() {
+        if(this.state.loading) {
+            return <LoadingView/>;
+        }
+
         return (
             <View style={{
                 flex: 1,
@@ -63,6 +80,23 @@ export default class WelcomeScreen extends React.Component {
                             textStyle={[ Styles.bigText, { paddingLeft: Definitions.DEFAULT_MARGIN * 2, paddingRight: Definitions.DEFAULT_MARGIN * 2 } ]}
                             onPress={ () => this.props.navigation.navigate("LoginScreen") }
                         >{ i18n.t("auth.welcome.login_button") }</BoxButton>
+
+                        <View
+                            style={{
+                                position: "absolute",
+                                bottom: 40
+                            }}
+                        >
+                            <NormalButton
+                                onPress={
+                                    () => {
+                                        setStateIfMounted(this, { loading: true }, () => this.context.funcs.selectNewServer());
+                                    }
+                                }
+                            >
+                                { (i18n.t("auth.welcome.change_server")).toUpperCase() }
+                            </NormalButton>
+                        </View>
                     </View>
                 </View>
                 <View style={{ flex: 10, padding: 2, alignItems: "flex-end" }}>

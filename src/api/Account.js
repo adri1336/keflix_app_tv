@@ -1,8 +1,8 @@
 import { _fetch } from "cuervo/src/utils/HttpClient";
 import { apiFetch } from "./ApiClient";
 
-export const getPassToken = async (accessToken) => {
-    const [response, data, error] = await _fetch("/account", "GET", accessToken);
+export const getPassToken = async (server, accessToken) => {
+    const [response, data, error] = await _fetch(server, "/account", "GET", accessToken);
     if(!error && response.status == 200) {
         return data;
     }

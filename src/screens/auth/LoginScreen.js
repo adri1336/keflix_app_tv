@@ -87,7 +87,7 @@ export default class LoginScreen extends React.Component {
  
                             if(validated) {
                                 this.loadingViewModal.setVisible(true);
-                                const data = await Auth.login(account);
+                                const data = await Auth.login(this.context.state.server, account);
                                 if(data) {
                                     this.context.funcs.login(data, this.checkbox.state.checked);
                                 }
