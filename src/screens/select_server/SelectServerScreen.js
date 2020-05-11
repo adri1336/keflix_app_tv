@@ -45,11 +45,11 @@ export default class SelectServerScreen extends React.Component {
 
     async getStoredServer() {
         const server = await AsyncStorage.getItem(STORAGE_KEYS.SERVER);
-        if(!server) {
-            this.setState({ loading: false });
+        if(server !== null) {
+            this.context.funcs.tryConnection(server);
         }
         else {
-            this.context.funcs.tryConnection(server);
+            this.setState({ loading: false });   
         }
     }
 
