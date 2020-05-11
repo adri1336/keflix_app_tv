@@ -8,6 +8,14 @@ export const upsert = async (context, body) => {
     return null;
 };
 
+export const favs = async (context, profileId) => {
+    const [response, data, error] = await apiFetch(context, "/profile_library_movie" + profileId + "/favs", "GET");
+    if(!error && response.status == 200) {
+        return data;
+    }
+    return null;
+};
+
 export const defaultObject = (context, libraryMovieId) => {
     const profileId = context.state.profile.id;
     return {
