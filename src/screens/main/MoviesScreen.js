@@ -1,6 +1,7 @@
 //Imports
 import React from "react";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
+import i18n from "i18n-js";
 
 //Components Imports
 import HeaderMedia from "cuervo/src/components/HeaderMedia";
@@ -13,6 +14,7 @@ import { AppContext } from "cuervo/src/AppContext";
 import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
 import * as Movie from "cuervo/src/api/Movie";
 import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Styles from "cuervo/src/utils/Styles";
 
 //Code
 export default class MoviesScreen extends React.Component {
@@ -22,6 +24,8 @@ export default class MoviesScreen extends React.Component {
         super(props);
         this.isDrawerOpened = false;
         this.state = {
+            loading: true,
+            sections: false,
             focused: true
         };
     }
@@ -86,7 +90,13 @@ export default class MoviesScreen extends React.Component {
         if(movies) sections.push({ title: "Últimas películas añadidas", covers: movies });
 
         if(this.librarySectionGrid) {
-            this.librarySectionGrid.setSections(sections);
+            if(sections.length > 0) {
+                this.librarySectionGrid.setSections(sections);
+                setStateIfMounted(this, { loading: false, sections: true });
+            }
+            else {
+                setStateIfMounted(this, { loading: false, sections: false });
+            }
         }
     }
 
@@ -122,62 +132,96 @@ export default class MoviesScreen extends React.Component {
     }
 
     render() {
+        if(!this.state.loading && !this.state.sections) {
+            return (
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: Definitions.PRIMARY_COLOR
+                    }}
+                >
+                    <NormalButton
+                        hasTVPreferredFocus={ true }
+                        textStyle={[ Styles.bigText ]}
+                    >
+                        { i18n.t("main.movies.no_data_title") }
+                    </NormalButton>
+                </View>
+            );
+        }
+
         return (
             <View
                 style={{
                     flex: 1,
-                    padding: Definitions.DEFAULT_MARGIN,
-                    paddingLeft: SCREEN_MARGIN_LEFT,
                     backgroundColor: Definitions.PRIMARY_COLOR
                 }}
             >
-                <HeaderMedia
-                    ref={ component => this.headerMedia = component }
-                />
-                <NormalButton
-                    hasTVPreferredFocus={ this.state.focused ? true: false }
-                    accessible={ this.state.focused ? true: false }
-                    focusable={ this.state.focused ? true: false }
-                />
-                <LibrarySectionGrid
-                    ref={ component => this.librarySectionGrid = component }
-                    firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
-                    onScrollStarted={
-                        toRowIndex => {
-                            if(this.headerMedia) {
-                                this.headerMedia.stopVideo();
-                                this.headerMedia.fadeBack(true);
-                            }
-                            this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: toRowIndex == 1 ? true : false });
-                        }
-                    }
-                    onCoverFocused={
-                        (movie, rowIndex) => {
-                            this.setHeaderInfo(movie);
-                            if(this.props.navigation.isFocused()) {
-                                this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
-                            }
-                        }
-                    }
-                    onCoverSelected={
-                        movie => {
-                            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false, drawerCanOpen: false });
-                            if(this.librarySectionGrid) {
-                                this.librarySectionGrid.setFocus(false);
-                            }
-                            if(this.headerMedia) {
-                                this.headerMedia.stopVideo();
-                            }
-                            this.props.navigation.navigate("MediaNavigator", {
-                                screen: "PlayScreen",
-                                params: {
-                                    backRouteName: this.props.route.name,
-                                    media: movie
+                {
+                    this.state.loading &&
+                    <View
+                        style={{
+                            position: "absolute",
+                            width: "100%",
+                            height: "100%",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <ActivityIndicator size="large" color={ Definitions.SECONDARY_COLOR }/>
+                    </View>
+                }
+                <View
+                    style={{
+                        flex: 1,
+                        padding: Definitions.DEFAULT_MARGIN,
+                        paddingLeft: SCREEN_MARGIN_LEFT
+                    }}
+                >
+                    <HeaderMedia
+                        ref={ component => this.headerMedia = component }
+                    />
+                    <NormalButton
+                        hasTVPreferredFocus={ this.state.focused ? true: false }
+                        accessible={ this.state.focused ? true: false }
+                        focusable={ this.state.focused ? true: false }
+                    />
+                    <LibrarySectionGrid
+                        ref={ component => this.librarySectionGrid = component }
+                        firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
+                        onScrollStarted={
+                            toRowIndex => {
+                                if(this.headerMedia) {
+                                    this.headerMedia.stopVideo();
+                                    this.headerMedia.fadeBack(true);
                                 }
-                            });
+                                this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: toRowIndex == 1 ? true : false });
+                            }
                         }
-                    }
-                />
+                        onCoverFocused={
+                            (movie, rowIndex) => {
+                                this.setHeaderInfo(movie);
+                                if(this.props.navigation.isFocused()) {
+                                    this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
+                                }
+                            }
+                        }
+                        onCoverSelected={
+                            movie => {
+                                this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false, drawerCanOpen: false });
+                                if(this.librarySectionGrid) {
+                                    this.librarySectionGrid.setFocus(false);
+                                }
+                                if(this.headerMedia) {
+                                    this.headerMedia.stopVideo();
+                                }
+                                this.props.navigation.navigate("PlayScreen", { media: movie });
+                            }
+                        }
+                    />
+                </View>
             </View>
         );
     }

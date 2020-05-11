@@ -9,7 +9,7 @@ export const upsert = async (context, body) => {
 };
 
 export const favs = async (context, profileId) => {
-    const [response, data, error] = await apiFetch(context, "/profile_library_movie" + profileId + "/favs", "GET");
+    const [response, data, error] = await apiFetch(context, "/profile_library_movie/" + profileId + "/favs", "GET");
     if(!error && response.status == 200) {
         return data;
     }

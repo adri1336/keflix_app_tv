@@ -180,6 +180,15 @@ i18n.translations = {
 		},
 		header_media: {
 			remaining_time: "Tiempo restante: {{remaining}}"
+		},
+		main: {
+			movies: {
+				no_data_title: "Las películas aparecerán aquí."
+			},
+			my_list: {
+				no_data_title: "Cuando tengas contenidos en tu lista los verás aqui.",
+				title: "Mi lista"
+			}
 		}
 	}
 };

@@ -8,8 +8,8 @@ import { createTVDrawerNavigator } from "cuervo/src/components/navigators/TVDraw
 
 //Screen Imports
 import SearchScreen from "cuervo/src/screens/main/SearchScreen";
-import MediaNavigator from "./MediaNavigator";
-import MyListScreen from "cuervo/src/screens/main/MyListScreen";
+import MoviesNavigator from "./MoviesNavigator";
+import MyListNavigator from "./MyListNavigator";
 import SettingsNavigator from "./SettingsNavigator";
 
 //Other Imports
@@ -25,11 +25,11 @@ export default () => {
     return (
         <MainNavigator.Navigator 
             headerMode="none"
-            initialRouteName="MediaNavigator"
+            initialRouteName="MoviesNavigator"
             tabs={[
                 { route: "SearchScreen", title: i18n.t("main_navigator.search_screen_title"), icon: { library: FontAwesome, name: "search" } },
-                { navigator: "MediaNavigator", route: "MoviesScreen", title: i18n.t("main_navigator.movies_screen_title"), icon: { library: MaterialCommunityIcons, name: "movie" } },
-                { route: "MyListScreen", title: i18n.t("main_navigator.my_list_screen_title"), icon: { library: FontAwesome, name: "plus" } }
+                { navigator: "MoviesNavigator", route: "MoviesScreen", title: i18n.t("main_navigator.movies_screen_title"), icon: { library: MaterialCommunityIcons, name: "movie" } },
+                { navigator: "MyListNavigator", route: "MyListScreen", title: i18n.t("main_navigator.my_list_screen_title"), icon: { library: FontAwesome, name: "plus" } }
             ]}
             appContext={ appContext }
         >
@@ -37,14 +37,15 @@ export default () => {
                 drawer: true, //activa el drawer en esta pantalla
                 drawerCanOpen: true, //permite o no abrir el drawer en la pantalla (mediante el mando)
             }}/>
-            <MainNavigator.Screen name="MediaNavigator" component={MediaNavigator} options={{
+            <MainNavigator.Screen name="MoviesNavigator" component={MoviesNavigator} options={{
                 drawer: true,
                 drawerCanOpen: true,
                 currentRoute: "MoviesScreen"
             }}/>
-            <MainNavigator.Screen name="MyListScreen" component={MyListScreen} options={{
+            <MainNavigator.Screen name="MyListNavigator" component={MyListNavigator} options={{
                 drawer: true,
-                drawerCanOpen: true
+                drawerCanOpen: true,
+                currentRoute: "MyListScreen"
             }}/>
             <MainNavigator.Screen name="SettingsNavigator" component={SettingsNavigator} options={{
                 drawer: false,

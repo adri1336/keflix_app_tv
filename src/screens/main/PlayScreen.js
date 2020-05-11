@@ -38,7 +38,7 @@ export default class PlayScreen extends React.Component {
         activateKeepAwake();
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", async () => {
             if(!this.videoIsValid) {
-                this.props.navigation.navigate(this.props.route.params.backRouteName);
+                this.props.navigation.goBack();
             }
             else {
                 if(this.props.navigation.isFocused()) {
@@ -53,7 +53,7 @@ export default class PlayScreen extends React.Component {
                         }
                     }
                     else {
-                        this.props.navigation.navigate(this.props.route.params.backRouteName);
+                        this.props.navigation.goBack();
                     }
                     return true;
                 }
@@ -502,7 +502,7 @@ export default class PlayScreen extends React.Component {
                             library: Entypo,
                             name: "back"
                         }}
-                        onPress={ () => this.props.navigation.navigate(this.props.route.params.backRouteName) }
+                        onPress={ () => this.props.navigation.goBack() }
                     >
                         { i18n.t("play_screen.back_button") }
                     </NormalButton>
