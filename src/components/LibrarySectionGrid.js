@@ -88,8 +88,10 @@ export default class LibrarySectionGrid extends React.Component {
     }
 
     setSections(sections) {
-        sections.push("endMargin");
-        setStateIfMounted(this, { sections: sections });
+        if(sections && sections.length > 0) {
+            sections.push("endMargin");
+            setStateIfMounted(this, { sections: sections });
+        }
     }
 
     renderSection(section, index) {
@@ -125,7 +127,7 @@ export default class LibrarySectionGrid extends React.Component {
     }
 
     render() {
-        if(this.state.sections) {
+        if(this.state.sections && this.state.sections.length > 0) {
             return (
                 <View
                     style={{

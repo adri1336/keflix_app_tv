@@ -34,8 +34,8 @@ export default class MoviesScreen extends React.Component {
         
         this.onFocusEvent = this.props.navigation.addListener("focus", () => {
             setStateIfMounted(this, { focused: true });
-            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.librarySectionGrid.getCurrentRowIndex() == 1 ? true : false });
             if(this.librarySectionGrid) {
+                this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.librarySectionGrid.getCurrentRowIndex() <= 1 ? true : false });
                 this.librarySectionGrid.setFocus(true);
             }
         });
@@ -78,10 +78,13 @@ export default class MoviesScreen extends React.Component {
     }
     
     async refreshMovies() {
-        const movies = await Movie.discover(this.context);
-        const sections = [
-            { title: "Últimas películas añadidas", covers: movies }
-        ];
+        let sections = [];
+        let movies = null;
+
+        //Últimas películas añadidas
+        movies = await Movie.discover(this.context);
+        if(movies) sections.push({ title: "Últimas películas añadidas", covers: movies });
+
         if(this.librarySectionGrid) {
             this.librarySectionGrid.setSections(sections);
         }

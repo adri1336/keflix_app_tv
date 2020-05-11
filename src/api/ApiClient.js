@@ -11,9 +11,10 @@ export const apiFetch = async (context, path, method = "GET", body = null) => {
 
         const [response, data, error] = await _fetch(context.state.server, path, method, accessToken, body);
         if(error) {
-            if(error.code == REQUEST_TIMEOUT_ERROR_CODE) {
+            // TEST 
+            //if(error.code == REQUEST_TIMEOUT_ERROR_CODE) {
                 context.funcs.timedOut();
-            }
+            //}
             return [null, null, error];
         }
         else if(response.status == 403) {

@@ -8,7 +8,7 @@ import i18n from "i18n-js";
 
 //Other Imports
 import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
-import { timeConvert, hoursMinutesFormat, setStateIfMounted } from "cuervo/src/utils/Functions";
+import { hoursMinutesFormat, setStateIfMounted } from "cuervo/src/utils/Functions";
 import ProgressBar from "cuervo/src/components/ProgressBar";
 
 //Vars
@@ -189,12 +189,12 @@ export default class HeaderMedia extends React.Component {
         if(this.state.info && (this.state.info.releaseDate || this.state.info.runtime || this.state.info.vote_average)) {
             let timeInfo = null;
             if(this.state.info.runtime) {
-                timeInfo = timeConvert(this.state.info.runtime * 60);
+                timeInfo = hoursMinutesFormat(this.state.info.runtime * 60);
             }
             return (
                 <View style={{ flexDirection: "row" }}>
                     { this.state.info.releaseDate && <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>{ this.state.info.releaseDate }</Text> }
-                    { this.state.info.runtime && <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>{ timeInfo.hours + "h" + " " + timeInfo.minutes + "min" }</Text> }
+                    { timeInfo && <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>{ timeInfo }</Text> }
                     { this.state.info.vote_average && <Text style={[ Styles.normalText, { marginRight: Definitions.DEFAULT_MARGIN } ]}>{ this.state.info.vote_average + "/10" }</Text> }
                 </View>
             );
