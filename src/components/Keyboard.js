@@ -18,7 +18,8 @@ import { setStateIfMounted } from "cuervo/src/utils/Functions";
 export const KeyboardTypes = {
     NORMAL: 0,
     EMAIL: 1,
-    NUMERIC: 2
+    NUMERIC: 2,
+    URL: 3
 };
 
 export const KeyboardButtonsTypes = {
@@ -53,6 +54,11 @@ const emailKeyboard = [
     ["!#$", "@", ".", ".com", "del"]
 ];
 
+const urlKeyboard = [
+    ["http://", "https://", "www."],
+    [".com", ".es", "/", ":", ".", "del"]
+];
+
 //Code
 function getKeyboard(type = KeyboardTypes.NORMAL, special = false) {
     var keyboard = [];
@@ -83,6 +89,15 @@ function getKeyboard(type = KeyboardTypes.NORMAL, special = false) {
             }
             case KeyboardTypes.NUMERIC: {
                 keyboard = numericKeyboard;
+                break;
+            }
+            case KeyboardTypes.URL: {
+                lettersRows.map((row) => {
+                    keyboard.push(row);
+                });
+                urlKeyboard.map((row) => {
+                    keyboard.push(row);
+                });
                 break;
             }
         }

@@ -111,7 +111,7 @@ export default class SelectServerScreen extends React.Component {
                             }}>
                                 <Keyboard 
                                     ref={ component => this.keyboard = component }
-                                    keboardType={ KeyboardTypes.NORMAL }
+                                    keboardType={ KeyboardTypes.URL }
                                     buttonsType={ [KeyboardButtonsTypes.CONTINUE] }
                                     onButtonPress={ (textInput, buttonType) => this.onKeyboardButtonPressed(textInput, buttonType) }
                                 />
