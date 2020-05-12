@@ -1,7 +1,12 @@
 import { apiFetch } from "./ApiClient";
 
-export const discover = async (context) => {
-    const [response, data, error] = await apiFetch(context, "/movie/discover", "POST", { profile_id: context.state.profile.id });
+export const discover = async (context, search = null, sort_by = null) => {
+    const [response, data, error] = await apiFetch(context, "/movie/discover", "POST", {
+        profile_id: context.state.profile.id,
+        include_adult: context.state.profile.adult_content,
+        search: search,
+        sort_by: sort_by
+    });
     if(!error && response.status == 200) {
         return data;
     }
