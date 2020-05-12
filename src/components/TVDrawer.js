@@ -4,6 +4,7 @@ import { View, Text, Animated, Easing, TVEventHandler, BackHandler, findNodeHand
 import { Feather } from "@expo/vector-icons";
 import i18n from "i18n-js";
 import { LinearGradient } from "expo-linear-gradient";
+import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
 
 //Components Imports
 import NormalButton from "cuervo/src/components/NormalButton";
@@ -150,10 +151,12 @@ export default class TVDrawer extends React.Component {
                     });
                 }
 
+                disableAllButtons();
                 this.props.currentOptions.isDrawerOpen = true;
                 this.props.navigation.emit({ type: "onDrawerOpened" });
             }
             else {
+                enableAllButtons();
                 this.props.currentOptions.isDrawerOpen = false;
                 this.props.navigation.emit({ type: "onDrawerClosed" });
             }

@@ -186,7 +186,6 @@ export default class MoviesScreen extends React.Component {
                     <NormalButton
                         hasTVPreferredFocus={ this.state.focused ? true: false }
                         accessible={ this.state.focused ? true: false }
-                        focusable={ this.state.focused ? true: false }
                     />
                     <LibrarySectionGrid
                         ref={ component => this.librarySectionGrid = component }

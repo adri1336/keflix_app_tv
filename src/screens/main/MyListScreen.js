@@ -19,6 +19,7 @@ import * as ProfileLibraryMovie from "cuervo/src/api/ProfileLibraryMovie";
 import { setStateIfMounted } from "cuervo/src/utils/Functions";
 import { COVER_ITEM_VALUES } from "cuervo/src/components/LibraryList";
 import * as Movie from "cuervo/src/api/Movie";
+import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
 
 //Vars
 const
@@ -31,9 +32,11 @@ export default class MyListScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        this.firstFocus = true;
         this.currentDrawerCanOpen = true;
         this.currentIndex = 0;
         this.delayOnFocusTimeout = null;
+        this.coversButtons = [];
         this.state = {
             loading: true,
             covers: null
@@ -46,9 +49,32 @@ export default class MyListScreen extends React.Component {
 
         this.onFocusEvent = this.props.navigation.addListener("focus", () => {
             this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.drawerCanOpen(this.currentIndex) });
-            setStateIfMounted(this, { loading: true, covers: null }, () => {
-                this.getCovers();
-            });
+
+            if(this.state.covers && this.coversButtons.length > 0 && this.state.covers[this.currentIndex] && !this.state.covers[this.currentIndex].profileInfo.fav) {
+                let covers = [];
+                for (let index = 0; index < this.state.covers.length; index++) {
+                    const cover = this.state.covers[index];
+                    if(!cover.invalid) {
+                        covers.push(cover);
+                    }
+                }
+
+                covers.splice(this.currentIndex, 1);
+                setStateIfMounted(this, { covers: covers }, () => {
+                    let newFocus = null;
+                    if(covers.length > 0) {
+                        let newFocusIndex = this.currentIndex - 1;
+                        if(newFocusIndex < 0) newFocusIndex = 0;
+                        
+                        this.currentIndex = newFocusIndex;
+                        newFocus = this.coversButtons[newFocusIndex];
+                    }
+                    enableAllButtons(newFocus);
+                });
+            }
+            else {
+                enableAllButtons();
+            }
         });
         this.onDrawerOpenedEvent = this.props.navigation.dangerouslyGetParent().addListener("onDrawerOpened", () => {
             this.isDrawerOpened = true;
@@ -142,6 +168,13 @@ export default class MyListScreen extends React.Component {
         return data;
     }
 
+    setDrawerCanOpen(toggle) {
+        if(this.currentDrawerCanOpen != toggle) {
+            this.currentDrawerCanOpen = toggle;
+            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: this.currentDrawerCanOpen });            
+        }
+    }
+
     render() {
         if(this.state.loading) {
             return (
@@ -158,7 +191,7 @@ export default class MyListScreen extends React.Component {
             );
         }
 
-        if(!this.state.covers) {
+        if(!this.state.covers || this.state.covers.length <= 0) {
             return (
                 <View
                     style={{
@@ -217,7 +250,8 @@ export default class MyListScreen extends React.Component {
                                 }
                                 return (
                                     <CoverButton
-                                        hasTVPreferredFocus={ index == this.currentIndex ? true : false }
+                                        touchableFixRef={ component => this.coversButtons[index] = component }
+                                        hasTVPreferredFocus={ this.firstFocus && index == 0 ? true : false }
                                         style={{ flex: 1, height: COVER_ITEM_VALUES.HEIGHT, margin: 2 }}
                                         poster={ item.mediaInfo.poster ? Movie.getPoster(this.context, item.id) : null }
                                         onFocus={
@@ -227,25 +261,27 @@ export default class MyListScreen extends React.Component {
                                                     this.headerMedia.stopVideo();
                                                     this.headerMedia.fadeBack(true);
                                                 }
+
+                                                this.currentIndex = index;
+                                                const drawerCanOpen = this.drawerCanOpen(this.currentIndex);
+                                                if(!drawerCanOpen) {
+                                                    this.setDrawerCanOpen(false);
+                                                }
+                                                
                                                 this.delayOnFocusTimeout = setTimeout(() => {
-                                                    this.currentIndex = index;
-                                                    const drawerCanOpen = this.drawerCanOpen(this.currentIndex);
-                                                    if(this.currentDrawerCanOpen != drawerCanOpen) {
-                                                        this.currentDrawerCanOpen = drawerCanOpen;
-                                                        if(this.currentDrawerCanOpen) {
-                                                            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: drawerCanOpen });
-                                                        }
-                                                        else {
-                                                            this.props.navigation.dangerouslyGetParent().setOptions({ drawer: true, drawerCanOpen: drawerCanOpen });
-                                                        }
+                                                    if(drawerCanOpen) {
+                                                        this.setDrawerCanOpen(true);
                                                     }
+
+                                                    this.delayOnFocusTimeout = null;
                                                     this.setHeaderInfo(item);
                                                 }, FOCUS_DELAY_TIME);
                                             }
                                         }
                                         onPress={
                                             () => {
-                                                this.clearTimers();
+                                                disableAllButtons();
+                                                this.firstFocus = null;
                                                 this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false, drawerCanOpen: false });
                                                 if(this.headerMedia) {
                                                     this.headerMedia.stopVideo();

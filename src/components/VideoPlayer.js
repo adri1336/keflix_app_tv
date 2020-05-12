@@ -523,7 +523,6 @@ export default class VideoPlayer extends React.Component {
                     >
                         <IconButton
                             accessible={ this.state.inBackground ? false : true }
-                            focusable={ this.state.inBackground ? false : true }
                             touchableRef={ component => this.go_back_button = component }
                             size={ ICON_SIZE }
                             icon={{
@@ -547,7 +546,6 @@ export default class VideoPlayer extends React.Component {
                         />
                         <IconButton
                             accessible={ this.state.inBackground ? false : true }
-                            focusable={ this.state.inBackground ? false : true }
                             touchableRef={ component => this.replay_button = component }
                             size={ ICON_SIZE }
                             icon={{
@@ -589,7 +587,6 @@ export default class VideoPlayer extends React.Component {
                         <IconButton
                             hasTVPreferredFocus={ this.state.inBackground ? false : true }
                             accessible={ this.state.inBackground ? false : true }
-                            focusable={ this.state.inBackground ? false : true }
                             touchableRef={ component => this.playPause_button = component }
                             size={ ICON_SIZE }
                             icon={{

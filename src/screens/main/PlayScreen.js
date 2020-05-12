@@ -269,7 +269,6 @@ export default class PlayScreen extends React.Component {
                             touchableRef={ component => this.playButton = component }
                             hasTVPreferredFocus={ this.state.playing ? false : true }
                             accessible={ this.state.playing ? false : true }
-                            focusable={ this.state.playing ? false : true }
                             textStyle={ Styles.bigText }
                             icon={{
                                 library: MaterialIcons,
@@ -308,7 +307,6 @@ export default class PlayScreen extends React.Component {
                     <NormalButton
                         touchableRef={ component => this.replayButton = component }
                         accessible={ this.state.playing ? false : true }
-                        focusable={ this.state.playing ? false : true }
                         textStyle={ Styles.bigText }
                         icon={{
                             library: MaterialIcons,
@@ -342,7 +340,6 @@ export default class PlayScreen extends React.Component {
                     touchableRef={ component => this.playButton = component }
                     hasTVPreferredFocus={ this.state.playing ? false : true }
                     accessible={ this.state.playing ? false : true }
-                    focusable={ this.state.playing ? false : true }
                     textStyle={ Styles.bigText }
                     icon={{
                         library: MaterialIcons,
@@ -378,7 +375,6 @@ export default class PlayScreen extends React.Component {
                 <NormalButton
                     touchableRef={ component => this.myListButton = component }
                     accessible={ this.state.playing ? false : true }
-                    focusable={ this.state.playing ? false : true }
                     textStyle={ Styles.bigText }
                     icon={{
                         library: MaterialCommunityIcons,
@@ -403,7 +399,6 @@ export default class PlayScreen extends React.Component {
                 <NormalButton
                     touchableRef={ component => this.myListButton = component }
                     accessible={ this.state.playing ? false : true }
-                    focusable={ this.state.playing ? false : true }
                     textStyle={ Styles.bigText }
                     icon={{
                         library: MaterialIcons,
@@ -434,7 +429,6 @@ export default class PlayScreen extends React.Component {
                 <NormalButton
                     touchableRef={ component => this.trailerButton = component }
                     accessible={ this.state.playing ? false : true }
-                    focusable={ this.state.playing ? false : true }
                     textStyle={ Styles.bigText }
                     icon={{
                         library: MaterialIcons,

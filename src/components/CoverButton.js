@@ -30,11 +30,13 @@ export default class CoverButton extends React.Component {
     }
 
     render() {
-        const { style, ...rest } = this.props;
+        const { style } = this.props;
         return (
             <TouchableOpacityFix
+                ref={ this.props.touchableFixRef }
                 activeOpacity={ 1 }
                 hasTVPreferredFocus={ this.props.hasTVPreferredFocus || false }
+                deactivable={ true }
                 onFocus={
                     () => {
                         if(this.props.onFocus) {
