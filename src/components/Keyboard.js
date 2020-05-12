@@ -19,7 +19,8 @@ export const KeyboardTypes = {
     NORMAL: 0,
     EMAIL: 1,
     NUMERIC: 2,
-    URL: 3
+    URL: 3,
+    ABC: 4
 };
 
 export const KeyboardButtonsTypes = {
@@ -58,6 +59,8 @@ const urlKeyboard = [
     ["http://", "https://", "www."],
     [".com", ".es", "/", ":", ".", "del"]
 ];
+
+const abcKeyboard = ["space", "del"];
 
 //Code
 function getKeyboard(type = KeyboardTypes.NORMAL, special = false) {
@@ -98,6 +101,13 @@ function getKeyboard(type = KeyboardTypes.NORMAL, special = false) {
                 urlKeyboard.map((row) => {
                     keyboard.push(row);
                 });
+                break;
+            }
+            case KeyboardTypes.ABC: {
+                lettersRows.map((row) => {
+                    keyboard.push(row);
+                });
+                keyboard.push(abcKeyboard);
                 break;
             }
         }
@@ -240,8 +250,16 @@ export default class Keyboard extends React.Component {
                                     return (
                                         <BoxButton
                                             key={ j }
+                                            deactivable={ this.props?.deactivable || false }
                                             icon={ iconObject }
                                             onPress={ () => this.onKeyPressed(stringLetter) }
+                                            onFocus={
+                                                () => {
+                                                    if(this.props?.onKeyFocused) {
+                                                        this.props.onKeyFocused(stringLetter);
+                                                    }
+                                                }
+                                            }
                                             onLongPress={
                                                 isDel ? (
                                                     () => {
@@ -370,6 +388,7 @@ export default class Keyboard extends React.Component {
                                 return(
                                     <BoxButton
                                         key={ i }
+                                        deactivable={ this.props?.deactivable || false }
                                         style={[
                                             {
                                                 flex: buttonFlex,

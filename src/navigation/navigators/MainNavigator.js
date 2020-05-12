@@ -7,7 +7,7 @@ import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import { createTVDrawerNavigator } from "cuervo/src/components/navigators/TVDrawerNavigator";
 
 //Screen Imports
-import SearchScreen from "cuervo/src/screens/main/SearchScreen";
+import SearchNavigator from "./SearchNavigator";
 import MoviesNavigator from "./MoviesNavigator";
 import MyListNavigator from "./MyListNavigator";
 import SettingsNavigator from "./SettingsNavigator";
@@ -27,15 +27,16 @@ export default () => {
             headerMode="none"
             initialRouteName="MoviesNavigator"
             tabs={[
-                { route: "SearchScreen", title: i18n.t("main_navigator.search_screen_title"), icon: { library: FontAwesome, name: "search" } },
+                { navigator: "SearchNavigator", route: "SearchScreen", title: i18n.t("main_navigator.search_screen_title"), icon: { library: FontAwesome, name: "search" } },
                 { navigator: "MoviesNavigator", route: "MoviesScreen", title: i18n.t("main_navigator.movies_screen_title"), icon: { library: MaterialCommunityIcons, name: "movie" } },
                 { navigator: "MyListNavigator", route: "MyListScreen", title: i18n.t("main_navigator.my_list_screen_title"), icon: { library: FontAwesome, name: "plus" } }
             ]}
             appContext={ appContext }
         >
-            <MainNavigator.Screen name="SearchScreen" component={SearchScreen} options={{
+            <MainNavigator.Screen name="SearchNavigator" component={SearchNavigator} options={{
                 drawer: true, //activa el drawer en esta pantalla
                 drawerCanOpen: true, //permite o no abrir el drawer en la pantalla (mediante el mando)
+                currentRoute: "SearchScreen"
             }}/>
             <MainNavigator.Screen name="MoviesNavigator" component={MoviesNavigator} options={{
                 drawer: true,

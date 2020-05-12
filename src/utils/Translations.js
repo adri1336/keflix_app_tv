@@ -182,6 +182,11 @@ i18n.translations = {
 			remaining_time: "Tiempo restante: {{remaining}}"
 		},
 		main: {
+			search: {
+				no_results: "No se han encontrado resultados.",
+				no_data: "Empieza a buscar contenido.",
+				input_placeholder: "Introduce el título"
+			},
 			movies: {
 				no_data_title: "Las películas aparecerán aquí."
 			},

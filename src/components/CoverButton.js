@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View,Image } from "react-native";
+import { View, Image } from "react-native";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
