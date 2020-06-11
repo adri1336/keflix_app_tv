@@ -4,22 +4,22 @@ import { View, ActivityIndicator, FlatList, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import HeaderMedia from "cuervo/src/components/HeaderMedia";
-import NormalButton from "cuervo/src/components/NormalButton";
-import CoverButton from "cuervo/src/components/CoverButton";
+import HeaderMedia from "app/src/components/HeaderMedia";
+import NormalButton from "app/src/components/NormalButton";
+import CoverButton from "app/src/components/CoverButton";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
-import { AppContext } from "cuervo/src/AppContext";
-import * as ProfileLibraryMovie from "cuervo/src/api/ProfileLibraryMovie";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
-import { COVER_ITEM_VALUES } from "cuervo/src/components/LibraryList";
-import * as Movie from "cuervo/src/api/Movie";
-import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
+import Definitions from "app/src/utils/Definitions";
+import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
+import { AppContext } from "app/src/AppContext";
+import * as ProfileMovie from "app/src/api/ProfileMovie";
+import { setStateIfMounted } from "app/src/utils/Functions";
+import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
+import * as Movie from "app/src/api/Movie";
+import { enableAllButtons, disableAllButtons } from "app/src/components/TouchableOpacityFix";
 
 //Vars
 const
@@ -113,7 +113,7 @@ export default class MyListScreen extends React.Component {
     }
 
     async getCovers() {
-        const covers = await ProfileLibraryMovie.favs(this.context, this.context.state.profile.id);
+        const covers = await ProfileMovie.favs(this.context, this.context.state.profile.id);
         if(covers) {
             setStateIfMounted(this, { loading: false, covers: covers });
         }

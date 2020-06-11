@@ -3,8 +3,8 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Screen Imports
-import MyListScreen from "cuervo/src/screens/main/MyListScreen";
-import PlayScreen from "cuervo/src/screens/main/PlayScreen";
+import MyListScreen from "app/src/screens/main/MyListScreen";
+import PlayScreen from "app/src/screens/main/PlayScreen";
 
 //Vars
 const MyListNavigator = createStackNavigator();

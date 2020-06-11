@@ -4,18 +4,18 @@ import { View, Text, FlatList } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import LoadingView from "cuervo/src/components/LoadingView";
-import ProfileButtonItem from "cuervo/src/components/ProfileButtonItem";
-import NormalButton from "cuervo/src/components/NormalButton";
+import LoadingView from "app/src/components/LoadingView";
+import ProfileButtonItem from "app/src/components/ProfileButtonItem";
+import NormalButton from "app/src/components/NormalButton";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
-import { AppContext } from "cuervo/src/AppContext";
-import * as Profile from "cuervo/src/api/Profile";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Definitions, { NAVIGATORS } from "app/src/utils/Definitions";
+import { AppContext } from "app/src/AppContext";
+import * as Profile from "app/src/api/Profile";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class SelectProfileScreen extends React.Component {

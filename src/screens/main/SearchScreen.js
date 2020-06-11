@@ -4,25 +4,25 @@ import { View, Text, FlatList, ActivityIndicator, Dimensions } from "react-nativ
 import i18n from "i18n-js";
 
 //Components Imports
-import SearchCoverButton from "cuervo/src/components/SearchCoverButton";
-import BoxTextInput from "cuervo/src/components/BoxTextInput";
+import SearchCoverButton from "app/src/components/SearchCoverButton";
+import BoxTextInput from "app/src/components/BoxTextInput";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
-import { AppContext } from "cuervo/src/AppContext";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
-import Keyboard, { KeyboardTypes } from "cuervo/src/components/Keyboard";
-import * as Movie from "cuervo/src/api/Movie";
-import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
-import { COVER_ITEM_VALUES } from "cuervo/src/components/LibraryList";
+import Definitions from "app/src/utils/Definitions";
+import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
+import { AppContext } from "app/src/AppContext";
+import { setStateIfMounted } from "app/src/utils/Functions";
+import Keyboard, { KeyboardTypes } from "app/src/components/Keyboard";
+import * as Movie from "app/src/api/Movie";
+import { enableAllButtons, disableAllButtons } from "app/src/components/TouchableOpacityFix";
+import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
 
 //Vars
 const
-    FETCH_IN_TIME = 500,
+    FETCH_IN_TIME = 2000,
     DRAWER_CAN_OPEN_LETTERS = ["0", "Q", "A", "SHIFT", "SPACE"];
 
 //Code

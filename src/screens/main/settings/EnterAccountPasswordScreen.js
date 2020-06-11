@@ -4,17 +4,17 @@ import { View, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import NormalAlert from "cuervo/src/components/NormalAlert";
-import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
-import AccountPasswordChecker from "cuervo/src/components/AccountPasswordChecker";
+import NormalAlert from "app/src/components/NormalAlert";
+import LoadingViewModal from "app/src/components/LoadingViewModal";
+import AccountPasswordChecker from "app/src/components/AccountPasswordChecker";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions, { NAVIGATORS } from "cuervo/src/utils/Definitions";
-import { AppContext } from "cuervo/src/AppContext";
-import * as Profile from "cuervo/src/api/Profile";
+import Definitions, { NAVIGATORS } from "app/src/utils/Definitions";
+import { AppContext } from "app/src/AppContext";
+import * as Profile from "app/src/api/Profile";
 
 //Code
 export default class EnterAccountPasswordScreen extends React.Component {

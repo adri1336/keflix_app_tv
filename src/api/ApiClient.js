@@ -1,5 +1,5 @@
 //Imports
-import { _fetch, REQUEST_TIMEOUT_ERROR_CODE } from "cuervo/src/utils/HttpClient";
+import { _fetch, REQUEST_TIMEOUT_ERROR_CODE } from "app/src/utils/HttpClient";
 import * as Auth from "./Auth";
 
 export const apiFetch = async (context, path, method = "GET", body = null) => {

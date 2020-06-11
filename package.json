@@ -1,13 +1,20 @@
 {
-  "name": "cuervo",
-  "version": "0.0.1",
+  "name": "app",
+  "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
     "eject": "expo eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adri1336/keflix_app_tv.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "https://github.com/adri1336",
+    "email": "adri1pawn@gmail.com",
+    "url": "https://github.com/adri1336"
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.6",
@@ -33,6 +40,5 @@
   "devDependencies": {
     "babel-preset-expo": "~8.1.0",
     "@babel/core": "^7.8.6"
-  },
-  "private": true
+  }
 }

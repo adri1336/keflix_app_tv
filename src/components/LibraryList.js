@@ -1,10 +1,10 @@
 //Imports
 import React from "react";
 import { View, Text, Image, FlatList, Dimensions, TVEventHandler } from "react-native";
-import Styles from "cuervo/src/utils/Styles";
-import Definitions from "cuervo/src/utils/Definitions";
-import { AppContext } from "cuervo/src/AppContext";
-import * as Movie from "cuervo/src/api/Movie";
+import Styles from "app/src/utils/Styles";
+import Definitions from "app/src/utils/Definitions";
+import { AppContext } from "app/src/AppContext";
+import * as Movie from "app/src/api/Movie";
 
 //Vars
 export const COVER_ITEM_VALUES = {

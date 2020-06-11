@@ -4,13 +4,13 @@ import { View } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
-import BoxTextInput from "cuervo/src/components/BoxTextInput";
+import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "app/src/components/Keyboard";
+import BoxTextInput from "app/src/components/BoxTextInput";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import * as Account from "cuervo/src/api/Account";
-import { AppContext } from "cuervo/src/AppContext";
+import Definitions from "app/src/utils/Definitions";
+import * as Account from "app/src/api/Account";
+import { AppContext } from "app/src/AppContext";
 
 //Code
 export default class AccountPasswordChecker extends React.Component {

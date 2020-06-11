@@ -3,7 +3,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Screen Imports
-import SelectServerScreen from "cuervo/src/screens/select_server/SelectServerScreen";
+import SelectServerScreen from "app/src/screens/select_server/SelectServerScreen";
 
 //Vars
 const SelectScreenNavigator = createStackNavigator();

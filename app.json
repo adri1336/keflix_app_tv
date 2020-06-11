@@ -1,12 +1,10 @@
 {
   "expo": {
     "name": "Keflix",
-    "description": "VOD App",
-    "slug": "Cuervo",
+    "description": "Keflix App TV",
+    "slug": "keflix-app-tv",
     "platforms": [
-      "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "landscape",
@@ -27,7 +25,7 @@
       "requireFullScreen": true
     },
     "android": {
-      "package": "com.example.cuervo",
+      "package": "xyz.keflix.keflix",
       "intentFilters": [
         {
           "action": "MAIN",

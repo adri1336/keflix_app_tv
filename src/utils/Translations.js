@@ -71,7 +71,7 @@ i18n.translations = {
 				create_profile_text: "Crear perfil",
 				name_placeholder: "Escribe tu nombre",
 				password_placeholder: "Establece tu PIN de acceso (opcional)",
-				adult_content_checkbox: "Permitir mostrar contenido solo para adultos (pornografía)",
+				adult_content_checkbox: "Permitir mostrar contenido solo para adultos",
 				edit_profile_text: "Editar perfil"
 			},
 			select_profile_color: {
@@ -113,8 +113,8 @@ i18n.translations = {
 				profile_has_password_yes: "PIN: sí",
 				profile_has_password_no: "PIN: no",
 				color_text: "Color:",
-				profile_adult_content_yes: "Contenido para adultos: sí",
-				profile_adult_content_no: "Contenido para adultos: no",
+				profile_adult_content_yes: "Contenido solo para adultos: sí",
+				profile_adult_content_no: "Contenido solo para adultos: no",
 				version_text: "Versión: {{version}}",
 				web_text: "Contacto: {{web}}",
 				delete_profile_alert_title: "Eliminar perfil",
@@ -157,7 +157,7 @@ i18n.translations = {
 		},
 		play_screen: {
 			play_button: "Reproducir ahora",
-			resume_button: "Renaudar",
+			resume_button: "Reanudar",
 			replay_button: "Reproducir desde el principio",
 			play_trailer_button: "Ver tráiler",
 			add_to_my_list_button: "Añadir a mi lista",

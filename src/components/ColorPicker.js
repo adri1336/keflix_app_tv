@@ -4,7 +4,7 @@ import { View, FlatList, Dimensions } from "react-native";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class ColorPicker extends React.Component {

@@ -3,9 +3,9 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Screen Imports
-import WelcomeScreen from "cuervo/src/screens/auth/WelcomeScreen";
-import RegisterScreen from "cuervo/src/screens/auth/RegisterScreen";
-import LoginScreen from "cuervo/src/screens/auth/LoginScreen";
+import WelcomeScreen from "app/src/screens/auth/WelcomeScreen";
+import RegisterScreen from "app/src/screens/auth/RegisterScreen";
+import LoginScreen from "app/src/screens/auth/LoginScreen";
 
 //Vars
 const AuthNavigator = createStackNavigator();

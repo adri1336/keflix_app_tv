@@ -4,7 +4,7 @@ import { View, Image } from "react-native";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 export default class CoverButton extends React.Component {
     constructor(props) {

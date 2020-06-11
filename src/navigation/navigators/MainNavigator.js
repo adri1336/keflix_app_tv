@@ -4,7 +4,7 @@ import i18n from "i18n-js";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 
 //Components Imports
-import { createTVDrawerNavigator } from "cuervo/src/components/navigators/TVDrawerNavigator";
+import { createTVDrawerNavigator } from "app/src/components/navigators/TVDrawerNavigator";
 
 //Screen Imports
 import SearchNavigator from "./SearchNavigator";
@@ -13,7 +13,7 @@ import MyListNavigator from "./MyListNavigator";
 import SettingsNavigator from "./SettingsNavigator";
 
 //Other Imports
-import { AppContext } from "cuervo/src/AppContext";
+import { AppContext } from "app/src/AppContext";
 
 //Vars
 const MainNavigator = createTVDrawerNavigator();

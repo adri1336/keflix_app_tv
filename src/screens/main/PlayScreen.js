@@ -1,18 +1,18 @@
 import React from "react";
 import { View, BackHandler, Animated, findNodeHandle, Text } from "react-native";
-import HeaderMedia from "cuervo/src/components/HeaderMedia";
-import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
-import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
-import NormalButton from "cuervo/src/components/NormalButton";
-import Styles from "cuervo/src/utils/Styles";
+import HeaderMedia from "app/src/components/HeaderMedia";
+import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
+import Definitions, { MEDIA_DEFAULT } from "app/src/utils/Definitions";
+import NormalButton from "app/src/components/NormalButton";
+import Styles from "app/src/utils/Styles";
 import { MaterialIcons, MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
-import * as Movie from "cuervo/src/api/Movie";
-import { AppContext } from "cuervo/src/AppContext";
-import VideoPlayer from "cuervo/src/components/VideoPlayer";
+import * as Movie from "app/src/api/Movie";
+import { AppContext } from "app/src/AppContext";
+import VideoPlayer from "app/src/components/VideoPlayer";
 import i18n from "i18n-js";
-import ProgressBar from "cuervo/src/components/ProgressBar";
-import * as ProfileLibraryMovie from "cuervo/src/api/ProfileLibraryMovie";
-import { setStateIfMounted, forceUpdateIfMounted } from "cuervo/src/utils/Functions";
+import ProgressBar from "app/src/components/ProgressBar";
+import * as ProfileMovie from "app/src/api/ProfileMovie";
+import { setStateIfMounted, forceUpdateIfMounted } from "app/src/utils/Functions";
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 
 const
@@ -182,7 +182,7 @@ export default class PlayScreen extends React.Component {
             const remainingMillis = durationMillis - positionMillis;
 
             if(!profileInfo) {
-                profileInfo = ProfileLibraryMovie.defaultObject(this.context, libraryMovieId);
+                profileInfo = ProfileMovie.defaultObject(this.context, libraryMovieId);
             }
             
             if(remainingMillis < MEDIA_DEFAULT.REMAINING_MILLIS) {
@@ -193,7 +193,7 @@ export default class PlayScreen extends React.Component {
             }
 
             profileInfo.current_time = positionMillis;
-            await ProfileLibraryMovie.upsert(this.context, profileInfo);
+            await ProfileMovie.upsert(this.context, profileInfo);
             this.media.profileInfo = profileInfo;
             if(force_update) {
                 forceUpdateIfMounted(this);
@@ -202,7 +202,7 @@ export default class PlayScreen extends React.Component {
     }
 
     renderVideoPlayer() {
-        const { id, title, mediaInfo, profileInfo } = this.media;
+        const { id, title, tagline, mediaInfo, profileInfo } = this.media;
         let positionMillis = 0;
         if(profileInfo && profileInfo.current_time > MEDIA_DEFAULT.MIN_MILLIS && !profileInfo.completed) {
             positionMillis = profileInfo.current_time;
@@ -224,6 +224,7 @@ export default class PlayScreen extends React.Component {
                     playIn={ 10 } //seconds
                     title={{
                         text: title,
+                        subtext: tagline,
                         image: mediaInfo.logo ? Movie.getLogo(this.context, id) : null
                     }}
                     videoProps={{
@@ -384,7 +385,7 @@ export default class PlayScreen extends React.Component {
                     onPress={
                         async () => {
                             profileInfo.fav = false;
-                            await ProfileLibraryMovie.upsert(this.context, profileInfo);
+                            await ProfileMovie.upsert(this.context, profileInfo);
                             this.media.profileInfo = profileInfo;
                             forceUpdateIfMounted(this);
                         }
@@ -408,10 +409,10 @@ export default class PlayScreen extends React.Component {
                     onPress={
                         async () => {
                             if(!profileInfo) {
-                                profileInfo = ProfileLibraryMovie.defaultObject(this.context, libraryMovieId);
+                                profileInfo = ProfileMovie.defaultObject(this.context, libraryMovieId);
                             }
                             profileInfo.fav = true;
-                            await ProfileLibraryMovie.upsert(this.context, profileInfo);
+                            await ProfileMovie.upsert(this.context, profileInfo);
                             this.media.profileInfo = profileInfo;
                             forceUpdateIfMounted(this);
                         }

@@ -3,8 +3,8 @@ import React from "react";
 import { View } from "react-native";
 
 //Other Imports
-import Definitions, { DEFAULT_SIZES } from "cuervo/src/utils/Definitions";
-import * as Dimensions from "cuervo/src/utils/Dimensions.js";
+import Definitions, { DEFAULT_SIZES } from "app/src/utils/Definitions";
+import * as Dimensions from "app/src/utils/Dimensions.js";
 
 //Code
 export default class ProgressBar extends React.Component {

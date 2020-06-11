@@ -3,17 +3,17 @@ import React from "react";
 import { View, Text, Image, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Video } from "expo-av";
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 import i18n from "i18n-js";
 
 //Other Imports
-import Definitions, { MEDIA_DEFAULT } from "cuervo/src/utils/Definitions";
-import { hoursMinutesFormat, setStateIfMounted } from "cuervo/src/utils/Functions";
-import ProgressBar from "cuervo/src/components/ProgressBar";
+import Definitions, { MEDIA_DEFAULT } from "app/src/utils/Definitions";
+import { hoursMinutesFormat, setStateIfMounted } from "app/src/utils/Functions";
+import ProgressBar from "app/src/components/ProgressBar";
 
 //Vars
 const
-    VIDEO_PLAY_DELAY = 2000,
+    VIDEO_PLAY_DELAY = 5000,
     BACK_FADE_DURATION = 500;
 
 //Code
@@ -267,6 +267,7 @@ export default class HeaderMedia extends React.Component {
                     source={{
                         uri: this.state.backdrop.image,
                     }}
+                    resizeMethod="resize"
                 />
             );
         }

@@ -7,12 +7,12 @@ import { Feather } from "@expo/vector-icons";
 import TouchableOpacityFix from "./TouchableOpacityFix";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import * as Dimensions from "cuervo/src/utils/Dimensions.js";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Definitions from "app/src/utils/Definitions";
+import * as Dimensions from "app/src/utils/Dimensions.js";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class Checkbox extends React.Component {

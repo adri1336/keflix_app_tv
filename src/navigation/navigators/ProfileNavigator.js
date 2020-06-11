@@ -3,11 +3,11 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Screen Imports
-import SelectProfileScreen from "cuervo/src/screens/profile/SelectProfileScreen";
-import CreateProfileScreen from "cuervo/src/screens/profile/CreateProfileScreen";
-import SelectProfileColorScreen from "cuervo/src/screens/profile/SelectProfileColorScreen";
-import EnterProfilePasswordScreen from "cuervo/src/screens/profile/EnterProfilePasswordScreen";
-import EnterAccountPasswordScreen from "cuervo/src/screens/profile/EnterAccountPasswordScreen";
+import SelectProfileScreen from "app/src/screens/profile/SelectProfileScreen";
+import CreateProfileScreen from "app/src/screens/profile/CreateProfileScreen";
+import SelectProfileColorScreen from "app/src/screens/profile/SelectProfileColorScreen";
+import EnterProfilePasswordScreen from "app/src/screens/profile/EnterProfilePasswordScreen";
+import EnterAccountPasswordScreen from "app/src/screens/profile/EnterAccountPasswordScreen";
 
 //Vars
 const ProfileNavigator = createStackNavigator();

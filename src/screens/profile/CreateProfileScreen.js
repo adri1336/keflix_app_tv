@@ -4,17 +4,17 @@ import { View, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
-import BoxTextInput from "cuervo/src/components/BoxTextInput";
-import Checkbox from "cuervo/src/components/Checkbox";
-import NormalAlert from "cuervo/src/components/NormalAlert";
+import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "app/src/components/Keyboard";
+import BoxTextInput from "app/src/components/BoxTextInput";
+import Checkbox from "app/src/components/Checkbox";
+import NormalAlert from "app/src/components/NormalAlert";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Definitions from "app/src/utils/Definitions";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class CreateProfileScreen extends React.Component {

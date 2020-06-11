@@ -4,19 +4,19 @@ import { View, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
-import CodeTextInput from "cuervo/src/components/CodeTextInput";
-import NormalAlert from "cuervo/src/components/NormalAlert";
-import NormalButton from "cuervo/src/components/NormalButton";
-import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
+import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "app/src/components/Keyboard";
+import CodeTextInput from "app/src/components/CodeTextInput";
+import NormalAlert from "app/src/components/NormalAlert";
+import NormalButton from "app/src/components/NormalButton";
+import LoadingViewModal from "app/src/components/LoadingViewModal";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { AppContext } from "cuervo/src/AppContext";
-import * as Profile from "cuervo/src/api/Profile";
+import Definitions from "app/src/utils/Definitions";
+import { AppContext } from "app/src/AppContext";
+import * as Profile from "app/src/api/Profile";
 
 //Code
 export default class EnterProfilePasswordScreen extends React.Component {

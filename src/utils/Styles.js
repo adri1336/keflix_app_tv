@@ -1,9 +1,9 @@
 //Imports
 import { StyleSheet } from "react-native";
-import * as Dimensions from "cuervo/src/utils/Dimensions.js";
+import * as Dimensions from "app/src/utils/Dimensions.js";
 
 //Other Imports
-import Definitions, { DEFAULT_SIZES } from "cuervo/src/utils/Definitions";
+import Definitions, { DEFAULT_SIZES } from "app/src/utils/Definitions";
 
 //Code
 const Styles = StyleSheet.create({

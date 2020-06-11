@@ -1,4 +1,4 @@
-import { _fetch } from "cuervo/src/utils/HttpClient";
+import { _fetch } from "app/src/utils/HttpClient";
 
 export const connection = async (server) => { //retorna 1 si hay éxito, 0 en caso contrario
     const [response, data, error] = await _fetch(server, "/auth/connection");

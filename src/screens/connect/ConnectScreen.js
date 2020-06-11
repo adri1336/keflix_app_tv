@@ -4,17 +4,17 @@ import { View, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import LoadingView from "cuervo/src/components/LoadingView";
-import NormalButton from "cuervo/src/components/NormalButton";
+import LoadingView from "app/src/components/LoadingView";
+import NormalButton from "app/src/components/NormalButton";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import { AppContext } from "cuervo/src/AppContext";
-import Definitions from "cuervo/src/utils/Definitions";
-import * as Auth from "cuervo/src/api/Auth";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import { AppContext } from "app/src/AppContext";
+import Definitions from "app/src/utils/Definitions";
+import * as Auth from "app/src/api/Auth";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class ConnectScreen extends React.Component {

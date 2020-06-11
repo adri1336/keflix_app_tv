@@ -4,12 +4,12 @@ import { View, Text, Image } from "react-native";
 
 //Components Imports
 import TouchableOpacityFix from "./TouchableOpacityFix";
-import { hoursMinutesFormat, setStateIfMounted } from "cuervo/src/utils/Functions";
-import { COVER_ITEM_VALUES } from "cuervo/src/components/LibraryList";
-import * as Movie from "cuervo/src/api/Movie";
-import { AppContext } from "cuervo/src/AppContext";
-import Definitions from "cuervo/src/utils/Definitions";
-import Styles from "cuervo/src/utils/Styles";
+import { hoursMinutesFormat, setStateIfMounted } from "app/src/utils/Functions";
+import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
+import * as Movie from "app/src/api/Movie";
+import { AppContext } from "app/src/AppContext";
+import Definitions from "app/src/utils/Definitions";
+import Styles from "app/src/utils/Styles";
 
 export default class SearchCoverButton extends React.Component {
     static contextType = AppContext;

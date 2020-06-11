@@ -14,7 +14,7 @@ import LoadingView from "./src/components/LoadingView";
 import Container from "./src/navigation/Container";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions from "app/src/utils/Definitions";
 
 //Disable Yellow Warnings Box In App
 console.disableYellowBox = true;
@@ -36,7 +36,7 @@ export default () => {
 	
 	//Fonts
 	let [fontsLoaded] = useFonts({
-		"Roboto-Regular": require("cuervo/assets/fonts/Roboto-Regular.ttf")
+		"Roboto-Regular": require("app/assets/fonts/Roboto-Regular.ttf")
 	});
 	if(fontsLoaded) {
 		return (

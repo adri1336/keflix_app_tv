@@ -3,19 +3,19 @@ import React from "react";
 import { View, Text, BackHandler, Alert } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import i18n from "i18n-js";
-import { version } from "cuervo/package.json";
+import { version } from "app/app.json";
 
 //Components Imports
-import LoadingView from "cuervo/src/components/LoadingView";
-import NormalButton from "cuervo/src/components/NormalButton";
+import LoadingView from "app/src/components/LoadingView";
+import NormalButton from "app/src/components/NormalButton";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { AppContext } from "cuervo/src/AppContext";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Definitions from "app/src/utils/Definitions";
+import { AppContext } from "app/src/AppContext";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class GeneralScreen extends React.Component {

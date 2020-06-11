@@ -4,17 +4,17 @@ import { View, ActivityIndicator } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import HeaderMedia from "cuervo/src/components/HeaderMedia";
-import LibrarySectionGrid from "cuervo/src/components/LibrarySectionGrid";
-import NormalButton from "cuervo/src/components/NormalButton";
+import HeaderMedia from "app/src/components/HeaderMedia";
+import LibrarySectionGrid from "app/src/components/LibrarySectionGrid";
+import NormalButton from "app/src/components/NormalButton";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { AppContext } from "cuervo/src/AppContext";
-import { SCREEN_MARGIN_LEFT } from "cuervo/src/components/TVDrawer";
-import * as Movie from "cuervo/src/api/Movie";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
-import Styles from "cuervo/src/utils/Styles";
+import Definitions from "app/src/utils/Definitions";
+import { AppContext } from "app/src/AppContext";
+import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
+import * as Movie from "app/src/api/Movie";
+import { setStateIfMounted } from "app/src/utils/Functions";
+import Styles from "app/src/utils/Styles";
 
 //Code
 export default class MoviesScreen extends React.Component {

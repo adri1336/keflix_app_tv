@@ -1,15 +1,15 @@
 //Imports
 import React from "react";
 import { View, Text, AsyncStorage } from "react-native";
-import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "cuervo/src/components/Keyboard";
-import Definitions, { STORAGE_KEYS } from "cuervo/src/utils/Definitions";
-import Styles from "cuervo/src/utils/Styles";
-import BoxTextInput from "cuervo/src/components/BoxTextInput";
-import NormalAlert from "cuervo/src/components/NormalAlert";
-import Checkbox from "cuervo/src/components/Checkbox";
-import { AppContext } from "cuervo/src/AppContext";
-import LoadingView from "cuervo/src/components/LoadingView";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Keyboard, { KeyboardTypes, KeyboardButtonsTypes } from "app/src/components/Keyboard";
+import Definitions, { STORAGE_KEYS } from "app/src/utils/Definitions";
+import Styles from "app/src/utils/Styles";
+import BoxTextInput from "app/src/components/BoxTextInput";
+import NormalAlert from "app/src/components/NormalAlert";
+import Checkbox from "app/src/components/Checkbox";
+import { AppContext } from "app/src/AppContext";
+import LoadingView from "app/src/components/LoadingView";
+import { setStateIfMounted } from "app/src/utils/Functions";
 import i18n from "i18n-js";
 
 export default class SelectServerScreen extends React.Component {

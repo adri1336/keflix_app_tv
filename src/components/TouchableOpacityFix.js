@@ -5,7 +5,7 @@
 //Imports
 import React from "react";
 import { TouchableOpacity, TVEventHandler } from "react-native";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 let
     buttons = [],

@@ -6,8 +6,7 @@ export default {
     DEFAULT_MARGIN: 8,
     PASSWORD_MIN_LENGTH: 3,
     PIN_PASSWORD_LENGTH: 4,
-    APPLICATION_WEBPAGE: "https://github.com/adri1samp/",
-    APPLICATION_NAME: "Keflix"
+    APPLICATION_WEBPAGE: "https://github.com/adri1336/keflix_app_tv"
 };
 
 export const DEFAULT_SIZES = {

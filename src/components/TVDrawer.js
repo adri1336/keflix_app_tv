@@ -4,19 +4,19 @@ import { View, Text, Animated, Easing, TVEventHandler, BackHandler, findNodeHand
 import { Feather } from "@expo/vector-icons";
 import i18n from "i18n-js";
 import { LinearGradient } from "expo-linear-gradient";
-import { enableAllButtons, disableAllButtons } from "cuervo/src/components/TouchableOpacityFix";
+import { enableAllButtons, disableAllButtons } from "app/src/components/TouchableOpacityFix";
 
 //Components Imports
-import NormalButton from "cuervo/src/components/NormalButton";
-import LoadingView from "cuervo/src/components/LoadingView";
+import NormalButton from "app/src/components/NormalButton";
+import LoadingView from "app/src/components/LoadingView";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions, { DEFAULT_SIZES } from "cuervo/src/utils/Definitions";
-import * as Dimensions from "cuervo/src/utils/Dimensions.js";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Definitions, { DEFAULT_SIZES } from "app/src/utils/Definitions";
+import * as Dimensions from "app/src/utils/Dimensions.js";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Vars
 export const DRAWER_VALUES = {

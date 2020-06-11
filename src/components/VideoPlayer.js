@@ -2,11 +2,11 @@ import React from "react";
 import { View, Animated, Easing, Text, TVEventHandler, findNodeHandle, ActivityIndicator, Image } from "react-native";
 import { Video } from "expo-av";
 import { MaterialIcons } from "@expo/vector-icons";
-import IconButton from "cuervo/src/components/IconButton";
-import ProgressBar from "cuervo/src/components/ProgressBar";
-import Definitions from "cuervo/src/utils/Definitions";
-import Styles from "cuervo/src/utils/Styles";
-import { timeConvertFormatted, setStateIfMounted } from "cuervo/src/utils/Functions";
+import IconButton from "app/src/components/IconButton";
+import ProgressBar from "app/src/components/ProgressBar";
+import Definitions from "app/src/utils/Definitions";
+import Styles from "app/src/utils/Styles";
+import { timeConvertFormatted, setStateIfMounted } from "app/src/utils/Functions";
 import i18n from "i18n-js";
 
 const
@@ -334,6 +334,7 @@ export default class VideoPlayer extends React.Component {
                 clearTimeout(this.hideControlsTimeout);
                 this.hideControlsTimeout = null;
             }
+            
             this.hideControlsTimeout = setTimeout(async () => {
                 if(!this.state.seeking) {
                     this.hideControlsTimeout = null;
@@ -347,11 +348,11 @@ export default class VideoPlayer extends React.Component {
         if(this.video && !this.state.inBackground) {
             if(this.state.paused) {
                 this.video.playAsync();
-                setStateIfMounted(this, { paused: false, showTitle: false });
+                setStateIfMounted(this, { paused: false, showTitle: false }, () => this.hideControlsTimer());
             }
             else {
                 this.video.pauseAsync();
-                setStateIfMounted(this, { paused: true });
+                setStateIfMounted(this, { paused: true }, () => this.hideControlsTimer());
             }
         }
     }
@@ -448,17 +449,35 @@ export default class VideoPlayer extends React.Component {
                                         <Image
                                             style={{ width: 250, height: 250, marginLeft: 110 }}
                                             resizeMode="center"
+                                            resizeMethod="resize"
                                             source={{ uri: this.props.title.image }}
                                         />
                                     );
                                 }
                                 else if(this.props.title.text) {
                                     return (
-                                        <Text
-                                            style={[ Styles.titleText, { fontWeight: "bold", marginLeft: 110 } ]}
+                                        <View
+                                            style={{
+                                                display: "flex",
+                                                flex: 1,
+                                                flexDirection: "column",
+                                                justifyContent: "center"
+                                            }}
                                         >
-                                            { this.props.title.text }
-                                        </Text>
+                                            <Text
+                                                style={[ Styles.titleText, { fontWeight: "bold", marginLeft: 110 } ]}
+                                            >
+                                                { this.props.title.text }
+                                            </Text>
+                                            {
+                                                this.props.title.subtext &&
+                                                <Text
+                                                    style={[ Styles.bigSubtitleText, { marginLeft: 110 } ]}
+                                                >
+                                                    { this.props.title.subtext }
+                                                </Text>
+                                            }
+                                        </View>
                                     );
                                 }
                             }
@@ -486,6 +505,7 @@ export default class VideoPlayer extends React.Component {
                             opacity: 0.3
                         }}
                         source={{ uri: this.props.backdrop }}
+                        resizeMethod="resize"
                     />
                 </View>
             );

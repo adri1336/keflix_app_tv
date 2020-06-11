@@ -3,8 +3,8 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Screen Imports
-import SearchScreen from "cuervo/src/screens/main/SearchScreen";
-import PlayScreen from "cuervo/src/screens/main/PlayScreen";
+import SearchScreen from "app/src/screens/main/SearchScreen";
+import PlayScreen from "app/src/screens/main/PlayScreen";
 
 //Vars
 const SearchNavigator = createStackNavigator();

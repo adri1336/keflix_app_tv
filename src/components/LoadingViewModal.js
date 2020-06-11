@@ -3,8 +3,8 @@ import React from "react";
 import { Modal, View, ActivityIndicator } from "react-native";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Definitions from "app/src/utils/Definitions";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class LoadingViewModal extends React.Component {

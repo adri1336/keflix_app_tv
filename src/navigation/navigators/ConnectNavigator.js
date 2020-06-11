@@ -3,7 +3,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 //Screen Imports
-import ConnectScreen from "cuervo/src/screens/connect/ConnectScreen";
+import ConnectScreen from "app/src/screens/connect/ConnectScreen";
 
 //Vars
 const ConnectNavigator = createStackNavigator();

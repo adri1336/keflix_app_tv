@@ -11,10 +11,10 @@ import ProfileNavigator from "./navigators/ProfileNavigator";
 import MainNavigator from "./navigators/MainNavigator";
 
 //Other Imports
-import { AppContext } from "cuervo/src/AppContext";
-import { NAVIGATORS, STORAGE_KEYS, CONFIG } from "cuervo/src/utils/Definitions";
-import * as Auth from "cuervo/src/api/Auth";
-import * as Account from "cuervo/src/api/Account";
+import { AppContext } from "app/src/AppContext";
+import { NAVIGATORS, STORAGE_KEYS, CONFIG } from "app/src/utils/Definitions";
+import * as Auth from "app/src/api/Auth";
+import * as Account from "app/src/api/Account";
 
 //Code
 function getNavigator(navigator) {

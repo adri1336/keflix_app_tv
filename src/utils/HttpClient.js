@@ -1,6 +1,6 @@
 //Vars
 export const REQUEST_TIMEOUT_ERROR_CODE = 504;
-const FETCH_TIMEOUT = 10000;
+const FETCH_TIMEOUT = 20000;
 
 //Code
 const timeout = (time, promise) => {

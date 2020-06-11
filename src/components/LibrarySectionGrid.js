@@ -1,10 +1,10 @@
 //Imports
 import React from "react";
 import { View, Text, FlatList, Dimensions, TVEventHandler } from "react-native";
-import Styles from "cuervo/src/utils/Styles";
-import Definitions from "cuervo/src/utils/Definitions";
-import LibraryList, { COVER_ITEM_VALUES } from "cuervo/src/components/LibraryList";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Styles from "app/src/utils/Styles";
+import Definitions from "app/src/utils/Definitions";
+import LibraryList, { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Vars
 const MAX_SECTIONS_IN_SCREEN = 3;

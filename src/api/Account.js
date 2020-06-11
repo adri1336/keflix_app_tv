@@ -1,4 +1,4 @@
-import { _fetch } from "cuervo/src/utils/HttpClient";
+import { _fetch } from "app/src/utils/HttpClient";
 import { apiFetch } from "./ApiClient";
 
 export const getPassToken = async (server, accessToken) => {

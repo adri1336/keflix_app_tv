@@ -4,18 +4,18 @@ import { View, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import NormalAlert from "cuervo/src/components/NormalAlert";
-import LoadingViewModal from "cuervo/src/components/LoadingViewModal";
-import ColorPicker from "cuervo/src/components/ColorPicker";
+import NormalAlert from "app/src/components/NormalAlert";
+import LoadingViewModal from "app/src/components/LoadingViewModal";
+import ColorPicker from "app/src/components/ColorPicker";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import * as Functions from "cuervo/src/utils/Functions";
-import * as Profile from "cuervo/src/api/Profile";
-import { AppContext } from "cuervo/src/AppContext";
+import Definitions from "app/src/utils/Definitions";
+import * as Functions from "app/src/utils/Functions";
+import * as Profile from "app/src/api/Profile";
+import { AppContext } from "app/src/AppContext";
 
 //Code
 export default class SelectProfileColorScreen extends React.Component {

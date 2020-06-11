@@ -3,7 +3,7 @@ import React from "react";
 import { View, ActivityIndicator } from "react-native";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
+import Definitions from "app/src/utils/Definitions";
 
 //Code
 export default () => {

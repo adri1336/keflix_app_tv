@@ -4,18 +4,18 @@ import { View, Text } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
-import BoxButton from "cuervo/src/components/BoxButton";
-import NormalButton from "cuervo/src/components/NormalButton";
-import LoadingView from "cuervo/src/components/LoadingView";
+import BoxButton from "app/src/components/BoxButton";
+import NormalButton from "app/src/components/NormalButton";
+import LoadingView from "app/src/components/LoadingView";
 
 //Styles Imports
-import Styles from "cuervo/src/utils/Styles";
+import Styles from "app/src/utils/Styles";
 
 //Other Imports
-import Definitions from "cuervo/src/utils/Definitions";
-import { name, version } from "cuervo/package.json";
-import { AppContext } from "cuervo/src/AppContext";
-import { setStateIfMounted } from "cuervo/src/utils/Functions";
+import Definitions from "app/src/utils/Definitions";
+import { name, version } from "app/package.json";
+import { AppContext } from "app/src/AppContext";
+import { setStateIfMounted } from "app/src/utils/Functions";
 
 //Code
 export default class WelcomeScreen extends React.Component {
@@ -61,7 +61,7 @@ export default class WelcomeScreen extends React.Component {
                         flexDirection: "column",
                         justifyContent: "center"
                     }}>
-                        <Text style={[Styles.bigTitleText, { color: Definitions.SECONDARY_COLOR }]}>{ Definitions.APPLICATION_NAME }</Text>
+                        <Text style={[Styles.bigTitleText, { color: Definitions.SECONDARY_COLOR }]}>{ "KEFLIX" }</Text>
                         <Text style={Styles.titleText}>{ i18n.t("auth.welcome.slogan_text") }</Text>
                     </View>
                     <View style={{

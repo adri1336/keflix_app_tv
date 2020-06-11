@@ -4,7 +4,7 @@ import { SafeAreaView, View } from "react-native";
 import { TabRouter, useNavigationBuilder, createNavigatorFactory } from "@react-navigation/native";
 
 //Components Imports
-import TVDrawer from "cuervo/src/components/TVDrawer";
+import TVDrawer from "app/src/components/TVDrawer";
 
 //Code
 function TVDrawerNavigator({ initialRouteName, children, appContext, tabs, ...rest }) {
