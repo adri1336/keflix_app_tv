@@ -13,7 +13,7 @@ import Styles from "app/src/utils/Styles";
 
 //Other Imports
 import Definitions from "app/src/utils/Definitions";
-import { name, version } from "app/package.json";
+import { version } from "app/package.json";
 import { AppContext } from "app/src/AppContext";
 import { setStateIfMounted } from "app/src/utils/Functions";
 
@@ -64,8 +64,8 @@ export default class WelcomeScreen extends React.Component {
                         <Image
                             source={ require("app/assets/images/logo.png") }
                             style={{
-                                width: 300,
-                                height: 100
+                                height: 100,
+                                aspectRatio: 2.65
                             }}
                             resizeMethod="resize"
                         />
@@ -107,7 +107,7 @@ export default class WelcomeScreen extends React.Component {
                     </View>
                 </View>
                 <View style={{ flex: 10, padding: 2, alignItems: "flex-end" }}>
-                    <Text style={Styles.smallSlimText}>{ name + "-" + version }</Text>
+                    <Text style={[Styles.smallSlimText, { color: "white" } ]}>{ version }</Text>
                 </View>
             </View>
         );

@@ -470,7 +470,7 @@ export default class VideoPlayer extends React.Component {
                                                 { this.props.title.text }
                                             </Text>
                                             {
-                                                this.props.title.subtext &&
+                                                this.props.title.subtext.length > 0 &&
                                                 <Text
                                                     style={[ Styles.bigSubtitleText, { marginLeft: 110 } ]}
                                                 >

@@ -87,7 +87,7 @@ export default class MoviesScreen extends React.Component {
 
         //Últimas películas añadidas
         movies = await Movie.discover(this.context);
-        if(movies) sections.push({ title: "Últimas películas añadidas", covers: movies });
+        if(movies && movies.length > 0) sections.push({ title: "Últimas películas añadidas", covers: movies });
 
         if(this.librarySectionGrid) {
             if(sections.length > 0) {
