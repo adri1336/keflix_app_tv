@@ -20,12 +20,8 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true,
-      "requireFullScreen": true
-    },
     "android": {
-      "package": "xyz.keflix.keflix",
+      "package": "xyz.keflix.keflix-app-tv",
       "intentFilters": [
         {
           "action": "MAIN",
