@@ -51,7 +51,7 @@ const numericKeyboard = [
 ];
 const normalKeyboard = ["!#$", ["space", 2.06], ",", ".", "del"];
 const emailKeyboard = [
-    ["@hotmail.com", "@gmail.com", "@hotmail.es"],
+    ["@gmail.com", "@hotmail.com", "@hotmail.es"],
     ["!#$", "@", ".", ".com", "del"]
 ];
 

@@ -20,8 +20,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "githubUrl": "https://github.com/adri1336/keflix_app_tv",
     "android": {
-      "package": "xyz.keflix.keflix-app-tv",
+      "package": "xyz.keflix.keflix_app_tv",
       "intentFilters": [
         {
           "action": "MAIN",

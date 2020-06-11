@@ -1,6 +1,6 @@
 //Imports
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import i18n from "i18n-js";
 
 //Components Imports
@@ -61,7 +61,14 @@ export default class WelcomeScreen extends React.Component {
                         flexDirection: "column",
                         justifyContent: "center"
                     }}>
-                        <Text style={[Styles.bigTitleText, { color: Definitions.SECONDARY_COLOR }]}>{ "KEFLIX" }</Text>
+                        <Image
+                            source={ require("app/assets/images/logo.png") }
+                            style={{
+                                width: 300,
+                                height: 100
+                            }}
+                            resizeMethod="resize"
+                        />
                         <Text style={Styles.titleText}>{ i18n.t("auth.welcome.slogan_text") }</Text>
                     </View>
                     <View style={{

@@ -39,7 +39,7 @@ export const STORAGE_KEYS = {
 export const MEDIA_DEFAULT = {
     MIN_MILLIS: 60000, //se considera que ha empezado a ver la película cuando lleva más de 1 min
     REMAINING_MILLIS: 600000, //cuando queden 10 minutos para que acabe la película se considerada terminada
-    PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL: 10000 //actualizar por donde va cada 10s
+    PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL: 30000 //actualizar por donde va cada 30s
 };
 
 export const CONFIG = {
