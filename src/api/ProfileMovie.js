@@ -16,13 +16,13 @@ export const favs = async (context, profileId) => {
     return null;
 };
 
-export const defaultObject = (context, libraryMovieId) => {
+export const defaultObject = (context, movieId) => {
     const profileId = context.state.profile.id;
     return {
         completed: false,
         current_time: 0,
         fav: false,
         profileId: profileId,
-        libraryMovieId: libraryMovieId
+        movieId: movieId
     };
 }

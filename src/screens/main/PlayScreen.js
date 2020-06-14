@@ -177,12 +177,12 @@ export default class PlayScreen extends React.Component {
 
     async updateProfilePositionMillis(positionMillis, force_update = false) {
         if(!this.state.trailer) {
-            let { runtime, libraryMovieId, profileInfo } = this.media;
+            let { runtime, id, profileInfo } = this.media;
             const durationMillis = runtime * 60000;
             const remainingMillis = durationMillis - positionMillis;
 
             if(!profileInfo) {
-                profileInfo = ProfileMovie.defaultObject(this.context, libraryMovieId);
+                profileInfo = ProfileMovie.defaultObject(this.context, id);
             }
             
             if(remainingMillis < MEDIA_DEFAULT.REMAINING_MILLIS) {
@@ -370,7 +370,7 @@ export default class PlayScreen extends React.Component {
     }
 
     renderMyListButton() {
-        let { profileInfo, libraryMovieId } = this.media;
+        let { profileInfo, id } = this.media;
         if(profileInfo && profileInfo.fav) {
             return (
                 <NormalButton
@@ -409,7 +409,7 @@ export default class PlayScreen extends React.Component {
                     onPress={
                         async () => {
                             if(!profileInfo) {
-                                profileInfo = ProfileMovie.defaultObject(this.context, libraryMovieId);
+                                profileInfo = ProfileMovie.defaultObject(this.context, id);
                             }
                             profileInfo.fav = true;
                             await ProfileMovie.upsert(this.context, profileInfo);
