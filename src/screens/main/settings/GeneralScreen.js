@@ -3,7 +3,7 @@ import React from "react";
 import { View, Text, BackHandler, Alert } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import i18n from "i18n-js";
-import { version } from "app/app.json";
+import { version } from "app/package.json";
 
 //Components Imports
 import LoadingView from "app/src/components/LoadingView";
