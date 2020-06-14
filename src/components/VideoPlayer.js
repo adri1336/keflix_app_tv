@@ -40,7 +40,7 @@ export default class VideoPlayer extends React.Component {
             bottomControlsPosY: new Animated.Value(CLOSED_CONTROLLER_Y_POSITION),
 
             inBackground: this.props.inBackground || false,
-            showBackdrop: this.props.backdrop || false,
+            showBackdrop: true,
             showTitle: false,
             seeking: false,
             paused: false,
@@ -489,26 +489,41 @@ export default class VideoPlayer extends React.Component {
     }
 
     renderBackdrop() {
-        if(this.props.backdrop && this.state.showBackdrop) {
-            return (
-                <View
-                    style={{
-                        position: "absolute",
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: "black"
-                    }}
-                >
-                    <Image
+        if(this.state.showBackdrop) {
+            if(this.props.backdrop) {
+                return (
+                    <View
                         style={{
-                            flex: 1,
-                            opacity: 0.3
+                            position: "absolute",
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: "black"
                         }}
-                        source={{ uri: this.props.backdrop }}
-                        resizeMethod="resize"
+                    >
+                        <Image
+                            style={{
+                                flex: 1,
+                                opacity: 0.3
+                            }}
+                            source={{ uri: this.props.backdrop }}
+                            resizeMethod="resize"
+                        />
+                    </View>
+                );
+            }
+            else {
+                return (
+                    <View
+                        style={{
+                            position: "absolute",
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: "black",
+                            opacity: 0.6
+                        }}
                     />
-                </View>
-            );
+                );
+            }
         }
     }
 
