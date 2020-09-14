@@ -11,4 +11,5 @@ Puedes instalar el .apk en cualquier Android TV con un gestor de paquetes descar
 
 ### Esta aplicación no distribuye ninguna película o contenido con derechos de autor, solo es una aplicación donde el usuario puede subir sus películas propias.
 
+Ejemplo de la aplicación conectado a un servidor de pruebas:
 ![Capturas de la aplicación funcionando en un servidor propio](https://i.imgur.com/jdxQJVF.png)
