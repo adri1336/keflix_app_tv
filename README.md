@@ -1,7 +1,7 @@
 # Keflix (APP Android TV)
 Aplicación para Android TV de streaming de películas
 Descarga la última apk desde la páginas de releases:
-https://github.com/adri1336/keflix_admin/releases
+https://github.com/adri1336/keflix_app_tv/releases
 
 Puedes instalar el .apk en cualquier Android TV con un gestor de paquetes descargado desde la Play Store.
 
