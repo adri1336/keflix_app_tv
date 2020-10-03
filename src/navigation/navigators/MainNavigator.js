@@ -1,7 +1,7 @@
 //Imports
 import React from "react";
 import i18n from "i18n-js";
-import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
 //Components Imports
 import { createTVDrawerNavigator } from "app/src/components/navigators/TVDrawerNavigator";
@@ -9,6 +9,7 @@ import { createTVDrawerNavigator } from "app/src/components/navigators/TVDrawerN
 //Screen Imports
 import SearchNavigator from "./SearchNavigator";
 import MoviesNavigator from "./MoviesNavigator";
+import TvsNavigator from "./TvsNavigator";
 import MyListNavigator from "./MyListNavigator";
 import SettingsNavigator from "./SettingsNavigator";
 
@@ -29,6 +30,7 @@ export default () => {
             tabs={[
                 { navigator: "SearchNavigator", route: "SearchScreen", title: i18n.t("main_navigator.search_screen_title"), icon: { library: FontAwesome, name: "search" } },
                 { navigator: "MoviesNavigator", route: "MoviesScreen", title: i18n.t("main_navigator.movies_screen_title"), icon: { library: MaterialCommunityIcons, name: "movie" } },
+                { navigator: "TvsNavigator", route: "TvsScreen", title: i18n.t("main_navigator.tvs_screen_title"), icon: { library: MaterialIcons, name: "tv" } },
                 { navigator: "MyListNavigator", route: "MyListScreen", title: i18n.t("main_navigator.my_list_screen_title"), icon: { library: FontAwesome, name: "plus" } }
             ]}
             appContext={ appContext }
@@ -42,6 +44,11 @@ export default () => {
                 drawer: true,
                 drawerCanOpen: true,
                 currentRoute: "MoviesScreen"
+            }}/>
+            <MainNavigator.Screen name="TvsNavigator" component={TvsNavigator} options={{
+                drawer: true,
+                drawerCanOpen: true,
+                currentRoute: "TvsScreen"
             }}/>
             <MainNavigator.Screen name="MyListNavigator" component={MyListNavigator} options={{
                 drawer: true,

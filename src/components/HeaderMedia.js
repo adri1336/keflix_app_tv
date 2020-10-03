@@ -36,6 +36,7 @@ export default class HeaderMedia extends React.Component {
                 video: null
             },
             progress: null,
+            tagline: null,
             showVideo: false,
             imageTitleAspestRatio: 1 / 1,
             backOpacity: new Animated.Value(0.8)
@@ -212,30 +213,51 @@ export default class HeaderMedia extends React.Component {
                 <View
                     style={{
                         marginTop: Definitions.DEFAULT_MARGIN,
-                        flexDirection: "row",
-                        alignItems: "center"
+                        flexDirection: "column"
                     }}
                 >
-                    <ProgressBar
-                        progress={ progress }
-                        bgColor="#A9A9A9"
+                    {
+                        this.state.tagline &&
+                        <Text
+                            numberOfLines={ 1 }
+                            style={[
+                                Styles.bigSubtitleText,
+                                {
+                                    color: "rgba(255, 255, 255, 0.6)"
+                                }
+                            ]}
+                        >
+                            { this.state.tagline }
+                        </Text>
+                    }
+                    <View
                         style={{
-                            width: 100,
-                            height: 3
+                            marginTop: Definitions.DEFAULT_MARGIN,
+                            flexDirection: "row",
+                            alignItems: "center"
                         }}
-                    />
-                    <Text
-                        numberOfLines={ 1 }
-                        style={[
-                            Styles.bigSubtitleText,
-                            {
-                                color: "rgba(255, 255, 255, 0.6)",
-                                marginLeft: Definitions.DEFAULT_MARGIN
-                            }
-                        ]}
                     >
-                        { i18n.t("header_media.remaining_time", { remaining: remaining }) }
-                    </Text>
+                        <ProgressBar
+                            progress={ progress }
+                            bgColor="#A9A9A9"
+                            style={{
+                                width: 100,
+                                height: 3
+                            }}
+                        />
+                        <Text
+                            numberOfLines={ 1 }
+                            style={[
+                                Styles.bigSubtitleText,
+                                {
+                                    color: "rgba(255, 255, 255, 0.6)",
+                                    marginLeft: Definitions.DEFAULT_MARGIN
+                                }
+                            ]}
+                        >
+                            { i18n.t("header_media.remaining_time", { remaining: remaining }) }
+                        </Text>
+                    </View>
                 </View>
             );
         }

@@ -101,7 +101,8 @@ export default class LibrarySectionGrid extends React.Component {
         else {
             return (
                 <LibraryList
-                    ref={ component => this.listRefs[index] = component }
+                    tvs={ this.props?.tvs || false }
+                    ref={  component => this.listRefs[index] = component }
                     firstCoverMarginLeft={ this.firstCoverMarginLeft }
                     focused={ index == 0 ? true : false }
                     title={ section.title }

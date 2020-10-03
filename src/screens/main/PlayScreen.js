@@ -6,14 +6,13 @@ import Definitions, { MEDIA_DEFAULT } from "app/src/utils/Definitions";
 import NormalButton from "app/src/components/NormalButton";
 import Styles from "app/src/utils/Styles";
 import { MaterialIcons, MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
-import * as Movie from "app/src/api/Movie";
 import { AppContext } from "app/src/AppContext";
 import VideoPlayer from "app/src/components/VideoPlayer";
 import i18n from "i18n-js";
 import ProgressBar from "app/src/components/ProgressBar";
-import * as ProfileMovie from "app/src/api/ProfileMovie";
 import { setStateIfMounted, forceUpdateIfMounted } from "app/src/utils/Functions";
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
+import { getEpisodeIndexFromInfo } from "app/src/screens/main/TvsScreen";
 
 const
     BACK_FADE_DURATION = 500;
@@ -24,13 +23,18 @@ export default class PlayScreen extends React.Component {
     constructor(props) {
         super(props);
         this.media = this.props.route.params.media;
+        this.mediaUris = this.props.route.params.mediaUris;
+        this.profileClass = this.props.route.params.profileClass;
+        this.tvs = this.props.route.params?.tvs || false;
+        this.episodeIndex = this.props.route.params?.episodeIndex;
         this.lastProfileUpdate = 0;
         this.state = {
             playing: false,
             trailer: false,
             infoOpacity: new Animated.Value(1)
         };
-        this.videoIsValid = this.media.mediaInfo.video ? true : false;
+        if(this.tvs) this.videoIsValid = true;
+        else this.videoIsValid = this.media.mediaInfo.video ? true : false;
     }
 
     componentDidMount() {
@@ -84,7 +88,7 @@ export default class PlayScreen extends React.Component {
         if(this.videoPlayer){
             this.videoPlayer.stopVideo(true);
             if(this.state.trailer) {
-                this.videoPlayer.setUri(Movie.getVideo(this.context, this.media.id));
+                this.videoPlayer.setUri(this.mediaUris.video);
             }
         }
         setStateIfMounted(this, { playing: false, trailer: false });
@@ -135,7 +139,7 @@ export default class PlayScreen extends React.Component {
         if(this.state.trailer != prevState.trailer) {
             if(this.state.trailer) {
                 if(this.videoPlayer) {
-                    this.videoPlayer.playNow(0, Movie.getTrailer(this.context, this.media.id));
+                    this.videoPlayer.playNow(0, this.mediaUris.trailer);
                 }
                 else {
                     setStateIfMounted(this, { trailer: false, playing: false });
@@ -145,14 +149,26 @@ export default class PlayScreen extends React.Component {
     }
 
     setHeaderInfo() {
-        const { id, title, release_date, runtime, vote_average, overview, mediaInfo } = this.media;
+        let { title, name, release_date, first_air_date, runtime, vote_average, overview, mediaInfo } = this.media;
+        if(this.tvs) {
+            if(this.episodeIndex < 0) runtime = 0;
+            else {
+                runtime = this.media.episode_tvs[this.episodeIndex].runtime;
+
+                const episode = this.media.episode_tvs[this.episodeIndex];
+                if(this.media.profileInfo && this.media.profileInfo.season !== -1 && this.media.profileInfo.episode !== -1) {
+                    overview = (episode.tagline + "\n\n" + episode.overview) || this.media.overview;
+                }
+            }
+        }
+
         this.headerMedia.setInfo({
             title: {
-                text: title,
-                image: mediaInfo.logo ? Movie.getLogo(this.context, id) : null
+                text: title || name,
+                image: mediaInfo.logo ? this.mediaUris.logo : null
             },
             info: {
-                releaseDate: release_date.substr(0, 4),
+                releaseDate: release_date ? release_date.substr(0, 4) : first_air_date.substr(0, 4),
                 runtime: runtime,
                 vote_average: vote_average,
             },
@@ -161,9 +177,29 @@ export default class PlayScreen extends React.Component {
         }, false);
     }
 
-    onPlaybackStatusUpdate(playbackStatus) {
+    async onPlaybackStatusUpdate(playbackStatus) {
         const { positionMillis } = playbackStatus;
         if(playbackStatus.didJustFinish) {
+            if(this.tvs && this.episodeIndex !== -1) {
+                const episode = this.media.episode_tvs[this.episodeIndex];
+                
+                const { nextSeason, nextEpisode } = episode.mediaInfo;
+                let { id, profileInfo } = this.media;
+                
+                profileInfo.current_time = 0;
+                if(nextSeason !== null && nextEpisode !== null) {
+                    profileInfo.season = nextSeason;
+                    profileInfo.episode = nextEpisode;
+                    this.episodeIndex = getEpisodeIndexFromInfo(id, profileInfo.season, profileInfo.episode);
+                }
+                else {
+                    profileInfo.season = -1;
+                    profileInfo.episode = -1;
+                    this.episodeIndex = -1;
+                }
+                await this.profileClass.upsert(this.context, profileInfo);
+                console.log(profileInfo);
+            }
             this.updateProfilePositionMillis(positionMillis, true);
             this.stopPlaying();
         }
@@ -178,22 +214,33 @@ export default class PlayScreen extends React.Component {
     async updateProfilePositionMillis(positionMillis, force_update = false) {
         if(!this.state.trailer) {
             let { runtime, id, profileInfo } = this.media;
+            if(this.tvs) {
+                runtime = this.media.episode_tvs[this.episodeIndex].runtime;
+            }
             const durationMillis = runtime * 60000;
             const remainingMillis = durationMillis - positionMillis;
 
             if(!profileInfo) {
-                profileInfo = ProfileMovie.defaultObject(this.context, id);
+                profileInfo = this.profileClass.defaultObject(this.context, id);
             }
             
-            if(remainingMillis < MEDIA_DEFAULT.REMAINING_MILLIS) {
-                profileInfo.completed = true;
+            if(!this.tvs) {
+                if(remainingMillis < MEDIA_DEFAULT.REMAINING_MILLIS) {
+                    profileInfo.completed = true;
+                }
+                else {
+                    profileInfo.completed = false;
+                }
             }
             else {
-                profileInfo.completed = false;
+                if(profileInfo.season === -1 || profileInfo.episode === -1) {
+                    profileInfo.season = this.media.episode_tvs[this.episodeIndex].season;
+                    profileInfo.episode = this.media.episode_tvs[this.episodeIndex].episode;
+                }
             }
 
             profileInfo.current_time = positionMillis;
-            await ProfileMovie.upsert(this.context, profileInfo);
+            await this.profileClass.upsert(this.context, profileInfo);
             this.media.profileInfo = profileInfo;
             if(force_update) {
                 forceUpdateIfMounted(this);
@@ -202,7 +249,11 @@ export default class PlayScreen extends React.Component {
     }
 
     renderVideoPlayer() {
-        const { id, title, tagline, mediaInfo, profileInfo } = this.media;
+        let { title, name, tagline, mediaInfo, profileInfo } = this.media;
+        if(this.tvs) {  
+            tagline = this.episodeIndex < 0 ? "" : (this.media.episode_tvs[this.episodeIndex].tagline || "");
+        }
+
         let positionMillis = 0;
         if(profileInfo && profileInfo.current_time > MEDIA_DEFAULT.MIN_MILLIS && !profileInfo.completed) {
             positionMillis = profileInfo.current_time;
@@ -220,15 +271,15 @@ export default class PlayScreen extends React.Component {
                 <VideoPlayer
                     ref={ component => this.videoPlayer = component }
                     inBackground={ true }
-                    backdrop={ mediaInfo.backdrop ? Movie.getBackdrop(this.context, id) : null }
+                    backdrop={ mediaInfo.backdrop ? this.mediaUris.backdrop : null }
                     playIn={ 10 } //seconds
                     title={{
-                        text: title,
+                        text: title || name,
                         subtext: tagline,
-                        image: mediaInfo.logo ? Movie.getLogo(this.context, id) : null
+                        image: mediaInfo.logo ? this.mediaUris.logo : null
                     }}
                     videoProps={{
-                        source: { uri: Movie.getVideo(this.context, id) },
+                        source: { uri: this.mediaUris.video },
                         positionMillis: positionMillis
                     }}
                     onPlayStarted={
@@ -251,8 +302,11 @@ export default class PlayScreen extends React.Component {
     }
 
     renderPlayButtons() {
-        const { runtime, profileInfo } = this.media;
-        if(profileInfo && profileInfo.current_time > MEDIA_DEFAULT.MIN_MILLIS && !profileInfo.completed) {
+        let { runtime, profileInfo } = this.media;
+        if(this.tvs && this.episodeIndex !== -1) {
+            runtime = this.media.episode_tvs[this.episodeIndex].runtime;
+        }
+        if((!this.tvs && profileInfo && profileInfo.current_time > MEDIA_DEFAULT.MIN_MILLIS && !profileInfo.completed) || (this.tvs && profileInfo && profileInfo.season !== -1 && profileInfo.episode !== -1)) {
             const total_time = runtime * 60000; //min to ms
             const current_time = profileInfo.current_time;
             const remainingMillis = total_time - current_time;
@@ -385,7 +439,7 @@ export default class PlayScreen extends React.Component {
                     onPress={
                         async () => {
                             profileInfo.fav = false;
-                            await ProfileMovie.upsert(this.context, profileInfo);
+                            await this.profileClass.upsert(this.context, profileInfo);
                             this.media.profileInfo = profileInfo;
                             forceUpdateIfMounted(this);
                         }
@@ -409,10 +463,10 @@ export default class PlayScreen extends React.Component {
                     onPress={
                         async () => {
                             if(!profileInfo) {
-                                profileInfo = ProfileMovie.defaultObject(this.context, id);
+                                profileInfo = this.profileClass.defaultObject(this.context, id);
                             }
                             profileInfo.fav = true;
-                            await ProfileMovie.upsert(this.context, profileInfo);
+                            await this.profileClass.upsert(this.context, profileInfo);
                             this.media.profileInfo = profileInfo;
                             forceUpdateIfMounted(this);
                         }

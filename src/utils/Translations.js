@@ -149,6 +149,7 @@ i18n.translations = {
 		main_navigator: {
 			search_screen_title: "Búsqueda",
 			movies_screen_title: "Películas",
+			tvs_screen_title: "Series",
 			my_list_screen_title: "Mi lista"
 		},
 		video_player: {
@@ -189,6 +190,9 @@ i18n.translations = {
 			},
 			movies: {
 				no_data_title: "Las películas aparecerán aquí."
+			},
+			tvs: {
+				no_data_title: "Las series aparecerán aquí."
 			},
 			my_list: {
 				no_data_title: "Cuando tengas contenidos en tu lista los verás aqui.",

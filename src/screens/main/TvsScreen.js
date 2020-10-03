@@ -12,13 +12,24 @@ import NormalButton from "app/src/components/NormalButton";
 import Definitions from "app/src/utils/Definitions";
 import { AppContext } from "app/src/AppContext";
 import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
-import * as Movie from "app/src/api/Movie";
+import * as Tv from "app/src/api/Tv";
 import { setStateIfMounted } from "app/src/utils/Functions";
 import Styles from "app/src/utils/Styles";
-import * as ProfileMovie from "app/src/api/ProfileMovie";
+import * as ProfileTv from "app/src/api/ProfileTv";
 
 //Code
-export default class MoviesScreen extends React.Component {
+export function getEpisodeIndexFromInfo(tv, season, episodeNumer) {
+    const episodes = tv.episode_tvs;
+    for (let index = 0; index < episodes.length; index++) {
+        const episode = episodes[index];
+        if(episode.season === season && episode.episode === episodeNumer) {
+            return index;
+        }
+    };
+    return -1;
+}
+
+export default class TvsScreen extends React.Component {
     static contextType = AppContext;
 
     constructor(props) {
@@ -35,7 +46,7 @@ export default class MoviesScreen extends React.Component {
         this._isMounted = true;
         this.account = this.context.state.account;
         this.profile = this.context.state.profile;
-        this.refreshMovies();
+        this.refreshTvs();
         
         this.onFocusEvent = this.props.navigation.addListener("focus", () => {
             setStateIfMounted(this, { focused: true });
@@ -82,14 +93,21 @@ export default class MoviesScreen extends React.Component {
         return true;
     }
     
-    async refreshMovies() {
+    async refreshTvs() {
         let sections = [];
-        let movies = null;
+        let tvs = null;
 
         //Últimas películas añadidas
-        movies = await Movie.discover(this.context);
-        if(movies && movies.length > 0) sections.push({ title: "Últimas películas añadidas", covers: movies });
+        tvs = await Tv.discover(this.context);
+        if(tvs && tvs.length > 0) sections.push({ title: "Últimas series añadidas", covers: tvs });
 
+        tvs.forEach(tv => { 
+            tv.tagline = "";
+            tv.episode_tvs.forEach(episode => {
+                episode.tagline = "S" + episode.season + ":E" + episode.episode + ": '" + episode.name + "'";
+            });
+        });
+        
         if(this.librarySectionGrid) {
             if(sections.length > 0) {
                 this.librarySectionGrid.setSections(sections);
@@ -101,13 +119,35 @@ export default class MoviesScreen extends React.Component {
         }
     }
 
-    setHeaderInfo(movie) {
-        const { title, release_date, runtime, vote_average, overview, profileInfo } = movie;
+    setHeaderInfo(tv) {
+        let season = tv.firstSeason,
+            episode = tv.firstEpisode;
+        
+        if(tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1) {
+            season = tv.profileInfo.season;
+            episode = tv.profileInfo.episode;
+        }
+
+        const episodeIndex = getEpisodeIndexFromInfo(tv, season, episode);
+        let runtime = 0;
+            tagline = "";
+
+        let { name, first_air_date, vote_average, overview, profileInfo } = tv;
+        let backdrop = tv.mediaInfo.backdrop ? Tv.getBackdrop(this.context, tv.id) : null;
+
+        if(episodeIndex !== -1 && tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1) {
+            runtime = tv.episode_tvs[episodeIndex].runtime;
+            tagline = tv.episode_tvs[episodeIndex].tagline;
+            overview = tagline + "\n\n" + tv.episode_tvs[episodeIndex].overview;
+
+            if(tv.episode_tvs[episodeIndex].mediaInfo.backdrop) {
+                backdrop = Tv.getEpisodeBackdrop(this.context, tv.id, season, episode);
+            }
+        }
 
         let progress = null;
-        if(profileInfo) {
+        if(episodeIndex !== -1 && tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1) {
             progress = {
-                completed: profileInfo.completed,
                 current_time: profileInfo.current_time,
                 total_time: runtime * 60000 //min to ms
             }
@@ -115,20 +155,21 @@ export default class MoviesScreen extends React.Component {
 
         this.headerMedia.setInfo({
             title: {
-                text: title,
-                image: movie.mediaInfo.logo ? Movie.getLogo(this.context, movie.id) : null
+                text: name,
+                image: tv.mediaInfo.logo ? Tv.getLogo(this.context, tv.id) : null
             },
             info: {
-                releaseDate: release_date.substr(0, 4),
+                releaseDate: first_air_date.substr(0, 4),
                 runtime: runtime,
                 vote_average: vote_average,
             },
             description: overview,
             backdrop: {
-                image: movie.mediaInfo.backdrop ? Movie.getBackdrop(this.context, movie.id) : null,
-                video: (this.props.navigation.isFocused() && movie.mediaInfo.trailer && !this.isDrawerOpened) ? Movie.getTrailer(this.context, movie.id) : null
+                image: backdrop,
+                video: (this.props.navigation.isFocused() && tv.mediaInfo.trailer && !this.isDrawerOpened) ? Tv.getTrailer(this.context, tv.id) : null
             },
-            progress: progress
+            progress: progress,
+            tagline: tagline
         });
     }
 
@@ -147,7 +188,7 @@ export default class MoviesScreen extends React.Component {
                         hasTVPreferredFocus={ true }
                         textStyle={[ Styles.bigText ]}
                     >
-                        { i18n.t("main.movies.no_data_title") }
+                        { i18n.t("main.tvs.no_data_title") }
                     </NormalButton>
                 </View>
             );
@@ -189,6 +230,7 @@ export default class MoviesScreen extends React.Component {
                         accessible={ this.state.focused ? true: false }
                     />
                     <LibrarySectionGrid
+                        tvs
                         ref={ component => this.librarySectionGrid = component }
                         firstCoverMarginLeft={ SCREEN_MARGIN_LEFT }
                         onScrollStarted={
@@ -201,15 +243,29 @@ export default class MoviesScreen extends React.Component {
                             }
                         }
                         onCoverFocused={
-                            (movie, rowIndex) => {
-                                this.setHeaderInfo(movie);
+                            (tv, rowIndex) => {
+                                this.setHeaderInfo(tv);
                                 if(this.props.navigation.isFocused()) {
                                     this.props.navigation.dangerouslyGetParent().setOptions({ drawerCanOpen: rowIndex == 1 ? true : false });
                                 }
                             }
                         }
                         onCoverSelected={
-                            movie => {
+                            tv => {
+                                let season = tv.firstSeason,
+                                    episode = tv.firstEpisode;
+
+                                if(tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1) {
+                                    season = tv.profileInfo.season;
+                                    episode = tv.profileInfo.episode;
+                                }
+
+                                const episodeIndex = getEpisodeIndexFromInfo(tv, season, episode);
+                                let backdrop = tv.mediaInfo.backdrop ? Tv.getBackdrop(this.context, tv.id) : null;
+                                if(episodeIndex !== -1 && tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1 && tv.episode_tvs[episodeIndex].mediaInfo.backdrop) {
+                                    backdrop = Tv.getEpisodeBackdrop(this.context, tv.id, season, episode);
+                                }
+
                                 this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false, drawerCanOpen: false });
                                 if(this.librarySectionGrid) {
                                     this.librarySectionGrid.setFocus(false);
@@ -217,14 +273,17 @@ export default class MoviesScreen extends React.Component {
                                 if(this.headerMedia) {
                                     this.headerMedia.stopVideo();
                                 }
+
                                 this.props.navigation.navigate("PlayScreen", {
-                                    media: movie,
-                                    profileClass: ProfileMovie,
+                                    tvs: true,
+                                    episodeIndex: episodeIndex,
+                                    media: tv,
+                                    profileClass: ProfileTv,
                                     mediaUris: {
-                                        video: Movie.getVideo(this.context, movie.id),
-                                        trailer: Movie.getTrailer(this.context, movie.id),
-                                        logo: Movie.getLogo(this.context, movie.id),
-                                        backdrop: Movie.getBackdrop(this.context, movie.id)
+                                        video: Tv.getEpisodeVideo(this.context, tv.id, season, episode),
+                                        trailer: Tv.getTrailer(this.context, tv.id),
+                                        logo: Tv.getLogo(this.context, tv.id),
+                                        backdrop: backdrop
                                     }
                                 });
                             }

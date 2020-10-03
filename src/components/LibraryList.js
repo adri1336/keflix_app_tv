@@ -5,6 +5,7 @@ import Styles from "app/src/utils/Styles";
 import Definitions from "app/src/utils/Definitions";
 import { AppContext } from "app/src/AppContext";
 import * as Movie from "app/src/api/Movie";
+import * as Tv from "app/src/api/Tv";
 
 //Vars
 export const COVER_ITEM_VALUES = {
@@ -30,6 +31,7 @@ export default class LibraryList extends React.Component {
     constructor(props) {
         super(props);
 
+        this.tvs = this.props.tvs || false;
         this.focused = this.props.focused || false;
         this.currentCoverIndex = 1;
         this.firstCoverMarginLeft = this.props.firstCoverMarginLeft;
@@ -180,7 +182,7 @@ export default class LibraryList extends React.Component {
                         cover.mediaInfo.poster ? 
                             <Image
                                 style={{ flex: 1, backgroundColor: "rgba(128, 128, 128, 0.2)" }}
-                                source={{ uri: Movie.getPoster(this.context, cover.id) }}
+                                source={{ uri: this.tvs ? Tv.getPoster(this.context, cover.id) : Movie.getPoster(this.context, cover.id) }}
                                 resizeMethod="resize"
                             />
                         :
