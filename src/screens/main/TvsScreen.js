@@ -13,22 +13,11 @@ import Definitions from "app/src/utils/Definitions";
 import { AppContext } from "app/src/AppContext";
 import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
 import * as Tv from "app/src/api/Tv";
-import { setStateIfMounted } from "app/src/utils/Functions";
+import { setStateIfMounted, getEpisodeIndexFromInfo, getMediaUris } from "app/src/utils/Functions";
 import Styles from "app/src/utils/Styles";
 import * as ProfileTv from "app/src/api/ProfileTv";
 
 //Code
-export function getEpisodeIndexFromInfo(tv, season, episodeNumer) {
-    const episodes = tv.episode_tvs;
-    for (let index = 0; index < episodes.length; index++) {
-        const episode = episodes[index];
-        if(episode.season === season && episode.episode === episodeNumer) {
-            return index;
-        }
-    };
-    return -1;
-}
-
 export default class TvsScreen extends React.Component {
     static contextType = AppContext;
 
@@ -252,19 +241,7 @@ export default class TvsScreen extends React.Component {
                         }
                         onCoverSelected={
                             tv => {
-                                let season = tv.firstSeason,
-                                    episode = tv.firstEpisode;
-
-                                if(tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1) {
-                                    season = tv.profileInfo.season;
-                                    episode = tv.profileInfo.episode;
-                                }
-
-                                const episodeIndex = getEpisodeIndexFromInfo(tv, season, episode);
-                                let backdrop = tv.mediaInfo.backdrop ? Tv.getBackdrop(this.context, tv.id) : null;
-                                if(episodeIndex !== -1 && tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1 && tv.episode_tvs[episodeIndex].mediaInfo.backdrop) {
-                                    backdrop = Tv.getEpisodeBackdrop(this.context, tv.id, season, episode);
-                                }
+                                const mediaUris = getMediaUris(this.context, tv);
 
                                 this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false, drawerCanOpen: false });
                                 if(this.librarySectionGrid) {
@@ -276,15 +253,10 @@ export default class TvsScreen extends React.Component {
 
                                 this.props.navigation.navigate("PlayScreen", {
                                     tvs: true,
-                                    episodeIndex: episodeIndex,
+                                    episodeIndex: mediaUris.episodeIndex,
                                     media: tv,
                                     profileClass: ProfileTv,
-                                    mediaUris: {
-                                        video: Tv.getEpisodeVideo(this.context, tv.id, season, episode),
-                                        trailer: Tv.getTrailer(this.context, tv.id),
-                                        logo: Tv.getLogo(this.context, tv.id),
-                                        backdrop: backdrop
-                                    }
+                                    mediaUris: mediaUris
                                 });
                             }
                         }

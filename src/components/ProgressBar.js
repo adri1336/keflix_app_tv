@@ -15,6 +15,7 @@ export default class ProgressBar extends React.Component {
         this.state = {
             progress: this.props.progress || 0
         };
+        if(this.state.progress > 100) this.state.progress = 100;
     }
 
     componentDidMount() {
@@ -35,6 +36,7 @@ export default class ProgressBar extends React.Component {
     componentDidUpdate(prevProps) {
         if(prevProps.progress != this.props.progress) {
             this.state.progress = this.props.progress;
+            if(this.state.progress > 100) this.state.progress = 100;
         }
     }
 

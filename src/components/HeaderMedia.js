@@ -100,7 +100,7 @@ export default class HeaderMedia extends React.Component {
     }
 
     setInfo(info, fadeBack = true) {
-        if(this.state.backdrop.video) {
+        if(this.state?.backdrop?.video) {
             this.videoPaused = false;
             this.videoPlayer.stopAsync();
         }

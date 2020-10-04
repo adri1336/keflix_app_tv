@@ -7,6 +7,7 @@ import TouchableOpacityFix from "./TouchableOpacityFix";
 import { hoursMinutesFormat, setStateIfMounted } from "app/src/utils/Functions";
 import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
 import * as Movie from "app/src/api/Movie";
+import * as Tv from "app/src/api/Tv";
 import { AppContext } from "app/src/AppContext";
 import Definitions from "app/src/utils/Definitions";
 import Styles from "app/src/utils/Styles";
@@ -39,7 +40,7 @@ export default class SearchCoverButton extends React.Component {
     renderCoverInfo() {
         let timeInfo = null;
         const { cover } = this.props;
-        const releaseDate = cover.release_date.substr(0, 4);
+        const releaseDate = cover.release_date === undefined ? cover.first_air_date.substr(0, 4) : cover.release_date.substr(0, 4);
         if(cover.runtime) {
             timeInfo = hoursMinutesFormat(cover.runtime * 60);
         }
@@ -99,7 +100,7 @@ export default class SearchCoverButton extends React.Component {
                                 width: COVER_ITEM_VALUES.WIDTH,
                                 backgroundColor: "rgba(128, 128, 128, 0.2)"
                             }}
-                            source={{ uri: Movie.getPoster(this.context, cover.id) }}
+                            source={{ uri: cover.tv ? Tv.getPoster(this.context, cover.id) : Movie.getPoster(this.context, cover.id) }}
                             resizeMethod="resize"
                         />
                     :
@@ -117,7 +118,7 @@ export default class SearchCoverButton extends React.Component {
                         marginLeft: Definitions.DEFAULT_MARGIN
                     }}
                 >
-                    <Text style={[ Styles.bigText, { fontWeight: "bold" } ]}>{ cover.title }</Text>
+                    <Text style={[ Styles.bigText, { fontWeight: "bold" } ]}>{ cover.title || cover.name }</Text>
                     { this.renderCoverInfo() }
                     <Text
                         numberOfLines={ 7 }

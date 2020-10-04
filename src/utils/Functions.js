@@ -1,4 +1,5 @@
 import i18n from "i18n-js";
+import * as Tv from "app/src/api/Tv";
 
 //Code
 export function isValidEmail(email) {
@@ -49,4 +50,41 @@ export function hoursMinutesFormat(sec) {
     else if(hours > 1 && minutes == 0) return i18n.t("functions.hour_minutes_format.hours", { hours: hours });
     else if(hours == 1 && minutes == 0) return i18n.t("functions.hour_minutes_format.hour", { hours: hours });
     return i18n.t("functions.hour_minutes_format.nothing");
+}
+
+export function getEpisodeIndexFromInfo(tv, season, episodeNumer) {
+    const episodes = tv.episode_tvs;
+    for (let index = 0; index < episodes.length; index++) {
+        const episode = episodes[index];
+        if(episode.season === season && episode.episode === episodeNumer) {
+            return index;
+        }
+    };
+    return -1;
+}
+
+export function getMediaUris(context, tv) {
+    let season = tv.firstSeason,
+        episode = tv.firstEpisode;
+
+    if(tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1) {
+        season = tv.profileInfo.season;
+        episode = tv.profileInfo.episode;
+    }
+
+    const episodeIndex = getEpisodeIndexFromInfo(tv, season, episode);
+    let backdrop = tv.mediaInfo.backdrop ? Tv.getBackdrop(context, tv.id) : null;
+    if(episodeIndex !== -1 && tv.profileInfo && tv.profileInfo.season !== -1 && tv.profileInfo.episode !== -1 && tv.episode_tvs[episodeIndex].mediaInfo.backdrop) {
+        backdrop = Tv.getEpisodeBackdrop(context, tv.id, season, episode);
+    }
+    
+    return {
+        video: Tv.getEpisodeVideo(context, tv.id, season, episode),
+        trailer: Tv.getTrailer(context, tv.id),
+        logo: Tv.getLogo(context, tv.id),
+        backdrop: backdrop,
+        episodeIndex: episodeIndex,
+        season: season,
+        episode: episode
+    };
 }

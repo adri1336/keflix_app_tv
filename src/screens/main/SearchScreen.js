@@ -14,15 +14,18 @@ import Styles from "app/src/utils/Styles";
 import Definitions from "app/src/utils/Definitions";
 import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
 import { AppContext } from "app/src/AppContext";
-import { setStateIfMounted } from "app/src/utils/Functions";
+import { setStateIfMounted, getMediaUris } from "app/src/utils/Functions";
 import Keyboard, { KeyboardTypes } from "app/src/components/Keyboard";
+import * as ProfileMovie from "app/src/api/ProfileMovie";
+import * as ProfileTv from "app/src/api/ProfileTv";
 import * as Movie from "app/src/api/Movie";
+import * as Tv from "app/src/api/Tv";
 import { enableAllButtons, disableAllButtons } from "app/src/components/TouchableOpacityFix";
 import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
 
 //Vars
 const
-    FETCH_IN_TIME = 2000,
+    FETCH_IN_TIME = 3000,
     DRAWER_CAN_OPEN_LETTERS = ["0", "Q", "A", "SHIFT", "SPACE"];
 
 //Code
@@ -95,7 +98,20 @@ export default class SearchScreen extends React.Component {
             this.lastFetchDate = Date.now();
             this.fetchTimeout = setTimeout(async (fetchDate = this.lastFetchDate) => {
                 this.fetchTimeout = null;
-                let covers = await Movie.discover(this.context, text, "title.ASC");
+                
+                let covers = [];
+                const movies = await Movie.discover(this.context, text, "title.ASC");
+                const tvs = await Tv.discover(this.context, text, "name.ASC");
+                tvs.forEach(tv => {
+                    tv.tv = true;
+                    tv.tagline = "";
+                    tv.episode_tvs.forEach(episode => {
+                        episode.tagline = "S" + episode.season + ":E" + episode.episode + ": '" + episode.name + "'";
+                    });
+                });
+                
+                covers = [ ...movies, ...tvs ];
+
                 if(this.lastFetchDate == fetchDate) {
                     if(covers.length > 0) {
                         covers.push({ id: "endMargin" });
@@ -124,7 +140,29 @@ export default class SearchScreen extends React.Component {
     onCoverSelected(cover) {
         disableAllButtons();
         this.props.navigation.dangerouslyGetParent().setOptions({ drawer: false, drawerCanOpen: false });
-        this.props.navigation.navigate("PlayScreen", { media: cover });
+        
+        if(cover.tv) {
+            const mediaUris = getMediaUris(this.context, cover);
+            this.props.navigation.navigate("PlayScreen", {
+                tvs: true,
+                episodeIndex: mediaUris.episodeIndex,
+                media: cover,
+                profileClass: ProfileTv,
+                mediaUris: mediaUris
+            });
+        }
+        else {
+            this.props.navigation.navigate("PlayScreen", {
+                media: cover,
+                profileClass: ProfileMovie,
+                mediaUris: {
+                    video: Movie.getVideo(this.context, cover.id),
+                    trailer: Movie.getTrailer(this.context, cover.id),
+                    logo: Movie.getLogo(this.context, cover.id),
+                    backdrop: Movie.getBackdrop(this.context, cover.id)
+                }
+            });
+        }
     }
 
     setDrawerCanOpen(toggle) {

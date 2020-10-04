@@ -16,9 +16,11 @@ import Definitions from "app/src/utils/Definitions";
 import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
 import { AppContext } from "app/src/AppContext";
 import * as ProfileMovie from "app/src/api/ProfileMovie";
-import { setStateIfMounted } from "app/src/utils/Functions";
+import * as ProfileTv from "app/src/api/ProfileTv";
+import { setStateIfMounted, getMediaUris } from "app/src/utils/Functions";
 import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
 import * as Movie from "app/src/api/Movie";
+import * as Tv from "app/src/api/Tv";
 import { enableAllButtons, disableAllButtons } from "app/src/components/TouchableOpacityFix";
 
 //Vars
@@ -113,8 +115,21 @@ export default class MyListScreen extends React.Component {
     }
 
     async getCovers() {
-        const covers = await ProfileMovie.favs(this.context, this.context.state.profile.id);
-        if(covers) {
+        let covers = [];
+        const movies = await ProfileMovie.favs(this.context, this.context.state.profile.id);
+        const tvs = await ProfileTv.favs(this.context, this.context.state.profile.id);
+        
+        tvs.forEach(tv => {
+            tv.tv = true;
+            tv.tagline = "";
+            tv.episode_tvs.forEach(episode => {
+                episode.tagline = "S" + episode.season + ":E" + episode.episode + ": '" + episode.name + "'";
+            });
+        });
+        
+        covers = [ ...movies, ...tvs ];
+
+        if(covers && covers.length > 0) {
             setStateIfMounted(this, { loading: false, covers: covers });
         }
         else {
@@ -128,7 +143,7 @@ export default class MyListScreen extends React.Component {
     }
 
     setHeaderInfo(cover) {
-        const { title, release_date, runtime, vote_average, overview, profileInfo } = cover;
+        const { title, name, first_air_date, release_date, runtime, vote_average, overview, profileInfo } = cover;
 
         let progress = null;
         if(profileInfo) {
@@ -141,18 +156,18 @@ export default class MyListScreen extends React.Component {
 
         this.headerMedia.setInfo({
             title: {
-                text: title,
-                image: cover.mediaInfo.logo ? Movie.getLogo(this.context, cover.id) : null
+                text: title || name,
+                image: cover.mediaInfo.logo ? (cover.tv ? Tv.getLogo(this.context, cover.id) : Movie.getLogo(this.context, cover.id)) : null
             },
             info: {
-                releaseDate: release_date.substr(0, 4),
+                releaseDate: release_date === undefined ? first_air_date.substr(0, 4) : release_date.substr(0, 4),
                 runtime: runtime,
                 vote_average: vote_average,
             },
             description: overview,
             backdrop: {
-                image: cover.mediaInfo.backdrop ? Movie.getBackdrop(this.context, cover.id) : null,
-                video: (this.props.navigation.isFocused() && cover.mediaInfo.trailer && !this.isDrawerOpened) ? Movie.getTrailer(this.context, cover.id) : null
+                image: cover.mediaInfo.backdrop ? (cover.tv ? Tv.getBackdrop(this.context, cover.id) : Movie.getBackdrop(this.context, cover.id)) : null,
+                video: (this.props.navigation.isFocused() && cover.mediaInfo.trailer && !this.isDrawerOpened) ? (cover.tv ? Tv.getTrailer(this.context, cover.id) : Movie.getTrailer(this.context, cover.id)) : null
             },
             progress: progress
         });
@@ -253,7 +268,7 @@ export default class MyListScreen extends React.Component {
                                         touchableFixRef={ component => this.coversButtons[index] = component }
                                         hasTVPreferredFocus={ this.firstFocus && index == 0 ? true : false }
                                         style={{ flex: 1, height: COVER_ITEM_VALUES.HEIGHT, margin: 2 }}
-                                        poster={ item.mediaInfo.poster ? Movie.getPoster(this.context, item.id) : null }
+                                        poster={ item.mediaInfo.poster ? (item.tv ? Tv.getPoster(this.context, item.id) : Movie.getPoster(this.context, item.id)) : null }
                                         onFocus={
                                             () => {
                                                 this.clearTimers();
@@ -286,7 +301,29 @@ export default class MyListScreen extends React.Component {
                                                 if(this.headerMedia) {
                                                     this.headerMedia.stopVideo();
                                                 }
-                                                this.props.navigation.navigate("PlayScreen", { media: item });
+
+                                                if(item.tv) {
+                                                    const mediaUris = getMediaUris(this.context, item);
+                                                    this.props.navigation.navigate("PlayScreen", {
+                                                        tvs: true,
+                                                        episodeIndex: mediaUris.episodeIndex,
+                                                        media: item,
+                                                        profileClass: ProfileTv,
+                                                        mediaUris: mediaUris
+                                                    });
+                                                }
+                                                else {
+                                                    this.props.navigation.navigate("PlayScreen", {
+                                                        media: item,
+                                                        profileClass: ProfileMovie,
+                                                        mediaUris: {
+                                                            video: Movie.getVideo(this.context, item.id),
+                                                            trailer: Movie.getTrailer(this.context, item.id),
+                                                            logo: Movie.getLogo(this.context, item.id),
+                                                            backdrop: Movie.getBackdrop(this.context, item.id)
+                                                        }
+                                                    });
+                                                }
                                             }
                                         }
                                     />
