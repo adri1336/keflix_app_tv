@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Keflix App TV",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
