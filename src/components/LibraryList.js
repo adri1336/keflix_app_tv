@@ -10,6 +10,7 @@ import * as Tv from "app/src/api/Tv";
 //Vars
 export const COVER_ITEM_VALUES = {
     WIDTH: 115,
+    WIDTH2: 250,
     HEIGHT: 165,
     MARGIN: 4,
     BORDER: 2,

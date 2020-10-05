@@ -17,7 +17,7 @@ import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
 import { AppContext } from "app/src/AppContext";
 import * as ProfileMovie from "app/src/api/ProfileMovie";
 import * as ProfileTv from "app/src/api/ProfileTv";
-import { setStateIfMounted, getMediaUris } from "app/src/utils/Functions";
+import { setStateIfMounted, getMediaUris, getEpisodeIndexFromInfo } from "app/src/utils/Functions";
 import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
 import * as Movie from "app/src/api/Movie";
 import * as Tv from "app/src/api/Tv";
@@ -143,7 +143,27 @@ export default class MyListScreen extends React.Component {
     }
 
     setHeaderInfo(cover) {
-        const { title, name, first_air_date, release_date, runtime, vote_average, overview, profileInfo } = cover;
+        let { title, name, first_air_date, release_date, runtime, vote_average, overview, profileInfo } = cover;
+
+        let tagline = "";
+        if(cover.tv) {
+            let season = cover.firstSeason,
+                episode = cover.firstEpisode;
+            
+            if(cover.profileInfo && cover.profileInfo.season !== -1 && cover.profileInfo.episode !== -1) {
+                season = cover.profileInfo.season;
+                episode = cover.profileInfo.episode;
+            }
+            
+            const episodeIndex = getEpisodeIndexFromInfo(cover, season, episode);
+            if(episodeIndex !== -1) {
+                runtime = cover.episode_tvs[episodeIndex].runtime;
+                if(cover.profileInfo && cover.profileInfo.season !== -1 && cover.profileInfo.episode !== -1) {
+                    tagline = cover.episode_tvs[episodeIndex].tagline;
+                    overview = tagline + "\n\n" + cover.episode_tvs[episodeIndex].overview;
+                }
+            }
+        }
 
         let progress = null;
         if(profileInfo) {
@@ -169,7 +189,8 @@ export default class MyListScreen extends React.Component {
                 image: cover.mediaInfo.backdrop ? (cover.tv ? Tv.getBackdrop(this.context, cover.id) : Movie.getBackdrop(this.context, cover.id)) : null,
                 video: (this.props.navigation.isFocused() && cover.mediaInfo.trailer && !this.isDrawerOpened) ? (cover.tv ? Tv.getTrailer(this.context, cover.id) : Movie.getTrailer(this.context, cover.id)) : null
             },
-            progress: progress
+            progress: progress,
+            tagline: tagline
         });
     }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, BackHandler, Animated, findNodeHandle, Text } from "react-native";
+import { View, BackHandler, Animated, findNodeHandle, Text, FlatList } from "react-native";
 import HeaderMedia from "app/src/components/HeaderMedia";
 import { SCREEN_MARGIN_LEFT } from "app/src/components/TVDrawer";
 import Definitions, { MEDIA_DEFAULT } from "app/src/utils/Definitions";
@@ -13,6 +13,8 @@ import i18n from "i18n-js";
 import ProgressBar from "app/src/components/ProgressBar";
 import { setStateIfMounted, forceUpdateIfMounted, getMediaUris } from "app/src/utils/Functions";
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
+import { COVER_ITEM_VALUES } from "app/src/components/LibraryList";
+import EpisodeListCoverButton from "app/src/components/EpisodeListCoverButton";
 
 const
     BACK_FADE_DURATION = 500;
@@ -31,7 +33,8 @@ export default class PlayScreen extends React.Component {
         this.state = {
             playing: false,
             trailer: false,
-            infoOpacity: new Animated.Value(1)
+            infoOpacity: new Animated.Value(1),
+            episodesList: false
         };
         if(this.tvs) this.videoIsValid = true;
         else this.videoIsValid = this.media.mediaInfo.video ? true : false;
@@ -102,68 +105,77 @@ export default class PlayScreen extends React.Component {
     setButtonsNextFocus() {
         let up = null, down = null;
 
-        up = findNodeHandle(this.playButton);
-        if(this.replayButton) down = findNodeHandle(this.replayButton);
-        else if(this.trailerButton) down = findNodeHandle(this.trailerButton);
-        else if(this.episodesButton) down = findNodeHandle(this.episodesButton);
-        else down = findNodeHandle(this.myListButton);
-        this.playButton.setNativeProps({
-            nextFocusUp: up,
-            nextFocusDown: down,
-            nextFocusLeft: findNodeHandle(this.playButton),
-            nextFocusRight: findNodeHandle(this.playButton)
-        });
-
-        if(this.replayButton) {
+        if(this.state.episodesList) {
+            this.episodesListBackButton.setNativeProps({
+                nextFocusUp: findNodeHandle(this.episodesListBackButton),
+                nextFocusLeft: findNodeHandle(this.episodesListBackButton),
+                nextFocusRight: findNodeHandle(this.episodesListBackButton)
+            });
+        }
+        else {
             up = findNodeHandle(this.playButton);
-            if(this.trailerButton) down = findNodeHandle(this.trailerButton);
+            if(this.replayButton) down = findNodeHandle(this.replayButton);
+            else if(this.trailerButton) down = findNodeHandle(this.trailerButton);
             else if(this.episodesButton) down = findNodeHandle(this.episodesButton);
             else down = findNodeHandle(this.myListButton);
-            this.replayButton.setNativeProps({
+            this.playButton.setNativeProps({
                 nextFocusUp: up,
                 nextFocusDown: down,
-                nextFocusLeft: findNodeHandle(this.replayButton),
-                nextFocusRight: findNodeHandle(this.replayButton)
+                nextFocusLeft: findNodeHandle(this.playButton),
+                nextFocusRight: findNodeHandle(this.playButton)
             });
-        }
 
-        if(this.trailerButton) {
-            if(this.replayButton) up = findNodeHandle(this.replayButton);
-            else up = findNodeHandle(this.playButton);
-            if(this.episodesButton) down = findNodeHandle(this.episodesButton);
-            else down = findNodeHandle(this.myListButton);
-            this.trailerButton.setNativeProps({
-                nextFocusUp: up,
-                nextFocusDown: down,
-                nextFocusLeft: findNodeHandle(this.trailerButton),
-                nextFocusRight: findNodeHandle(this.trailerButton)
-            });
-        }
+            if(this.replayButton) {
+                up = findNodeHandle(this.playButton);
+                if(this.trailerButton) down = findNodeHandle(this.trailerButton);
+                else if(this.episodesButton) down = findNodeHandle(this.episodesButton);
+                else down = findNodeHandle(this.myListButton);
+                this.replayButton.setNativeProps({
+                    nextFocusUp: up,
+                    nextFocusDown: down,
+                    nextFocusLeft: findNodeHandle(this.replayButton),
+                    nextFocusRight: findNodeHandle(this.replayButton)
+                });
+            }
 
-        if(this.episodesButton) {
-            if(this.trailerButton) up = findNodeHandle(this.trailerButton);
+            if(this.trailerButton) {
+                if(this.replayButton) up = findNodeHandle(this.replayButton);
+                else up = findNodeHandle(this.playButton);
+                if(this.episodesButton) down = findNodeHandle(this.episodesButton);
+                else down = findNodeHandle(this.myListButton);
+                this.trailerButton.setNativeProps({
+                    nextFocusUp: up,
+                    nextFocusDown: down,
+                    nextFocusLeft: findNodeHandle(this.trailerButton),
+                    nextFocusRight: findNodeHandle(this.trailerButton)
+                });
+            }
+
+            if(this.episodesButton) {
+                if(this.trailerButton) up = findNodeHandle(this.trailerButton);
+                else if(this.replayButton) up = findNodeHandle(this.replayButton);
+                else up = findNodeHandle(this.playButton);
+                down = findNodeHandle(this.myListButton);
+                this.episodesButton.setNativeProps({
+                    nextFocusUp: up,
+                    nextFocusDown: down,
+                    nextFocusLeft: findNodeHandle(this.trailerButton),
+                    nextFocusRight: findNodeHandle(this.trailerButton)
+                });
+            }
+
+            if(this.episodesButton) up = findNodeHandle(this.episodesButton);
+            else if(this.trailerButton) up = findNodeHandle(this.trailerButton);
             else if(this.replayButton) up = findNodeHandle(this.replayButton);
             else up = findNodeHandle(this.playButton);
             down = findNodeHandle(this.myListButton);
-            this.episodesButton.setNativeProps({
-                nextFocusUp: up,
-                nextFocusDown: down,
-                nextFocusLeft: findNodeHandle(this.trailerButton),
-                nextFocusRight: findNodeHandle(this.trailerButton)
+            this.myListButton.setNativeProps({
+                nextFocusUp: this.episodesButton ? findNodeHandle(this.episodesButton) : (this.trailerButton ? findNodeHandle(this.trailerButton) : this.replayButton ? findNodeHandle(this.replayButton) : findNodeHandle(this.playButton)),
+                nextFocusDown: findNodeHandle(this.myListButton),
+                nextFocusLeft: findNodeHandle(this.myListButton),
+                nextFocusRight: findNodeHandle(this.myListButton)
             });
         }
-
-        if(this.episodesButton) up = findNodeHandle(this.episodesButton);
-        else if(this.trailerButton) up = findNodeHandle(this.trailerButton);
-        else if(this.replayButton) up = findNodeHandle(this.replayButton);
-        else up = findNodeHandle(this.playButton);
-        down = findNodeHandle(this.myListButton);
-        this.myListButton.setNativeProps({
-            nextFocusUp: this.episodesButton ? findNodeHandle(this.episodesButton) : (this.trailerButton ? findNodeHandle(this.trailerButton) : this.replayButton ? findNodeHandle(this.replayButton) : findNodeHandle(this.playButton)),
-            nextFocusDown: findNodeHandle(this.myListButton),
-            nextFocusLeft: findNodeHandle(this.myListButton),
-            nextFocusRight: findNodeHandle(this.myListButton)
-        });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -183,6 +195,18 @@ export default class PlayScreen extends React.Component {
                     setStateIfMounted(this, { trailer: false, playing: false });
                 }
             }
+        }
+        if(this.state.episodesList != prevState.episodesList) {
+            if(this.state.episodesList) {
+                const index = this.episodeIndex;
+                if(index < 0) index = 0;
+                else if(index >= this.media.episode_tvs.length) index = 0;
+
+                requestAnimationFrame(() => {
+                    this.flatList.scrollToOffset({ offset: (COVER_ITEM_VALUES.HEIGHT * index), animated: false });
+                });
+            }
+            else this.setHeaderInfo();
         }
     }
 
@@ -281,9 +305,15 @@ export default class PlayScreen extends React.Component {
                 }
             }
             else {
-                if(profileInfo.season === -1 || profileInfo.episode === -1) {
-                    profileInfo.season = this.media.episode_tvs[this.episodeIndex].season;
-                    profileInfo.episode = this.media.episode_tvs[this.episodeIndex].episode;
+                if(profileInfo.season === -1 || profileInfo.episode === -1) {                
+                    const newMediaUris = getMediaUris(this.context, this.media);
+                    profileInfo.season = newMediaUris.season;
+                    profileInfo.episode = newMediaUris.episode;
+                    
+                    this.episodeIndex = newMediaUris.episodeIndex;
+                    this.mediaUris = newMediaUris;
+
+                    this.videoPlayer.setUri(this.mediaUris.video);
                 }
             }
 
@@ -567,12 +597,113 @@ export default class PlayScreen extends React.Component {
                     style={{ marginBottom: 20 }}
                     onPress={
                         () => {
-                            //flatList episodios
+                            setStateIfMounted(this, { ...this.state, episodesList: true });
+                            this.setButtonsNextFocus();
                         }
                     }
                 >
                     { i18n.t("play_screen.episodes_button") }
                 </NormalButton>
+            );
+        }
+    }
+
+    renderButtonsOrEpisodesList() {
+        if(this.state.episodesList) {
+            return (
+                <View
+                    style={{
+                        flex: 1,
+                        marginTop: 50,
+                        marginLeft: Definitions.DEFAULT_MARGIN,
+                        marginBottom: -Definitions.DEFAULT_MARGIN,
+                        marginRight: -Definitions.DEFAULT_MARGIN
+                    }}
+                >
+                    <NormalButton
+                        touchableRef={ component => this.episodesListBackButton = component }
+                        hasTVPreferredFocus={ true }
+                        accessible={ this.state.playing ? false : true }
+                        textStyle={ Styles.bigText }
+                        icon={{
+                            library: Entypo,
+                            name: "back"
+                        }}
+                        style={{ marginBottom: 20 }}
+                        onPress={
+                            () => {
+                                setStateIfMounted(this, { ...this.state, episodesList: false });
+                                this.setButtonsNextFocus();
+                            }
+                        }
+                    >
+                        { i18n.t("play_screen.episodes_list_back_button") }
+                    </NormalButton>
+                    <FlatList
+                        ref={ component => this.flatList = component }
+                        data={ this.media.episode_tvs }
+                        keyExtractor={ (item, index) => String(index) }
+                        showsVerticalScrollIndicator={ false }
+                        scrollEnabled={ false }
+                        renderItem={
+                            ({ item, index }) => {
+                                return (
+                                    <EpisodeListCoverButton
+                                        style={{
+                                            flex: 1,
+                                            margin: 2
+                                        }}
+                                        tv={ item }
+                                        tvId={ this.media.id }
+                                        onPress={
+                                            async () => {
+                                                let { profileInfo } = this.media;
+                                                if(!(item.season === profileInfo.season && item.episode === profileInfo.episode)) {
+                                                    profileInfo.season = item.season;
+                                                    profileInfo.episode = item.episode;
+                                                    profileInfo.current_time = 0;
+
+                                                    const newMediaUris = getMediaUris(this.context, this.media);
+                                                    profileInfo.season = newMediaUris.season;
+                                                    profileInfo.episode = newMediaUris.episode;
+                                                    this.episodeIndex = newMediaUris.episodeIndex;
+                                                    this.mediaUris = newMediaUris;
+                                                    this.videoPlayer.setUri(this.mediaUris.video);
+                                                    await this.profileClass.upsert(this.context, profileInfo);
+                                                }
+                                                setStateIfMounted(this, { ...this.state, episodesList: false });
+                                                this.setButtonsNextFocus();
+                                            }
+                                        }
+                                        onFocus={
+                                            () => {
+                                                this.flatList.scrollToOffset({ offset: (COVER_ITEM_VALUES.HEIGHT * index), animated: true });
+                                            }
+                                        }
+                                    />
+                                );
+                            }
+                        }
+                    />
+                </View>
+            );
+        }
+        else {
+            return (
+                <View
+                    style={{
+                        flex: 1,
+                        marginTop: 50,
+                        marginLeft: Definitions.DEFAULT_MARGIN,
+                        marginBottom: -Definitions.DEFAULT_MARGIN,
+                        marginRight: -Definitions.DEFAULT_MARGIN
+                    }}
+                >
+                    { this.renderPlayButtons() }
+                    { this.renderPlayTrailerButton() }
+                    { this.renderEpisodesButton() }
+                    { this.renderMyListButton() }
+                </View>
             );
         }
     }
@@ -592,20 +723,7 @@ export default class PlayScreen extends React.Component {
                 <HeaderMedia
                     ref={ component => this.headerMedia = component }
                 />
-                <View
-                    style={{
-                        flex: 1,
-                        marginTop: 50,
-                        marginLeft: Definitions.DEFAULT_MARGIN,
-                        marginBottom: -Definitions.DEFAULT_MARGIN,
-                        marginRight: -Definitions.DEFAULT_MARGIN
-                    }}
-                >
-                    { this.renderPlayButtons() }
-                    { this.renderPlayTrailerButton() }
-                    { this.renderEpisodesButton() }
-                    { this.renderMyListButton() }
-                </View>
+                { this.renderButtonsOrEpisodesList() }
             </Animated.View>
         );
     }
