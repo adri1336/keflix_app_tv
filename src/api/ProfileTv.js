@@ -18,6 +18,8 @@ export const favs = async (context, profileId) => {
 
 export const defaultObject = (context, tvId, season, episode) => {
     const profileId = context.state.profile.id;
+    if(season === undefined) season = -1;
+    if(episode === undefined) episode = -1;
     return {
         season: season,
         episode: episode,

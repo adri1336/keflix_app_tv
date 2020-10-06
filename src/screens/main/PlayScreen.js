@@ -276,7 +276,7 @@ export default class PlayScreen extends React.Component {
             this.stopPlaying(true);
         }
         else {
-            if(Date.now() - this.lastProfileUpdate > MEDIA_DEFAULT.PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL && positionMillis > MEDIA_DEFAULT.MIN_MILLIS) {
+            if(Date.now() - this.lastProfileUpdate > MEDIA_DEFAULT.PLAYBACK_UPDATE_PROFILE_INFO_INTERVAL && (positionMillis > 0 && (positionMillis > MEDIA_DEFAULT.MIN_MILLIS || this.tvs))) {
                 this.updateProfilePositionMillis(positionMillis);
                 this.lastProfileUpdate = Date.now();
             }
@@ -294,6 +294,7 @@ export default class PlayScreen extends React.Component {
 
             if(!profileInfo) {
                 profileInfo = this.profileClass.defaultObject(this.context, id);
+                this.media.profileInfo = profileInfo;
             }
             
             if(!this.tvs) {
@@ -305,15 +306,14 @@ export default class PlayScreen extends React.Component {
                 }
             }
             else {
-                if(profileInfo.season === -1 || profileInfo.episode === -1) {                
+                if(profileInfo.season === -1 || profileInfo.episode === -1) {
                     const newMediaUris = getMediaUris(this.context, this.media);
                     profileInfo.season = newMediaUris.season;
                     profileInfo.episode = newMediaUris.episode;
                     
                     this.episodeIndex = newMediaUris.episodeIndex;
                     this.mediaUris = newMediaUris;
-
-                    this.videoPlayer.setUri(this.mediaUris.video);
+                    this.setHeaderInfo();
                 }
             }
 

@@ -6,7 +6,7 @@
     "platforms": [
       "android"
     ],
-    "version": "1.0.1",
+    "version": "1.1.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
     "splash": {
@@ -22,15 +22,7 @@
     ],
     "githubUrl": "https://github.com/adri1336/keflix_app_tv",
     "android": {
-      "package": "xyz.keflix.keflix_app_tv",
-      "intentFilters": [
-        {
-          "action": "MAIN",
-          "category": [
-            "LEANBACK_LAUNCHER"
-          ]
-        }
-      ]
+      "package": "xyz.keflix.keflix_app_tv"
     }
   }
 }
