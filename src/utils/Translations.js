@@ -25,7 +25,7 @@ i18n.translations = {
 		},
 		auth: {
 			welcome: {
-				slogan_text: "Películas para ver en tu televisión.",
+				slogan_text: "Películas y series para ver en tu televisión.",
 				register_button: "Registrarse ahora",
 				login_button: "Iniciar sesión",
 				change_server: "Cambiar servidor"
