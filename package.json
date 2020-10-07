@@ -2,10 +2,11 @@
   "name": "app",
   "version": "1.1.0",
   "description": "Keflix App TV",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "eject": "expo eject"
+    "start": "react-native start",
+    "eject": "expo eject",
+    "ios": "react-native run-ios",
+    "android": "react-native run-android"
   },
   "repository": {
     "type": "git",
@@ -18,28 +19,34 @@
     "url": "https://github.com/adri1336"
   },
   "dependencies": {
+    "expo": "~37.0.3",
+    "expo-splash-screen": "^0.2.3",
+    "expo-updates": "~0.2.0",
+    "react": "~16.9.0",
+    "react-dom": "~16.9.0",
+    "react-native": "~0.61.5",
+    "react-native-gesture-handler": "~1.6.0",
+    "react-native-reanimated": "~1.7.0",
+    "react-native-screens": "~2.2.0",
+    "react-native-unimodules": "~0.9.0",
+    "react-native-web": "~0.11.7",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/native": "^5.1.4",
     "@react-navigation/stack": "^5.2.9",
     "@use-expo/font": "^2.0.0",
-    "expo": "~37.0.3",
     "expo-av": "~8.1.0",
+    "expo-keep-awake": "~8.1.0",
     "expo-linear-gradient": "~8.1.0",
     "expo-localization": "~8.1.0",
     "expo-screen-orientation": "~1.0.0",
     "i18n-js": "^3.5.1",
-    "react": "~16.9.0",
-    "react-dom": "~16.9.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.0.tar.gz",
-    "react-native-gesture-handler": "~1.6.0",
-    "react-native-reanimated": "~1.7.0",
-    "react-native-safe-area-context": "0.7.3",
-    "react-native-screens": "~2.2.0",
-    "react-native-web": "~0.11.7",
-    "expo-keep-awake": "~8.1.0"
+    "react-native-safe-area-context": "0.7.3"
   },
   "devDependencies": {
-    "babel-preset-expo": "~8.1.0",
-    "@babel/core": "^7.8.6"
+    "@babel/core": "^7.8.6",
+    "babel-jest": "~25.2.6",
+    "jest": "~25.2.6",
+    "react-test-renderer": "~16.9.0",
+    "babel-preset-expo": "~8.1.0"
   }
 }

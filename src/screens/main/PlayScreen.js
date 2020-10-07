@@ -198,13 +198,15 @@ export default class PlayScreen extends React.Component {
         }
         if(this.state.episodesList != prevState.episodesList) {
             if(this.state.episodesList) {
-                const index = this.episodeIndex;
+                let index = this.episodeIndex;
                 if(index < 0) index = 0;
                 else if(index >= this.media.episode_tvs.length) index = 0;
 
-                requestAnimationFrame(() => {
-                    this.flatList.scrollToOffset({ offset: (COVER_ITEM_VALUES.HEIGHT * index), animated: false });
-                });
+                if(index > 0) {
+                    requestAnimationFrame(() => {
+                        this.flatList.scrollToOffset({ offset: (COVER_ITEM_VALUES.HEIGHT * index), animated: false });
+                    });
+                }
             }
             else this.setHeaderInfo();
         }
@@ -597,8 +599,10 @@ export default class PlayScreen extends React.Component {
                     style={{ marginBottom: 20 }}
                     onPress={
                         () => {
-                            setStateIfMounted(this, { ...this.state, episodesList: true });
-                            this.setButtonsNextFocus();
+                            if(this.media.episode_tvs.length > 0) {
+                                setStateIfMounted(this, { ...this.state, episodesList: true });
+                                this.setButtonsNextFocus();
+                            }
                         }
                     }
                 >
